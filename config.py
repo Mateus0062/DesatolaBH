@@ -21,7 +21,13 @@ ITBI_FINAL = DATA_FINAL / 'ITBI_final_features.csv'
 
 MIN_AREA_M2 = 10
 MAX_AREA_M2 = 10_000
-MIN_VALOR = 1_000
+MIN_VALOR = 50_000
 MAX_VALOR = 50_000_000
 MIN_ANO_CONSTRUCAO = 1900
 MAX_ANO_CONSTRUCAO = 2024
+
+# Preço por m² (novo filtro!)
+MIN_PRECO_M2 = 500        # ← R$ 500/m² mínimo (remove declarações fraudulentas)
+MAX_PRECO_M2 = 30_000     # ← R$ 30k/m² máximo (imóveis ultra-premium são outliers)
+
+MAX_IDADE_IMOVEL = 150    # ← Remove imóveis "antigos demais" (provavelmente erro)
