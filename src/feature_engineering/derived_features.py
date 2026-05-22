@@ -6,141 +6,190 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_CLEANED, ITBI_FINAL
 
-def criar_features_proporcoes(df):
-    print("\n[1/5] Criando features de proporções...")
 
-    # Razão entre área construída e área do terreno
+def criar_features_proporcoes(df, verbose=True):
+    print("\n[1/8] Criando features de proporções...")
+
     df['razao_area_util'] = df['area_construida_m2'] / df['area_terreno_m2']
-
-    # Densidade de construção (quanto do terreno foi usado)
     df['densidade_construcao'] = df['area_total_m2'] / df['area_terreno_m2']
-
-    # Diferença entre área total e área construída (áreas comuns, garagem, etc.)
     df['area_nao_construida_m2'] = df['area_total_m2'] - df['area_construida_m2']
 
     print(f"  ✓ 3 features de proporção criadas")
+
     return df
 
-def criar_features_temporais_bairro(df):
-    print("\n[2/5] Criando features temporais por bairro...")
 
-    # Preço médio por bairro e ano
-    preco_medio_bairro_ano = df.groupby(['bairro', 'ano_transacao'])['valor_declarado'].mean().reset_index()
-    preco_medio_bairro_ano.columns = ['bairro', 'ano_transacao', 'preco_medio_bairro_ano']
+def criar_features_idade(df):
+    print("\n[2/8] Criando features de idade...")
 
-    df = df.merge(preco_medio_bairro_ano, on=['bairro', 'ano_transacao'], how='left')
-
-    # Preço médio geral do bairro (todos os anos)
-    preco_medio_bairro_geral = df.groupby('bairro')['valor_declarado'].mean().reset_index()
-    preco_medio_bairro_geral.columns = ['bairro', 'preco_medio_bairro']
-
-    df = df.merge(preco_medio_bairro_geral, on='bairro', how='left')
-
-    # Preço relativo ao bairro (esse imóvel é caro ou barato para o bairro?)
-    df['preco_relativo_bairro'] = df['valor_declarado'] / df['preco_medio_bairro']
-
-    # Calcular valorização dos últimos 3 anos por bairro
-    def calcular_valorizacao_3anos(bairro_df):
-        if len(bairro_df) < 2:
-            return 0
-
-        anos_disponiveis = sorted(bairro_df['ano_transacao'].unique())
-
-        if len(anos_disponiveis) < 2:
-            return 0
-
-        # Pegar último ano e 3 anos atrás
-        ano_final = anos_disponiveis[-1]
-        ano_inicial = ano_final - 3
-
-        preco_final = bairro_df[bairro_df['ano_transacao'] == ano_final]['valor_declarado'].mean()
-        preco_inicial = bairro_df[bairro_df['ano_transacao'] >= ano_inicial]['valor_declarado'].iloc[0] if len(
-            bairro_df[bairro_df['ano_transacao'] >= ano_inicial]) > 0 else preco_final
-
-        if preco_inicial == 0:
-            return 0
-
-        return ((preco_final - preco_inicial) / preco_inicial) * 100
-
-    valorizacao_por_bairro = df.groupby('bairro').apply(calcular_valorizacao_3anos).reset_index()
-    valorizacao_por_bairro.columns = ['bairro', 'valorizacao_bairro_3anos']
-
-    df = df.merge(valorizacao_por_bairro, on='bairro', how='left')
-    df['valorizacao_bairro_3anos'] = df['valorizacao_bairro_3anos'].fillna(0)
-
-    print("4 features temporais criadas")
-    return df
-
-def criar_features_idade_avancadas(df):
-    print("\n[3/5] Criando features de idade...")
-
-    # Tratar nulos na idade_imovel (preencher com mediana)
+    # Preencher nulos com mediana
     idade_mediana = df['idade_imovel'].median()
     df['idade_imovel'] = df['idade_imovel'].fillna(idade_mediana)
 
-    # Flag: imóvel novo (até 5 anos)
+    # Flag imóvel novo
     df['imovel_novo'] = (df['idade_imovel'] <= 5).astype(int)
 
-    # Estimativa de depreciação (1% ao ano, cap em 40%)
+    # Depreciação estimada
     df['depreciacao_estimada'] = np.minimum(df['idade_imovel'] * 0.01, 0.40)
 
     print(f"  ✓ 2 features de idade criadas")
+
     return df
 
-def criar_features_interacao(df):
-    print("\n[4/5] Criando features de interação...")
 
-    # Interação área × idade
+def criar_features_interacao_simples(df):
+    print("\n[3/8] Criando features de interação...")
+
+    # Área × idade
     df['area_x_idade'] = df['area_total_m2'] * df['idade_imovel']
 
-    # Interação preço/m² × idade
-    df['preco_m2_x_idade'] = df['preco_m2'] * df['idade_imovel']
-
-    # Flag: imóvel novo em bairro caro (combo valorizado)
-    preco_m2_mediano = df['preco_m2'].median()
-    df['novo_em_bairro_caro'] = (
+    # Flag: imóvel novo E grande (possivelmente premium)
+    area_mediana = df['area_total_m2'].median()
+    df['novo_e_grande'] = (
             (df['idade_imovel'] <= 10) &
-            (df['preco_m2'] > preco_m2_mediano)
+            (df['area_total_m2'] > area_mediana)
     ).astype(int)
 
-    # Densidade × preço (imóveis densos em áreas caras podem ser apartamentos premium)
-    df['densidade_x_preco'] = df['densidade_construcao'] * df['preco_m2']
+    print(f"  ✓ 2 features de interação criadas")
 
-    print("4 features de interação criadas")
     return df
 
-def criar_features_estatisticas_bairro(df):
-    print("\n[5/5] Criando features estatísticas por bairro...")
 
-    # Desvio padrão de preços no bairro
-    std_preco = df.groupby('bairro')['valor_declarado'].std().reset_index()
-    std_preco.columns = ['bairro', 'std_preco_bairro']
-    df = df.merge(std_preco, on='bairro', how='left')
-    df['std_preco_bairro'] = df['std_preco_bairro'].fillna(0)
+def criar_features_bairro_sem_leakage(df):
 
-    # Número de transações por bairro
-    num_transacoes = df.groupby('bairro').size().reset_index()
-    num_transacoes.columns = ['bairro', 'num_transacoes_bairro']
-    df = df.merge(num_transacoes, on='bairro', how='left')
+    print("\n[4/8] Calculando features de bairro (sem leakage - otimizado)...")
 
-    # Preço máximo já visto no bairro
-    preco_max = df.groupby('bairro')['valor_declarado'].max().reset_index()
-    preco_max.columns = ['bairro', 'preco_max_bairro']
-    df = df.merge(preco_max, on='bairro', how='left')
+    # Pré-calcular estatísticas por bairro
+    stats_bairro = df.groupby('bairro')['valor_declarado'].agg([
+        'sum', 'count', 'std', 'min', 'max'
+    ]).reset_index()
+    stats_bairro.columns = ['bairro', 'soma_total', 'count_total', 'std_total', 'min_total', 'max_total']
 
-    # Preço mínimo do bairro
-    preco_min = df.groupby('bairro')['valor_declarado'].min().reset_index()
-    preco_min.columns = ['bairro', 'preco_min_bairro']
-    df = df.merge(preco_min, on='bairro', how='left')
+    # Merge com dataset
+    df = df.merge(stats_bairro, on='bairro', how='left')
 
-    # Range de preços no bairro
-    df['range_preco_bairro'] = df['preco_max_bairro'] - df['preco_min_bairro']
+    # Leave-One-Out: média SEM o próprio imóvel
+    df['preco_medio_bairro_loo'] = (df['soma_total'] - df['valor_declarado']) / (df['count_total'] - 1)
 
-    print(f"  ✓ 5 features estatísticas criadas")
+    # Para imóveis únicos no bairro, usar média geral
+    media_geral = df['valor_declarado'].mean()
+    df.loc[df['count_total'] == 1, 'preco_medio_bairro_loo'] = media_geral
+
+    # Outras estatísticas (já calculadas, não precisam de LOO)
+    df['std_preco_bairro'] = df['std_total']
+    df['num_transacoes_bairro'] = df['count_total']
+    df['preco_min_bairro'] = df['min_total']
+    df['preco_max_bairro'] = df['max_total']
+    df['range_preco_bairro'] = df['max_total'] - df['min_total']
+
+    # Limpar colunas temporárias
+    df = df.drop(columns=['soma_total', 'count_total', 'std_total', 'min_total', 'max_total'])
+
+    print(f"  ✓ 6 features de bairro criadas (sem leakage)")
+
     return df
 
-def aplicar_feature_engineering(df_input=None, path_input=None, salvar=True):
-    # Carregar dados limpos
+
+def criar_features_preco_m2_bairro_sem_leakage(df):
+
+    print("\n[5/8] Calculando preço/m² médio do bairro (sem leakage)...")
+
+    # Pré-calcular soma de valores e áreas por bairro
+    stats = df.groupby('bairro').agg({
+        'valor_declarado': 'sum',
+        'area_total_m2': 'sum'
+    }).reset_index()
+    stats.columns = ['bairro', 'soma_valor', 'soma_area']
+
+    # Merge
+    df = df.merge(stats, on='bairro', how='left')
+
+    # Calcular SEM o próprio imóvel
+    df['preco_m2_medio_bairro_loo'] = (
+            (df['soma_valor'] - df['valor_declarado']) /
+            (df['soma_area'] - df['area_total_m2'])
+    )
+
+    # Fallback para casos edge
+    preco_m2_global = df['valor_declarado'].sum() / df['area_total_m2'].sum()
+    df['preco_m2_medio_bairro_loo'] = df['preco_m2_medio_bairro_loo'].fillna(preco_m2_global)
+
+    # Limpar temporários
+    df = df.drop(columns=['soma_valor', 'soma_area'])
+
+    print(f"  ✓ Feature criada: preco_m2_medio_bairro_loo")
+
+    return df
+
+def criar_features_valorizacao_bairro(df):
+    print("\n[6/8] Calculando valorização do bairro...")
+
+    # Preço médio por bairro/ano
+    preco_ano = df.groupby(['bairro', 'ano_transacao'])['valor_declarado'].mean().reset_index()
+    preco_ano.columns = ['bairro', 'ano', 'preco_medio']
+
+    # Para cada bairro, calcular valorização dos últimos 3 anos
+    valorizacao = []
+
+    for bairro in df['bairro'].unique():
+        df_bairro = preco_ano[preco_ano['bairro'] == bairro].sort_values('ano')
+
+        if len(df_bairro) >= 2:
+            # Pegar último ano e 3 anos atrás
+            anos = df_bairro['ano'].values
+            precos = df_bairro['preco_medio'].values
+
+            if len(anos) >= 4:
+                # Comparar último ano com 3 anos atrás
+                preco_atual = precos[-1]
+                preco_3anos = precos[-4]
+                val = ((preco_atual - preco_3anos) / preco_3anos) * 100 if preco_3anos > 0 else 0
+            else:
+                # Comparar primeiro com último disponível
+                preco_atual = precos[-1]
+                preco_inicial = precos[0]
+                val = ((preco_atual - preco_inicial) / preco_inicial) * 100 if preco_inicial > 0 else 0
+        else:
+            val = 0
+
+        valorizacao.append({'bairro': bairro, 'valorizacao_bairro_3anos': val})
+
+    df_valorizacao = pd.DataFrame(valorizacao)
+    df = df.merge(df_valorizacao, on='bairro', how='left')
+    df['valorizacao_bairro_3anos'] = df['valorizacao_bairro_3anos'].fillna(0)
+
+    print(f"  ✓ Feature criada: valorizacao_bairro_3anos")
+
+    return df
+
+def criar_features_comparativas(df):
+    print("\n[7/8] Criando features comparativas...")
+
+    # Calcular médias por bairro (para área e idade)
+    medias_area = df.groupby('bairro')['area_total_m2'].mean().to_dict()
+    medias_idade = df.groupby('bairro')['idade_imovel'].mean().to_dict()
+
+    # Criar comparações
+    df['area_vs_media_bairro'] = df['area_total_m2'] / df['bairro'].map(medias_area)
+    df['idade_vs_media_bairro'] = df['idade_imovel'] / (df['bairro'].map(medias_idade) + 1)
+
+    print(f"  ✓ 2 features comparativas criadas")
+
+    return df
+
+def criar_features_sazonalidade(df):
+    print("\n[8/8] Criando features de sazonalidade...")
+
+    df['trimestre'] = df['mes_transacao'].apply(lambda m: (m - 1) // 3 + 1)
+    df['fim_de_ano'] = (df['mes_transacao'] >= 11).astype(int)
+    df['inicio_ano'] = (df['mes_transacao'] <= 3).astype(int)
+
+    print(f"  ✓ 3 features de sazonalidade criadas")
+
+    return df
+
+def aplicar_features_completo(df_input=None, path_input=None, salvar=True):
+    # Carregar dados
     if df_input is None:
         if path_input is None:
             path_input = ITBI_CLEANED
@@ -149,49 +198,35 @@ def aplicar_feature_engineering(df_input=None, path_input=None, salvar=True):
         df = df_input.copy()
 
     print("=" * 80)
-    print("INICIANDO FEATURE ENGINEERING")
+    print("FEATURE ENGINEERING SEM DATA LEAKAGE")
     print("=" * 80)
     print(f"\nLinhas de entrada: {len(df):,}")
     print(f"Features iniciais: {len(df.columns)}")
 
-    # Aplicar cada módulo
+    # Aplicar transformações
     df = criar_features_proporcoes(df)
-    df = criar_features_temporais_bairro(df)
-    df = criar_features_idade_avancadas(df)
-    df = criar_features_interacao(df)
-    df = criar_features_estatisticas_bairro(df)
+    df = criar_features_idade(df)
+    df = criar_features_interacao_simples(df)
+    df = criar_features_bairro_sem_leakage(df)
+    df = criar_features_preco_m2_bairro_sem_leakage(df)
+    df = criar_features_valorizacao_bairro(df)
+    df = criar_features_comparativas(df)
+    df = criar_features_sazonalidade(df)
 
-    # Finalização
     print("\n" + "=" * 80)
     print("FEATURE ENGINEERING CONCLUÍDO")
     print("=" * 80)
-    print(f"\nLinhas finais:    {len(df):,}")
-    print(
-        f"Features finais:  {len(df.columns)} (+{len(df.columns) - len(df_input.columns) if df_input is not None else 'N/A'} novas)")
-    print(f"\nNovas features criadas:")
-
-    # Listar novas colunas
-    if df_input is not None:
-        colunas_novas = set(df.columns) - set(df_input.columns)
-        for i, col in enumerate(sorted(colunas_novas), 1):
-            print(f"  {i:2d}. {col}")
+    print(f"\nFeatures finais: {len(df.columns)}")
 
     # Salvar
     if salvar:
         df.to_csv(ITBI_FINAL, index=False, encoding='utf-8')
-        print(f"\n✓ Dataset final salvo: {ITBI_FINAL}")
+        print(f"\n✓ Dataset salvo: {ITBI_FINAL}")
         print(f"  Tamanho: {df.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
 
     return df
 
 if __name__ == '__main__':
-    print("Carregando dados limpos...")
-    df_final = aplicar_feature_engineering()
-
-    print("\n" + "=" * 80)
-    print("PROCESSO CONCLUÍDO!")
-    print("=" * 80)
-    print("\nDataset pronto para modelagem:")
-    print(f"  - Linhas: {len(df_final):,}")
-    print(f"  - Features: {len(df_final.columns)}")
-    print(f"  - Arquivo: {ITBI_FINAL}")
+    print("Aplicando feature engineering...")
+    df_final = aplicar_features_completo()
+    print("\n✓✓✓ CONCLUÍDO ✓✓✓")

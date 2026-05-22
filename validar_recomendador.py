@@ -20,17 +20,13 @@ print(f"  ✓ {len(df):,} linhas carregadas\n")
 df_teste = df[df['ano_transacao'] >= 2022].copy()
 print(f"Imóveis de 2022-2024: {len(df_teste):,} transações")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # REMOVER COLUNAS (incluindo features com leakage!)
-# ══════════════════════════════════════════════════════════════════════════════
-
 colunas_remover = [
     # Colunas não-features
     'id', 'endereco', 'bairro', 'data_transacao', 'valor_declarado',
     'valor_base_calculo', 'cep', 'padrao_acabamento', 'tipo_construtivo',
     'tipo_ocupacao', 'zona_uso', 'faixa_idade',
 
-    # Features com data leakage (CRÍTICO!)
     'preco_m2',
     'preco_m2_x_idade',
     'densidade_x_preco',
@@ -39,11 +35,7 @@ colunas_remover = [
     'preco_relativo_bairro',
 ]
 
-
-
-# ══════════════════════════════════════════════════════════════════════════════
 # VALIDAÇÃO: Aplicar recomendador em TODOS os imóveis de teste
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("APLICANDO RECOMENDADOR EM TODOS OS IMÓVEIS DE 2022-2024")
@@ -58,7 +50,6 @@ df_amostra = df_teste.sample(n=min(AMOSTRA, len(df_teste)), random_state=42)
 print(f"\nProcessando amostra de {len(df_amostra):,} imóveis...")
 
 for idx, row in df_amostra.iterrows():
-
     # Preparar features (removendo colunas problemáticas)
     features = row.drop(colunas_remover, errors='ignore').to_frame().T
 
@@ -92,18 +83,16 @@ df_resultados = pd.DataFrame(resultados)
 
 print(f"\n✓ Processamento concluído!")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # ANÁLISE 1: Distribuição de Desvios
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("ANÁLISE 1: DISTRIBUIÇÃO DE DESVIOS (Preço Real vs Previsto)")
 print("=" * 80)
 
 print(f"\nEstatísticas:")
-print(f"  Desvio médio:    {df_resultados['desvio_percentual'].mean():>8.2f}%")
-print(f"  Desvio mediano:  {df_resultados['desvio_percentual'].median():>8.2f}%")
-print(f"  Desvio padrão:   {df_resultados['desvio_percentual'].std():>8.2f}%")
+print(f"Desvio médio: {df_resultados['desvio_percentual'].mean():>8.2f}%")
+print(f"Desvio mediano: {df_resultados['desvio_percentual'].median():>8.2f}%")
+print(f"Desvio padrão: {df_resultados['desvio_percentual'].std():>8.2f}%")
 
 print(f"\nDistribuição por faixa:")
 faixas = [
@@ -121,9 +110,7 @@ for min_val, max_val, label in faixas:
     pct = qtd / len(df_resultados) * 100
     print(f"  {label:30s}: {qtd:>6,} imóveis ({pct:>5.1f}%)")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # ANÁLISE 2: Precisão do Modelo por Ano
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("ANÁLISE 2: PRECISÃO DO MODELO POR ANO")
@@ -139,16 +126,13 @@ for ano in sorted(df_resultados['ano'].unique()):
     print(f"  MAE:         R$ {mae:>12,.2f}")
     print(f"  MAPE:        {mape:>12.2f}%")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # ANÁLISE 3: Simulação de Recomendações
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("ANÁLISE 3: SIMULAÇÃO DE RECOMENDAÇÕES")
 print("=" * 80)
 
 print("\nSe aplicássemos o recomendador ANTES das vendas:")
-
 
 def classificar_recomendacao(desvio):
     if desvio > 15:
@@ -170,9 +154,7 @@ for rec, qtd in df_resultados['recomendacao'].value_counts().items():
     pct = qtd / len(df_resultados) * 100
     print(f"  {rec:20s}: {qtd:>6,} imóveis ({pct:>5.1f}%)")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # ANÁLISE 4: Insights por Bairro
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("ANÁLISE 4: TOP 10 BAIRROS - Desvio Médio")
@@ -194,9 +176,7 @@ print("\nBairros onde imóveis tendem a ser vendidos ABAIXO do previsto:")
 for bairro, row in bairros_desvio.tail(10).iterrows():
     print(f"  {bairro:25s}: {row['desvio_percentual']:>7.2f}% ({row['qtd']:.0f} imóveis)")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # ANÁLISE 5: Validação da Estratégia
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("ANÁLISE 5: VALIDAÇÃO DAS REGRAS DE DECISÃO")
@@ -220,17 +200,13 @@ print(
 print(f"  → Sistema recomendaria: PODE AUMENTAR ou REFORMAR")
 print(f"  → Oportunidades perdidas de ganho")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # SALVAR RESULTADOS
-# ══════════════════════════════════════════════════════════════════════════════
 
 output_path = OUTPUTS_TABLES / 'validacao_recomendador.csv'
 df_resultados.to_csv(output_path, index=False)
 print(f"\n✓ Resultados salvos em: {output_path}")
 
-# ══════════════════════════════════════════════════════════════════════════════
 # CONCLUSÃO
-# ══════════════════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 80)
 print("CONCLUSÃO DA VALIDAÇÃO")
@@ -241,18 +217,18 @@ mape_geral = df_resultados['desvio_percentual'].abs().mean()
 dentro_10pct = (df_resultados['desvio_percentual'].abs() <= 10).sum()
 
 print(f"\nPerformance geral do sistema:")
-print(f"  MAE:              R$ {mae_geral:,.2f}")
-print(f"  MAPE:             {mape_geral:.2f}%")
-print(f"  Dentro de ±10%:   {dentro_10pct:,} imóveis ({dentro_10pct / len(df_resultados) * 100:.1f}%)")
+print(f"  MAE: R$ {mae_geral:,.2f}")
+print(f"  MAPE: {mape_geral:.2f}%")
+print(f"  Dentro de ±10%: {dentro_10pct:,} imóveis ({dentro_10pct / len(df_resultados) * 100:.1f}%)")
 
 print(f"\nInterpretação:")
 if mape_geral < 5:
-    print("  ✓✓✓ EXCELENTE - Sistema altamente confiável")
+    print(" EXCELENTE - Sistema altamente confiável")
 elif mape_geral < 10:
-    print("  ✓✓ MUITO BOM - Sistema confiável para uso prático")
+    print("MUITO BOM - Sistema confiável para uso prático")
 elif mape_geral < 15:
-    print("  ✓ BOM - Sistema útil, com margem de melhoria")
+    print("BOM - Sistema útil, com margem de melhoria")
 else:
-    print("  ⚠ REGULAR - Necessita ajustes")
+    print("REGULAR - Necessita ajustes")
 
 print("\n" + "=" * 80)

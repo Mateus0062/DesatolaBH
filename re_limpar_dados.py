@@ -1,10 +1,6 @@
-"""
-Re-executa limpeza com filtros rigorosos
-"""
-
 import pandas as pd
 from src.limpeza_dados.Limpeza import limpar_dataset_itbi, salvar_dataset_limpo
-from src.feature_engineering.derived_features import aplicar_feature_engineering
+from src.feature_engineering.derived_features import aplicar_features_completo
 from config import ITBI_RAW, ITBI_CLEANED, ITBI_FINAL
 
 print("="*80)
@@ -27,7 +23,7 @@ print("\n" + "="*80)
 print("APLICANDO FEATURE ENGINEERING")
 print("="*80)
 
-df_final = aplicar_feature_engineering(df_input=df_limpo, salvar=True)
+df_final = aplicar_features_completo(df_input=df_limpo, salvar=True)
 
 print("\n" + "="*80)
 print("✓✓✓ PROCESSO CONCLUÍDO ✓✓✓")
