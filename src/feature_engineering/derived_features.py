@@ -75,8 +75,12 @@ def criar_features_bairro_sem_leakage(df):
     media_geral = df['valor_declarado'].mean()
     df.loc[df['count_total'] == 1, 'preco_medio_bairro_loo'] = media_geral
 
+    # std é NaN para bairros com uma única transação (precisa de n>=2).
+    # Para esses casos, usar o desvio padrão global como fallback.
+    std_global = df['valor_declarado'].std()
+    df['std_preco_bairro'] = df['std_total'].fillna(std_global)
+
     # Outras estatísticas (já calculadas, não precisam de LOO)
-    df['std_preco_bairro'] = df['std_total']
     df['num_transacoes_bairro'] = df['count_total']
     df['preco_min_bairro'] = df['min_total']
     df['preco_max_bairro'] = df['max_total']
@@ -213,20 +217,18 @@ def aplicar_features_completo(df_input=None, path_input=None, salvar=True):
     df = criar_features_comparativas(df)
     df = criar_features_sazonalidade(df)
 
-    print("\n" + "=" * 80)
-    print("FEATURE ENGINEERING CONCLUÍDO")
-    print("=" * 80)
+    print("\nFEATURE ENGINEERING CONCLUÍDO")
     print(f"\nFeatures finais: {len(df.columns)}")
 
     # Salvar
     if salvar:
         df.to_csv(ITBI_FINAL, index=False, encoding='utf-8')
         print(f"\n✓ Dataset salvo: {ITBI_FINAL}")
-        print(f"  Tamanho: {df.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
+        print(f"Tamanho: {df.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
 
     return df
 
 if __name__ == '__main__':
     print("Aplicando feature engineering...")
     df_final = aplicar_features_completo()
-    print("\n✓✓✓ CONCLUÍDO ✓✓✓")
+    print("\nCONCLUÍDO")

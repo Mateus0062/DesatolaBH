@@ -87,7 +87,6 @@ BAIRROS_CLASSE_4 = [
 
 
 def criar_mapeamento_classe():
-    """Cria dicionário bairro -> classe socioeconômica"""
     mapeamento = {}
 
     # Classe 1: Popular
@@ -138,7 +137,6 @@ def criar_mapeamento_classe():
 
 
 def carregar_densidade_demografica(path_csv):
-    """Carrega dados de densidade demográfica do CSV do IBGE"""
     df_densidade = pd.read_csv(path_csv, encoding='utf-8-sig')
 
     # Normalizar nome dos bairros (uppercase, sem acentos especiais)
@@ -163,26 +161,21 @@ def carregar_densidade_demografica(path_csv):
 
 
 def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
-    """Aplica features IBGE ao dataset"""
-
-    if verbose:
-        print("=" * 80)
-        print("APLICANDO FEATURES IBGE")
-        print("=" * 80)
-        print(f"\nLinhas de entrada: {len(df):,}")
+    print("=" * 80)
+    print("APLICANDO FEATURES IBGE")
+    print("=" * 80)
+    print(f"\nLinhas de entrada: {len(df):,}")
 
     # Carregar mapeamentos
     classe_map = criar_mapeamento_classe()
     densidade_map = carregar_densidade_demografica(path_densidade_csv)
 
-    if verbose:
-        print(f"\n[1/4] Carregados:")
-        print(f"  - {len(classe_map)} bairros com classificação socioeconômica")
-        print(f"  - {len(densidade_map)} bairros com densidade demográfica")
+    print(f"\n[1/4] Carregados:")
+    print(f"  - {len(classe_map)} bairros com classificação socioeconômica")
+    print(f"  - {len(densidade_map)} bairros com densidade demográfica")
 
     # Features de classificação
-    if verbose:
-        print(f"\n[2/4] Aplicando features de classificação socioeconômica...")
+    print(f"\n[2/4] Aplicando features de classificação socioeconômica...")
 
     def get_classe_features(bairro):
         if bairro in classe_map:
@@ -205,14 +198,12 @@ def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
     grupo_map = {'Popular': 1, 'Medio': 2, 'Alto': 3, 'Luxo': 4}
     df['grupo_bairro_num'] = df['grupo_bairro'].map(grupo_map)
 
-    if verbose:
-        print(f"  ✓ 5 features criadas")
-        print(f"\n  Distribuição por classe:")
-        print(df['grupo_bairro'].value_counts().sort_index())
+    print(f"  ✓ 5 features criadas")
+    print(f"\n  Distribuição por classe:")
+    print(df['grupo_bairro'].value_counts().sort_index())
 
     # Features de densidade
-    if verbose:
-        print(f"\n[3/4] Aplicando features de densidade demográfica...")
+    print(f"\n[3/4] Aplicando features de densidade demográfica...")
 
     def get_densidade_features(bairro):
         if bairro in densidade_map:
@@ -231,12 +222,10 @@ def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
     df['densidade_demografica'] = df['bairro'].apply(lambda x: get_densidade_features(x)['densidade_demografica'])
     df['pessoas_por_domicilio'] = df['populacao_bairro'] / (df['domicilios_bairro'] + 1)
 
-    if verbose:
-        print(f"  ✓ 5 features criadas")
+    print(f"  ✓ 5 features criadas")
 
     # Features de interação
-    if verbose:
-        print(f"\n[4/4] Criando features de interação...")
+    print(f"\n[4/4] Criando features de interação...")
 
     df['tipo_x_densidade'] = df['tipo_bairro'] * (df['densidade_demografica'] / 10000)
 
@@ -246,19 +235,16 @@ def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
     df['area_vs_densidade'] = df['area_total_m2'] / (df['densidade_demografica'] + 1)
     df['poder_compra_bairro'] = df['salario_medio_sm'] * df['populacao_bairro']
 
-    if verbose:
-        print(f"  ✓ 4 features de interação criadas")
-        print("\n" + "=" * 80)
-        print("FEATURES IBGE APLICADAS COM SUCESSO!")
-        print("=" * 80)
-        print(f"\nTotal de features IBGE: 14")
+    print(f"  ✓ 4 features de interação criadas")
+    print("\n" + "=" * 80)
+    print("FEATURES IBGE APLICADAS COM SUCESSO!")
+    print("=" * 80)
+    print(f"\nTotal de features IBGE: 14")
 
     return df
 
 
 def processar_dataset_completo(path_itbi_final, path_densidade_csv, salvar=True):
-    """Carrega dataset, aplica features IBGE, e salva"""
-
     print("Carregando dataset...")
     df = pd.read_csv(path_itbi_final)
 
@@ -268,9 +254,9 @@ def processar_dataset_completo(path_itbi_final, path_densidade_csv, salvar=True)
 
     if salvar:
         df.to_csv(path_itbi_final, index=False, encoding='utf-8')
-        print(f"\n✓ Dataset atualizado salvo: {path_itbi_final}")
-        print(f"  Linhas: {len(df):,}")
-        print(f"  Colunas: {len(df.columns)}")
+        print(f"\nDataset atualizado salvo: {path_itbi_final}")
+        print(f"Linhas: {len(df):,}")
+        print(f"Colunas: {len(df.columns)}")
 
     return df
 
@@ -278,7 +264,6 @@ def processar_dataset_completo(path_itbi_final, path_densidade_csv, salvar=True)
 if __name__ == '__main__':
     PATH_ITBI = ITBI_FINAL
 
-    # AJUSTE O CAMINHO AQUI!
     # Opção 1: Se você colocou o CSV em data/external/
     PATH_DENSIDADE = Path( __file__).resolve().parent.parent.parent / 'data' / 'external' / 'dataset-densidade-demografica.csv'
 
@@ -289,12 +274,7 @@ if __name__ == '__main__':
 
     # Verificar se arquivo existe
     if not Path(PATH_DENSIDADE).exists():
-        print(f"\n❌ ERRO: Arquivo não encontrado!")
-        print(f"   Esperado em: {PATH_DENSIDADE}")
-        print(f"\n💡 SOLUÇÃO:")
-        print(f"   1. Copie 'dataset-densidade-demografica.csv' para: data/external/")
-        print(f"   OU")
-        print(f"   2. Edite a linha PATH_DENSIDADE no código com o caminho correto")
+        print(f"\nERRO: Arquivo não encontrado!")
         sys.exit(1)
 
     df_final = processar_dataset_completo(PATH_ITBI, str(PATH_DENSIDADE), salvar=True)

@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_RAW = BASE_DIR / 'data' / 'raw'
 DATA_PROCESSED = BASE_DIR / 'data' / 'processed'
 DATA_FINAL = BASE_DIR / 'data' / 'final'
+DATA_EXTERNAL = BASE_DIR / 'data' / 'external'
 
 OUTPUTS_MODELS = BASE_DIR / 'outputs' / 'models'
 OUTPUTS_FIGURES = BASE_DIR / 'outputs' / 'figures'
@@ -31,3 +32,29 @@ MIN_PRECO_M2 = 500        # ← R$ 500/m² mínimo (remove declarações fraudul
 MAX_PRECO_M2 = 30_000     # ← R$ 30k/m² máximo (imóveis ultra-premium são outliers)
 
 MAX_IDADE_IMOVEL = 150    # ← Remove imóveis "antigos demais" (provavelmente erro)
+
+TARGET = 'valor_declarado'
+
+# Colunas que NUNCA entram no modelo, com o motivo de cada uma.
+COLUNAS_EXCLUIR_MODELO = [
+    # --- Metadados (não preditivos) ---
+    'id', 'endereco', 'data_transacao',
+
+    # --- Identificadores categóricos string ---
+    # 'bairro' vira features numéricas via ibge_features / loo; 'cep' idem.
+    'bairro', 'cep',
+
+    # --- Categóricas string ainda não codificadas ---
+    # padronize: ou vira one-hot/ordinal, ou sai. Por ora, sai.
+    'padrao_acabamento', 'tipo_construtivo', 'tipo_ocupacao', 'zona_uso',
+    'grupo_bairro',
+
+    # --- LEAKAGE: derivam do target ---
+    'valor_base_calculo',    # base de cálculo do ITBI ~= valor_declarado
+    'preco_m2',              # = valor_declarado / area
+    'preco_m2_x_idade', 'densidade_x_preco',
+    'preco_medio_bairro', 'preco_medio_bairro_ano', 'preco_relativo_bairro',
+
+    # --- Splitters temporais: usados para dividir, não para prever ---
+    'ano_transacao', 'mes_transacao',
+]

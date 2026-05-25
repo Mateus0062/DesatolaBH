@@ -23,7 +23,7 @@ colunas_remover = [
     'valor_base_calculo', 'cep', 'padrao_acabamento', 'tipo_construtivo',
     'tipo_ocupacao', 'zona_uso', 'faixa_idade',
     'preco_m2', 'preco_m2_x_idade', 'densidade_x_preco',
-    'preco_medio_bairro_ano', 'preco_medio_bairro', 'preco_relativo_bairro',
+    'preco_medio_bairro_ano', 'preco_medio_bairro', 'preco_relativo_bairro', 'ano_transacao', 'grupo_bairro', 'mes_transacao'
 ]
 
 X_teste = df_teste.drop(columns=[col for col in colunas_remover if col in df_teste.columns])

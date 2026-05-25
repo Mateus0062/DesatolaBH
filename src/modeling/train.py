@@ -16,43 +16,30 @@ from config import (
 )
 
 def preparar_dados(df):
-    """
-    Prepara dados para modelagem
-    """
+    from config import TARGET, COLUNAS_EXCLUIR_MODELO
+
     print("\n[1/6] Preparando dados...")
 
-    # Target: valor_declarado
-    y = df['valor_declarado'].copy()
+    y = df[TARGET].copy()
+    X = df.drop(columns=[c for c in COLUNAS_EXCLUIR_MODELO + [TARGET]
+                         if c in df.columns])
 
-    # Remover colunas que não devem ser features
-    colunas_remover = [
-        'id',
-        'endereco',
-        'bairro',
-        'data_transacao',
-        'valor_declarado',
-        'valor_base_calculo',
-        'cep',
-        'padrao_acabamento',
-        'tipo_construtivo',
-        'tipo_ocupacao',
-        'zona_uso',
-        'faixa_idade',
-        'preco_m2',                    # calculado do target
-        'preco_m2_x_idade',            # deriva de preco_m2
-        'densidade_x_preco',           # deriva de preco_m2
-        'preco_medio_bairro_ano',      # inclui próprio imóvel
-        'preco_medio_bairro',          # inclui próprio imóvel
-        'preco_relativo_bairro',       # deriva das features acima
-    ]
+    # Trava de segurança: nenhuma string pode passar daqui.
+    strings_restantes = X.select_dtypes(include='object').columns.tolist()
+    if strings_restantes:
+        raise ValueError(
+            f"Colunas string não tratadas chegaram ao modelo: "
+            f"{strings_restantes}. Adicione-as a COLUNAS_EXCLUIR_MODELO "
+            f"no config.py ou codifique-as numericamente."
+        )
 
-    # Features numéricas
-    X = df.drop(columns=[col for col in colunas_remover if col in df.columns])
+    # Trava 2: nenhum NaN silencioso.
+    nans = X.columns[X.isna().any()].tolist()
+    if nans:
+        raise ValueError(f"Features com NaN: {nans}. Trate antes de treinar.")
 
-    print(f"  ✓ Target: valor_declarado")
-    print(f"  ✓ Features: {X.shape[1]} colunas (removidas 6 com leakage)")
-    print(f"  ✓ Linhas: {X.shape[0]:,}")
-
+    print(f"  ✓ Target: {TARGET}")
+    print(f"  ✓ Features: {X.shape[1]} colunas, {X.shape[0]:,} linhas")
     return X, y
 
 def dividir_dados(X, y, df_original):
@@ -89,7 +76,6 @@ def dividir_dados(X, y, df_original):
 
 
     return X_train, X_val, X_test, y_train, y_val, y_test
-
 
 def calcular_metricas(y_true, y_pred, nome_modelo):
     mae = mean_absolute_error(y_true, y_pred)
