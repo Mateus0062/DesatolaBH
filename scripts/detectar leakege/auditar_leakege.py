@@ -11,7 +11,7 @@ print("AUDITORIA DE DATA LEAKAGE")
 print("=" * 80)
 
 df = pd.read_csv(ITBI_FINAL)
-y = df['valor_declarado']
+y = df['valor_base_calculo_real']
 
 # 1. Quais colunas proibidas ainda estão no dataset?
 print("\n[1] Colunas proibidas presentes no dataset final:")
@@ -24,10 +24,10 @@ if not presentes:
 # 2. Correlação de TODAS as colunas numéricas com o target.
 #    Qualquer coisa com |corr| > 0.95 que não seja o próprio target
 #    é suspeita de leakage.
-print("\n[2] Correlação com valor_declarado (|corr| > 0.80):")
+print("\n[2] Correlação com valor_base_calculo_real (|corr| > 0.80):")
 num = df.select_dtypes(include=[np.number])
 corr = num.corrwith(y).abs().sort_values(ascending=False)
-suspeitas = corr[(corr > 0.80) & (corr.index != 'valor_declarado')]
+suspeitas = corr[(corr > 0.80) & (corr.index != 'valor_base_calculo_real')]
 for feat, val in suspeitas.items():
     flag = "  <-- LEAKAGE PROVÁVEL" if val > 0.95 else ""
     print(f"   {feat:35s} {val:.4f}{flag}")

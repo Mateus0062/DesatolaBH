@@ -19,15 +19,20 @@ print(f"Imóveis de teste (2023-2024): {len(df_teste):,}\n")
 
 # Preparar features
 colunas_remover = [
-    'id', 'endereco', 'bairro', 'data_transacao', 'valor_declarado',
-    'valor_base_calculo', 'cep', 'padrao_acabamento', 'tipo_construtivo',
-    'tipo_ocupacao', 'zona_uso', 'faixa_idade',
-    'preco_m2', 'preco_m2_x_idade', 'densidade_x_preco',
-    'preco_medio_bairro_ano', 'preco_medio_bairro', 'preco_relativo_bairro', 'ano_transacao', 'grupo_bairro', 'mes_transacao'
+    'id', 'endereco', 'data_transacao','bairro', 'cep',
+    'padrao_acabamento', 'tipo_construtivo', 'tipo_ocupacao', 'zona_uso',
+    'grupo_bairro',
+    'preco_m2',
+    'valor_base_calculo',
+    'valor_declarado',
+    'preco_m2_x_idade', 'densidade_x_preco',
+    'preco_medio_bairro', 'preco_medio_bairro_ano', 'preco_relativo_bairro',
+    'ano_transacao', 'mes_transacao',
+    'valor_base_calculo_real', 'valor_declarado_real'
 ]
 
 X_teste = df_teste.drop(columns=[col for col in colunas_remover if col in df_teste.columns])
-y_teste = df_teste['valor_declarado']
+y_teste = df_teste['valor_base_calculo_real']
 
 # Fazer previsões
 y_pred = modelo.predict(X_teste)
@@ -61,7 +66,7 @@ print(f"   Q3:      R$ {y_teste.quantile(0.75):>12,.2f}")
 print(f"   Máximo:  R$ {y_teste.max():>12,.2f}")
 
 # 3. Imóveis muito baratos (< R$ 100k) — MAPE explode aqui!
-baratos = df_teste[df_teste['valor_declarado'] < 100000]
+baratos = df_teste[df_teste['valor_base_calculo_real'] < 100000]
 print(f"\n3. IMÓVEIS MUITO BARATOS (< R$ 100k):")
 print(f"   Quantidade:  {len(baratos):,} ({len(baratos)/len(df_teste)*100:.1f}%)")
 if len(baratos) > 0:
@@ -69,7 +74,7 @@ if len(baratos) > 0:
     print(f"   MAE médio:   R$ {baratos['erro_abs'].mean():,.2f}")
 
 # 4. Imóveis caros (> R$ 1M)
-caros = df_teste[df_teste['valor_declarado'] > 1000000]
+caros = df_teste[df_teste['valor_base_calculo_real'] > 1000000]
 print(f"\n4. IMÓVEIS CAROS (> R$ 1M):")
 print(f"   Quantidade:  {len(caros):,} ({len(caros)/len(df_teste)*100:.1f}%)")
 if len(caros) > 0:
@@ -77,8 +82,8 @@ if len(caros) > 0:
     print(f"   MAE médio:   R$ {caros['erro_abs'].mean():,.2f}")
 
 # 5. Imóveis "normais" (R$ 100k - R$ 1M)
-normais = df_teste[(df_teste['valor_declarado'] >= 100000) &
-                    (df_teste['valor_declarado'] <= 1000000)]
+normais = df_teste[(df_teste['valor_base_calculo_real'] >= 100000) &
+                    (df_teste['valor_base_calculo_real'] <= 1000000)]
 print(f"\n5. IMÓVEIS 'NORMAIS' (R$ 100k - R$ 1M):")
 print(f"   Quantidade:  {len(normais):,} ({len(normais)/len(df_teste)*100:.1f}%)")
 print(f"   MAPE médio:  {normais['erro_pct'].mean():.2f}%")
@@ -87,11 +92,11 @@ print(f"   MAE médio:   R$ {normais['erro_abs'].mean():,.2f}")
 # 6. Top 10 piores previsões
 print(f"\n6. TOP 10 PIORES PREVISÕES (erro percentual):")
 piores = df_teste.nlargest(10, 'erro_pct')[
-    ['bairro', 'area_total_m2', 'idade_imovel', 'valor_declarado', 'previsto', 'erro_pct']
+    ['bairro', 'area_construida_m2', 'idade_imovel', 'valor_base_calculo_real', 'previsto', 'erro_pct']
 ]
 for idx, row in piores.iterrows():
-    print(f"\n   {row['bairro']:20s} | {row['area_total_m2']:>6.0f}m² | {row['idade_imovel']:>2.0f} anos")
-    print(f"   Real: R$ {row['valor_declarado']:>12,.2f} | Previsto: R$ {row['previsto']:>12,.2f}")
+    print(f"\n   {row['bairro']:20s} | {row['area_construida_m2']:>6.0f}m² | {row['idade_imovel']:>2.0f} anos")
+    print(f"   Real: R$ {row['valor_base_calculo_real']:>12,.2f} | Previsto: R$ {row['previsto']:>12,.2f}")
     print(f"   Erro: {row['erro_pct']:>6.1f}%")
 
 # 7. Calcular MAPE apenas para imóveis "normais"

@@ -6,18 +6,14 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_CLEANED, ITBI_FINAL
 
-
 def criar_features_proporcoes(df, verbose=True):
     print("\n[1/8] Criando features de proporções...")
 
     df['razao_area_util'] = df['area_construida_m2'] / df['area_terreno_m2']
-    df['densidade_construcao'] = df['area_total_m2'] / df['area_terreno_m2']
-    df['area_nao_construida_m2'] = df['area_total_m2'] - df['area_construida_m2']
 
-    print(f"  ✓ 3 features de proporção criadas")
+    print(f"1 feature de proporção criada")
 
     return df
-
 
 def criar_features_idade(df):
     print("\n[2/8] Criando features de idade...")
@@ -32,25 +28,24 @@ def criar_features_idade(df):
     # Depreciação estimada
     df['depreciacao_estimada'] = np.minimum(df['idade_imovel'] * 0.01, 0.40)
 
-    print(f"  ✓ 2 features de idade criadas")
+    print(f"2 features de idade criadas")
 
     return df
-
 
 def criar_features_interacao_simples(df):
     print("\n[3/8] Criando features de interação...")
 
     # Área × idade
-    df['area_x_idade'] = df['area_total_m2'] * df['idade_imovel']
+    df['area_x_idade'] = df['area_construida_m2'] * df['idade_imovel']
 
     # Flag: imóvel novo E grande (possivelmente premium)
-    area_mediana = df['area_total_m2'].median()
+    area_mediana = df['area_construida_m2'].median()
     df['novo_e_grande'] = (
             (df['idade_imovel'] <= 10) &
-            (df['area_total_m2'] > area_mediana)
+            (df['area_construida_m2'] > area_mediana)
     ).astype(int)
 
-    print(f"  ✓ 2 features de interação criadas")
+    print(f"2 features de interação criadas")
 
     return df
 
@@ -60,24 +55,25 @@ def criar_features_bairro_sem_leakage(df):
     print("\n[4/8] Calculando features de bairro (sem leakage - otimizado)...")
 
     # Pré-calcular estatísticas por bairro
-    stats_bairro = df.groupby('bairro')['valor_declarado'].agg([
+    stats_bairro = df.groupby('bairro')['valor_base_calculo_real'].agg([
         'sum', 'count', 'std', 'min', 'max'
     ]).reset_index()
+
     stats_bairro.columns = ['bairro', 'soma_total', 'count_total', 'std_total', 'min_total', 'max_total']
 
     # Merge com dataset
     df = df.merge(stats_bairro, on='bairro', how='left')
 
     # Leave-One-Out: média SEM o próprio imóvel
-    df['preco_medio_bairro_loo'] = (df['soma_total'] - df['valor_declarado']) / (df['count_total'] - 1)
+    df['preco_medio_bairro_loo'] = (df['soma_total'] - df['valor_base_calculo_real']) / (df['count_total'] - 1)
 
     # Para imóveis únicos no bairro, usar média geral
-    media_geral = df['valor_declarado'].mean()
+    media_geral = df['valor_base_calculo_real'].mean()
     df.loc[df['count_total'] == 1, 'preco_medio_bairro_loo'] = media_geral
 
     # std é NaN para bairros com uma única transação (precisa de n>=2).
     # Para esses casos, usar o desvio padrão global como fallback.
-    std_global = df['valor_declarado'].std()
+    std_global = df['valor_base_calculo_real'].std()
     df['std_preco_bairro'] = df['std_total'].fillna(std_global)
 
     # Outras estatísticas (já calculadas, não precisam de LOO)
@@ -89,7 +85,7 @@ def criar_features_bairro_sem_leakage(df):
     # Limpar colunas temporárias
     df = df.drop(columns=['soma_total', 'count_total', 'std_total', 'min_total', 'max_total'])
 
-    print(f"  ✓ 6 features de bairro criadas (sem leakage)")
+    print(f"6 features de bairro criadas (sem leakage)")
 
     return df
 
@@ -100,8 +96,8 @@ def criar_features_preco_m2_bairro_sem_leakage(df):
 
     # Pré-calcular soma de valores e áreas por bairro
     stats = df.groupby('bairro').agg({
-        'valor_declarado': 'sum',
-        'area_total_m2': 'sum'
+        'valor_base_calculo_real': 'sum',
+        'area_construida_m2': 'sum'
     }).reset_index()
     stats.columns = ['bairro', 'soma_valor', 'soma_area']
 
@@ -110,18 +106,18 @@ def criar_features_preco_m2_bairro_sem_leakage(df):
 
     # Calcular SEM o próprio imóvel
     df['preco_m2_medio_bairro_loo'] = (
-            (df['soma_valor'] - df['valor_declarado']) /
-            (df['soma_area'] - df['area_total_m2'])
+            (df['soma_valor'] - df['valor_base_calculo_real']) /
+            (df['soma_area'] - df['area_construida_m2'])
     )
 
     # Fallback para casos edge
-    preco_m2_global = df['valor_declarado'].sum() / df['area_total_m2'].sum()
+    preco_m2_global = df['valor_base_calculo_real'].sum() / df['area_construida_m2'].sum()
     df['preco_m2_medio_bairro_loo'] = df['preco_m2_medio_bairro_loo'].fillna(preco_m2_global)
 
     # Limpar temporários
     df = df.drop(columns=['soma_valor', 'soma_area'])
 
-    print(f"  ✓ Feature criada: preco_m2_medio_bairro_loo")
+    print(f"Feature criada: preco_m2_medio_bairro_loo")
 
     return df
 
@@ -129,7 +125,7 @@ def criar_features_valorizacao_bairro(df):
     print("\n[6/8] Calculando valorização do bairro...")
 
     # Preço médio por bairro/ano
-    preco_ano = df.groupby(['bairro', 'ano_transacao'])['valor_declarado'].mean().reset_index()
+    preco_ano = df.groupby(['bairro', 'ano_transacao'])['valor_base_calculo_real'].mean().reset_index()
     preco_ano.columns = ['bairro', 'ano', 'preco_medio']
 
     # Para cada bairro, calcular valorização dos últimos 3 anos
@@ -162,7 +158,7 @@ def criar_features_valorizacao_bairro(df):
     df = df.merge(df_valorizacao, on='bairro', how='left')
     df['valorizacao_bairro_3anos'] = df['valorizacao_bairro_3anos'].fillna(0)
 
-    print(f"  ✓ Feature criada: valorizacao_bairro_3anos")
+    print(f"Feature criada: valorizacao_bairro_3anos")
 
     return df
 
@@ -170,14 +166,14 @@ def criar_features_comparativas(df):
     print("\n[7/8] Criando features comparativas...")
 
     # Calcular médias por bairro (para área e idade)
-    medias_area = df.groupby('bairro')['area_total_m2'].mean().to_dict()
+    medias_area = df.groupby('bairro')['area_construida_m2'].mean().to_dict()
     medias_idade = df.groupby('bairro')['idade_imovel'].mean().to_dict()
 
     # Criar comparações
-    df['area_vs_media_bairro'] = df['area_total_m2'] / df['bairro'].map(medias_area)
+    df['area_vs_media_bairro'] = df['area_construida_m2'] / df['bairro'].map(medias_area)
     df['idade_vs_media_bairro'] = df['idade_imovel'] / (df['bairro'].map(medias_idade) + 1)
 
-    print(f"  ✓ 2 features comparativas criadas")
+    print(f"2 features comparativas criadas")
 
     return df
 
@@ -188,7 +184,7 @@ def criar_features_sazonalidade(df):
     df['fim_de_ano'] = (df['mes_transacao'] >= 11).astype(int)
     df['inicio_ano'] = (df['mes_transacao'] <= 3).astype(int)
 
-    print(f"  ✓ 3 features de sazonalidade criadas")
+    print(f"3 features de sazonalidade criadas")
 
     return df
 

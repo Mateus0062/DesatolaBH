@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
-      <change afterPath="$PROJECT_DIR$/corrigir_features.py" afterDir="false" />
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 5 - Análise e melhoria do modelo">
       <change afterPath="$PROJECT_DIR$/data/external/dataset-densidade-demografica.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/diagnostico_features.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fix_grupo_bairro.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/explicability/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/explicability/shap_analysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modeling/gerar_graficos.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modeling/gridsearch_optimization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/raw/ITBI_Relatorios.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/detectar erros/verifica_erro.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gerar_graficos.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/re_limpar_dados.py" beforeDir="false" afterPath="$PROJECT_DIR$/re_limpar_dados.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analisar_erros.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar erros/analisar_erros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostico_features.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_limpar_dados.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/auditar_leakege.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar leakege/auditar_leakege.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/visualizacoes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/validar_recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/validar_recomendador.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_modelos.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/teste modelos/test_modelos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testar_recomendador.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testar_recomendador_real.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/validar_recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/recomendador/validar_recomendador.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verifica_erro.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verificar_dataleakege.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +67,9 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Python.Limpeza.executor&quot;: &quot;Run&quot;,
     &quot;Python.derived_features.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ibge_features.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.verifica_erro.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -73,22 +78,23 @@
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mateus Mattos/PycharmProjects/DesatolaBH/data/external&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mateus Mattos/PycharmProjects/DesatolaBH/data/raw&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\external" />
       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\raw" />
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\external" />
       <recent name="C:\Users\mateu\PycharmProjects\DesatolaBH\data\raw" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\teste modelos" />
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\detectar erros" />
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\detectar leakege" />
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\recomendador" />
       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\src\explicability" />
-      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\src\modeling" />
-      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH" />
-      <recent name="C:\Users\mateu\PycharmProjects\DesatolaBH\data\" />
     </key>
   </component>
   <component name="RunManager" selected="Python.derived_features">
@@ -142,10 +148,62 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="ibge_features" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DesatolaBH" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/feature_engineering" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DesatolaBH" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/modeling" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/modeling/train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.ibge_features" />
         <item itemvalue="Python.derived_features" />
         <item itemvalue="Python.Limpeza" />
+        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -167,6 +225,9 @@
       <workItem from="1779212075618" duration="216000" />
       <workItem from="1779279620134" duration="11442000" />
       <workItem from="1779453726298" duration="13299000" />
+      <workItem from="1779726189712" duration="9160000" />
+      <workItem from="1779801058166" duration="9480000" />
+      <workItem from="1779812250499" duration="714000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -176,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779390812460</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fase 5 - Análise e melhoria do modelo">
+      <option name="closed" value="true" />
+      <created>1779736383634</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1779736383634</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,8 +262,15 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fase 5 - Análise e melhoria do modelo" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1779284536862" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$derived_features.coverage" NAME="derived_features Coverage Results" MODIFIED="1779286485294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$verifica_erro.coverage" NAME="verifica_erro Coverage Results" MODIFIED="1779810572511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1779806832199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1779735005226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$derived_features.coverage" NAME="derived_features Coverage Results" MODIFIED="1779810442998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$ibge_features.coverage" NAME="ibge_features Coverage Results" MODIFIED="1779810503164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
   </component>
 </project>
