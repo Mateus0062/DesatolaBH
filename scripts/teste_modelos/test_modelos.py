@@ -1,3 +1,7 @@
+from pathlib import Path
+import sys
+
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from src.modeling.train import pipeline_completo
 from src.modeling.evaluate import avaliar_modelos_teste
 

@@ -2,14 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.">
-      <change afterPath="$PROJECT_DIR$/data/external/dataset-densidade-demografica.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/raw/ITBI_Relatorios.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/detectar erros/analisar_erros.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/analisar_erros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/detectar erros/verifica_erro.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica_erro.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/detectar leakege/auditar_leakege.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_leakege/auditar_leakege.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/recomendador/validar_recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/recomendador/demonstrar_recomendador.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/teste modelos/test_modelos.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/teste_modelos/test_modelos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modeling/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/evaluate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modeling/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sistema_decisao/recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema_decisao/recomendador.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +224,8 @@
       <workItem from="1779726189712" duration="9160000" />
       <workItem from="1779801058166" duration="9480000" />
       <workItem from="1779812250499" duration="915000" />
-      <workItem from="1779814941924" duration="306000" />
+      <workItem from="1779814941924" duration="1156000" />
+      <workItem from="1779819021077" duration="3594000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -244,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779813119131</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.">
+      <option name="closed" value="true" />
+      <created>1779815391767</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779815391768</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

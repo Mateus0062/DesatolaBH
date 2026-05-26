@@ -43,15 +43,22 @@ def avaliar_modelos_teste(X_test, y_test):
 
     for nome, modelo in modelos.items():
         print(f"\nAvaliando {nome}...")
-        y_pred = modelo.predict(X_test)
+        y_pred = np.expm1(modelo.predict(X_test))
+
+        if not np.isfinite(y_pred).all() or y_pred.max() > 1e9:
+            raise ValueError(
+                f"{nome}: previsões fora de faixa após expm1. "
+                f"O modelo provavelmente foi treinado SEM log-transform. "
+                f"Retreine com o train.py atual."
+            )
 
         metricas = calcular_metricas(y_test, y_pred, nome)
         resultados.append(metricas)
 
-        print(f"  MAE:  R$ {metricas['MAE']:,.2f}")
-        print(f"  RMSE: R$ {metricas['RMSE']:,.2f}")
-        print(f"  MAPE: {metricas['MAPE']:.2f}%")
-        print(f"  R²:   {metricas['R²']:.4f}")
+        print(f"MAE: R$ {metricas['MAE']:,.2f}")
+        print(f"RMSE: R$ {metricas['RMSE']:,.2f}")
+        print(f"MAPE: {metricas['MAPE']:.2f}%")
+        print(f"R²: {metricas['R²']:.4f}")
 
     # Criar DataFrame
     df_resultados = pd.DataFrame(resultados)
@@ -78,21 +85,21 @@ def avaliar_modelos_teste(X_test, y_test):
         if filtro.any():
             row_val = df_val[filtro].iloc[0]
         else:
-            print(f"  ⚠️  Modelo '{nome}' não encontrado nos resultados de validação")
+            print(f"Modelo '{nome}' não encontrado nos resultados de validação")
             continue
 
         print(f"\n{nome}:")
-        print(f"  MAE:  Val={row_val['MAE']:>10,.2f}  |  Test={row_teste['MAE']:>10,.2f}")
-        print(f"  R²:   Val={row_val['R²']:>10.4f}  |  Test={row_teste['R²']:>10.4f}")
+        print(f"MAE: Val={row_val['MAE']:>10,.2f}  |  Test={row_teste['MAE']:>10,.2f}")
+        print(f"R²: Val={row_val['R²']:>10.4f}  |  Test={row_teste['R²']:>10.4f}")
 
         # Detectar overfitting
         diff_r2 = row_val['R²'] - row_teste['R²']
         if diff_r2 > 0.05:
-            print(f"  ⚠️  OVERFITTING DETECTADO (R² caiu {diff_r2:.4f})")
+            print(f"OVERFITTING DETECTADO (R² caiu {diff_r2:.4f})")
         elif diff_r2 > 0.02:
-            print(f"  ⚠️  Leve overfitting (R² caiu {diff_r2:.4f})")
+            print(f"Leve overfitting (R² caiu {diff_r2:.4f})")
         else:
-            print(f"  ✓  Generalização boa (diferença {diff_r2:.4f})")
+            print(f"Generalização boa (diferença {diff_r2:.4f})")
 
     return df_resultados
 
@@ -101,10 +108,7 @@ if __name__ == '__main__':
     # Recarregar dados de teste
     print("Carregando dados de teste...")
 
-    # Você vai precisar salvar X_test e y_test
-    # Por enquanto, rode isso DEPOIS de rodar train.py na mesma sessão
-    print("\n⚠️  Execute este script importando de train.py:")
-    print("    from src.modeling.train import pipeline_completo")
-    print("    modelos, resultados, (X_test, y_test) = pipeline_completo()")
-    print("    from src.modeling.evaluate import avaliar_modelos_teste")
-    print("    avaliar_modelos_teste(X_test, y_test)")
+    print("from src.modeling.train import pipeline_completo")
+    print("modelos, resultados, (X_test, y_test) = pipeline_completo()")
+    print("from src.modeling.evaluate import avaliar_modelos_teste")
+    print("avaliar_modelos_teste(X_test, y_test)")

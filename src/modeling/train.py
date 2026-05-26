@@ -95,22 +95,20 @@ def treinar_random_forest(X_train, y_train, X_val, y_val):
     print("\n[3/6] Treinando Random Forest...")
 
     modelo = RandomForestRegressor(
-        n_estimators=100,
-        max_depth=20,
-        min_samples_split=5,
-        min_samples_leaf=2,
-        random_state=42,
-        n_jobs=-1,
-        verbose=1
+        n_estimators=100, max_depth=20,
+        min_samples_split=5, min_samples_leaf=2,
+        random_state=42, n_jobs=-1, verbose=1
     )
 
-    modelo.fit(X_train, y_train)
+    # Treina no espaço logarítmico: log1p comprime a cauda de preços
+    # e faz o modelo otimizar erro proporcional, não absoluto.
+    modelo.fit(X_train, np.log1p(y_train))
 
-    # Predições
-    y_pred_train = modelo.predict(X_train)
-    y_pred_val = modelo.predict(X_val)
+    # Prediz em log e reverte para reais com expm1 (inverso exato de log1p).
+    y_pred_train = np.expm1(modelo.predict(X_train))
+    y_pred_val = np.expm1(modelo.predict(X_val))
 
-    # Métricas
+    # Métricas SEMPRE em reais — y_train/y_val nunca foram transformados.
     metricas_train = calcular_metricas(y_train, y_pred_train, 'Random Forest (Train)')
     metricas_val = calcular_metricas(y_val, y_pred_val, 'Random Forest (Val)')
 
@@ -125,31 +123,25 @@ def treinar_xgboost(X_train, y_train, X_val, y_val):
     print("\n[4/6] Treinando XGBoost...")
 
     modelo = XGBRegressor(
-        n_estimators=100,
-        max_depth=8,
-        learning_rate=0.1,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        random_state=42,
-        n_jobs=-1,
-        verbosity=1
+        n_estimators=100, max_depth=8, learning_rate=0.1,
+        subsample=0.8, colsample_bytree=0.8,
+        random_state=42, n_jobs=-1, verbosity=1
     )
 
+    # O eval_set também precisa estar em log — mesma escala do treino.
     modelo.fit(
-        X_train, y_train,
-        eval_set=[(X_val, y_val)],
+        X_train, np.log1p(y_train),
+        eval_set=[(X_val, np.log1p(y_val))],
         verbose=False
     )
 
-    # Predições
-    y_pred_train = modelo.predict(X_train)
-    y_pred_val = modelo.predict(X_val)
+    y_pred_train = np.expm1(modelo.predict(X_train))
+    y_pred_val = np.expm1(modelo.predict(X_val))
 
-    # Métricas
     metricas_train = calcular_metricas(y_train, y_pred_train, 'XGBoost (Train)')
     metricas_val = calcular_metricas(y_val, y_pred_val, 'XGBoost (Val)')
 
-    print(f"MAE (val):R$ {metricas_val['MAE']:,.2f}")
+    print(f"MAE (val): R$ {metricas_val['MAE']:,.2f}")
     print(f"RMSE (val): R$ {metricas_val['RMSE']:,.2f}")
     print(f"MAPE (val): {metricas_val['MAPE']:.2f}%")
     print(f"R² (val): {metricas_val['R²']:.4f}")
@@ -160,27 +152,20 @@ def treinar_lightgbm(X_train, y_train, X_val, y_val):
     print("\n[5/6] Treinando LightGBM...")
 
     modelo = LGBMRegressor(
-        n_estimators=100,
-        max_depth=8,
-        learning_rate=0.1,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        random_state=42,
-        n_jobs=-1,
-        verbose=-1
+        n_estimators=100, max_depth=8, learning_rate=0.1,
+        subsample=0.8, colsample_bytree=0.8,
+        random_state=42, n_jobs=-1, verbose=-1
     )
 
     modelo.fit(
-        X_train, y_train,
-        eval_set=[(X_val, y_val)],
-        callbacks=None  # silenciar output
+        X_train, np.log1p(y_train),
+        eval_set=[(X_val, np.log1p(y_val))],
+        callbacks=None
     )
 
-    # Predições
-    y_pred_train = modelo.predict(X_train)
-    y_pred_val = modelo.predict(X_val)
+    y_pred_train = np.expm1(modelo.predict(X_train))
+    y_pred_val = np.expm1(modelo.predict(X_val))
 
-    # Métricas
     metricas_train = calcular_metricas(y_train, y_pred_train, 'LightGBM (Train)')
     metricas_val = calcular_metricas(y_val, y_pred_val, 'LightGBM (Val)')
 
