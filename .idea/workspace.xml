@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 5 - Análise e melhoria do modelo">
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.">
       <change afterPath="$PROJECT_DIR$/data/external/dataset-densidade-demografica.csv" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/data/raw/ITBI_Relatorios.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/detectar erros/verifica_erro.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analisar_erros.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar erros/analisar_erros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/diagnostico_features.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/re_limpar_dados.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/auditar_leakege.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar leakege/auditar_leakege.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_modelos.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/teste modelos/test_modelos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testar_recomendador.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testar_recomendador_real.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/validar_recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/recomendador/validar_recomendador.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/verifica_erro.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/verificar_dataleakege.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,7 +217,8 @@
       <workItem from="1779453726298" duration="13299000" />
       <workItem from="1779726189712" duration="9160000" />
       <workItem from="1779801058166" duration="9480000" />
-      <workItem from="1779812250499" duration="714000" />
+      <workItem from="1779812250499" duration="915000" />
+      <workItem from="1779814941924" duration="306000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -245,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779736383634</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.">
+      <option name="closed" value="true" />
+      <created>1779813119131</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1779813119131</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,7 +263,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fase 5 - Análise e melhoria do modelo" />
+    <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DesatolaBH$verifica_erro.coverage" NAME="verifica_erro Coverage Results" MODIFIED="1779810572511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
