@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import (
     ITBI_FINAL,
-    OUTPUTS_MODELS, OUTPUTS_TABLES
+    OUTPUTS_MODELS, OUTPUTS_TABLES, HIPERPARAMETROS
 )
 
 def preparar_dados(df):
@@ -29,17 +29,16 @@ def preparar_dados(df):
     if strings_restantes:
         raise ValueError(
             f"Colunas string não tratadas chegaram ao modelo: "
-            f"{strings_restantes}. Adicione-as a COLUNAS_EXCLUIR_MODELO "
-            f"no config.py ou codifique-as numericamente."
+            f"{strings_restantes}."
         )
 
     # Trava 2: nenhum NaN silencioso.
     nans = X.columns[X.isna().any()].tolist()
     if nans:
-        raise ValueError(f"Features com NaN: {nans}. Trate antes de treinar.")
+        raise ValueError(f"Features com NaN: {nans}.")
 
-    print(f"  ✓ Target: {TARGET}")
-    print(f"  ✓ Features: {X.shape[1]} colunas, {X.shape[0]:,} linhas")
+    print(f"Target: {TARGET}")
+    print(f"Features: {X.shape[1]} colunas, {X.shape[0]:,} linhas")
     return X, y
 
 def dividir_dados(X, y, df_original):
@@ -65,15 +64,14 @@ def dividir_dados(X, y, df_original):
 
     # Estatísticas
     total = len(X)
-    print(f"Treino (2008-2021):  {len(X_train):>7,} linhas ({len(X_train) / total * 100:.1f}%)")
-    print(f"Validação (2022):    {len(X_val):>7,} linhas ({len(X_val) / total * 100:.1f}%)")
-    print(f"Teste (2023-2024):   {len(X_test):>7,} linhas ({len(X_test) / total * 100:.1f}%)")
+    print(f"Treino (2008-2021): {len(X_train):>7,} linhas ({len(X_train) / total * 100:.1f}%)")
+    print(f"Validação (2022): {len(X_val):>7,} linhas ({len(X_val) / total * 100:.1f}%)")
+    print(f"Teste (2023-2024): {len(X_test):>7,} linhas ({len(X_test) / total * 100:.1f}%)")
 
     print(f"\nDistribuição temporal:")
-    print(f"Treino:    {anos[mask_train].min():.0f} - {anos[mask_train].max():.0f}")
+    print(f"Treino: {anos[mask_train].min():.0f} - {anos[mask_train].max():.0f}")
     print(f"Validação: {anos[mask_val].min():.0f} - {anos[mask_val].max():.0f}")
-    print(f"Teste:     {anos[mask_test].min():.0f} - {anos[mask_test].max():.0f}")
-
+    print(f"Teste: {anos[mask_test].min():.0f} - {anos[mask_test].max():.0f}")
 
     return X_train, X_val, X_test, y_train, y_val, y_test
 
@@ -95,9 +93,13 @@ def treinar_random_forest(X_train, y_train, X_val, y_val):
     print("\n[3/6] Treinando Random Forest...")
 
     modelo = RandomForestRegressor(
-        n_estimators=100, max_depth=20,
-        min_samples_split=5, min_samples_leaf=2,
-        random_state=42, n_jobs=-1, verbose=1
+        n_estimators=100,
+        max_depth=20,
+        min_samples_split=5,
+        min_samples_leaf=2,
+        random_state=42,
+        n_jobs=-1,
+        verbose=0
     )
 
     # Treina no espaço logarítmico: log1p comprime a cauda de preços
@@ -123,9 +125,10 @@ def treinar_xgboost(X_train, y_train, X_val, y_val):
     print("\n[4/6] Treinando XGBoost...")
 
     modelo = XGBRegressor(
-        n_estimators=100, max_depth=8, learning_rate=0.1,
-        subsample=0.8, colsample_bytree=0.8,
-        random_state=42, n_jobs=-1, verbosity=1
+        **HIPERPARAMETROS['xgboost'],
+        random_state=42,
+        n_jobs=-1,
+        verbosity=1
     )
 
     # O eval_set também precisa estar em log — mesma escala do treino.
@@ -152,9 +155,10 @@ def treinar_lightgbm(X_train, y_train, X_val, y_val):
     print("\n[5/6] Treinando LightGBM...")
 
     modelo = LGBMRegressor(
-        n_estimators=100, max_depth=8, learning_rate=0.1,
-        subsample=0.8, colsample_bytree=0.8,
-        random_state=42, n_jobs=-1, verbose=-1
+        **HIPERPARAMETROS['lightgbm'],
+        random_state=42,
+        n_jobs=-1,
+        verbose=-1
     )
 
     modelo.fit(

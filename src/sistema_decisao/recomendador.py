@@ -10,7 +10,7 @@ from config import OUTPUTS_MODELS
 class RecomendadorImoveis:
     def __init__(self, modelo_path=None):
         if modelo_path is None:
-            modelo_path = OUTPUTS_MODELS / 'random_forest.pkl'
+            modelo_path = OUTPUTS_MODELS / 'xgboost.pkl'
 
         with open(modelo_path, 'rb') as f:
             self.modelo = pickle.load(f)
@@ -19,6 +19,7 @@ class RecomendadorImoveis:
 
     def prever_preco_justo(self, features):
         X = features[self.modelo.feature_names_in_]
+        X = X.apply(pd.to_numeric, errors='coerce')
         return np.expm1(self.modelo.predict(X)[0])
 
     def calcular_desvio(self, preco_pedido, preco_justo):

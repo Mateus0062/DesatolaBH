@@ -9,7 +9,7 @@ from config import ITBI_FINAL, OUTPUTS_MODELS, COLUNAS_EXCLUIR_MODELO, TARGET
 
 # Carregar modelo e dados
 print("Carregando modelo e dados...")
-with open(OUTPUTS_MODELS / 'random_forest.pkl', 'rb') as f:
+with open(OUTPUTS_MODELS / 'xgboost.pkl', 'rb') as f:
     modelo = pickle.load(f)
 
 df = pd.read_csv(ITBI_FINAL)

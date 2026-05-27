@@ -118,3 +118,27 @@ IPCA_VAR_MENSAL = {
 }
 
 IPCA_MES_BASE = (2024, 12)  # data-base: reais de dezembro/2024
+
+# Criando variaveis para armazenar o parametros dos modelos aqui
+
+HIPERPARAMETROS = {
+    'xgboost': {
+        'colsample_bytree': 0.6697465716019966,
+        'learning_rate': 0.21037194404971513,
+        'max_depth': 9,
+        'n_estimators': 487,
+        'reg_alpha': 0.837710105907328,
+        'reg_lambda': 1.8513802340785614,
+        'subsample': 0.8940864476963089,
+    },
+    'lightgbm': {
+        'colsample_bytree': 0.794696861183782,
+        'learning_rate': 0.27276864843838067,
+        'max_depth': 13,
+        'min_child_samples': 30,
+        'n_estimators': 435,
+        'num_leaves': 116,
+        'subsample': 0.8307615538505436,
+    },
+    # 'random_forest': preenchido após o tuning de amanhã
+}

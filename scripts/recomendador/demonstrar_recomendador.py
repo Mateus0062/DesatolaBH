@@ -25,9 +25,9 @@ print("=" * 80)
 print("DEMONSTRAÇÃO DO RECOMENDADOR")
 print("=" * 80)
 print("\nPara cada imóvel, simulamos 3 cenários de preço pedido:")
-print("  - 20% acima do valor estimado")
-print("  - alinhado com o valor estimado")
-print("  - 20% abaixo do valor estimado")
+print("- 20% acima do valor estimado")
+print("- alinhado com o valor estimado")
+print("- 20% abaixo do valor estimado")
 
 for posicao, (_, imovel) in enumerate(exemplos.iterrows(), 1):
     # Monta as features do imóvel — o recomendador alinha internamente,
@@ -37,14 +37,16 @@ for posicao, (_, imovel) in enumerate(exemplos.iterrows(), 1):
         errors='ignore'
     ).to_frame().T
 
+    features = features.apply(pd.to_numeric, errors='coerce')
+
     valor_justo = recomendador.prever_preco_justo(features)
 
     print("\n" + "=" * 80)
     print(f"IMÓVEL DE EXEMPLO {posicao}")
-    print(f"  Bairro: {imovel['bairro']}")
-    print(f"  Área construída: {imovel['area_construida_m2']:.0f} m²")
-    print(f"  Idade: {imovel['idade_imovel']:.0f} anos")
-    print(f"  Valor de mercado estimado (modelo): R$ {valor_justo:,.2f}")
+    print(f"Bairro: {imovel['bairro']}")
+    print(f"Área construída: {imovel['area_construida_m2']:.0f} m²")
+    print(f"Idade: {imovel['idade_imovel']:.0f} anos")
+    print(f"Valor de mercado estimado (modelo): R$ {valor_justo:,.2f}")
 
     # Três cenários de preço pedido hipotético.
     for fator, rotulo in [(1.20, "20% acima"),
@@ -53,10 +55,10 @@ for posicao, (_, imovel) in enumerate(exemplos.iterrows(), 1):
         preco_pedido = valor_justo * fator
         analise = recomendador.analisar_imovel(features, preco_pedido)
 
-        print(f"\n  --- Cenário: preço pedido {rotulo} (R$ {preco_pedido:,.2f}) ---")
-        print(f"      Desvio: {analise['desvio_percentual']:+.1f}%")
-        print(f"      Recomendação: {analise['acao']} (prioridade {analise['prioridade']})")
-        print(f"      {analise['justificativa']}")
+        print(f"\nCenário: preço pedido {rotulo} (R$ {preco_pedido:,.2f}) ---")
+        print(f"Desvio: {analise['desvio_percentual']:+.1f}%")
+        print(f"Recomendação: {analise['acao']} (prioridade {analise['prioridade']})")
+        print(f"{analise['justificativa']}")
 
 print("\n" + "=" * 80)
 print("FIM DA DEMONSTRAÇÃO")
