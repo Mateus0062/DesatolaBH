@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.">
-      <change afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/explicability/lime_local.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/explicability/shap_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DesatolaBH.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DesatolaBH.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/final/ITBI_final_features.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/final/ITBI_final_features.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/processed/ITBI_cleaned.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/processed/ITBI_cleaned.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/melhores_hiperparametros.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/detectar_erros/verifica_erro.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica_erro.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/explicability/shap_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/explicability/shap_analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/tuning_hiperparametros.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/tuning_hiperparametros.py" afterDir="false" />
-    </list>
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -275,7 +253,7 @@
       <workItem from="1779882370581" duration="3385000" />
       <workItem from="1779887559544" duration="1280000" />
       <workItem from="1779906394639" duration="19502000" />
-      <workItem from="1779989629078" duration="3762000" />
+      <workItem from="1779989629078" duration="4183000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -309,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779815391768</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar.">
+      <option name="closed" value="true" />
+      <created>1779994650174</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1779994650175</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -329,7 +315,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
     <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
+    <MESSAGE value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DesatolaBH$tuning_hiperparametros.coverage" NAME="tuning_hiperparametros Coverage Results" MODIFIED="1779908450464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
