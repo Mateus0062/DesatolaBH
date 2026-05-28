@@ -123,22 +123,134 @@ IPCA_MES_BASE = (2024, 12)  # data-base: reais de dezembro/2024
 
 HIPERPARAMETROS = {
     'xgboost': {
-        'colsample_bytree': 0.6697465716019966,
-        'learning_rate': 0.21037194404971513,
-        'max_depth': 9,
-        'n_estimators': 487,
-        'reg_alpha': 0.837710105907328,
-        'reg_lambda': 1.8513802340785614,
-        'subsample': 0.8940864476963089,
+        'colsample_bytree': 0.8675365010654429,
+        'learning_rate': 0.203117483419074,
+        'max_depth': 10,
+        'min_child_weight': 3,
+        'n_estimators': 598,
+        'reg_alpha': 0.38292687475378984,
+        'reg_lambda': 2.4434241907782077,
+        'subsample': 0.9395655297064336,
     },
     'lightgbm': {
-        'colsample_bytree': 0.794696861183782,
-        'learning_rate': 0.27276864843838067,
-        'max_depth': 13,
-        'min_child_samples': 30,
-        'n_estimators': 435,
-        'num_leaves': 116,
-        'subsample': 0.8307615538505436,
+        'colsample_bytree': 0.8784119186699892,
+        'learning_rate': 0.17531773932591585,
+        'max_depth': 10,
+        'min_child_samples': 41,
+        'n_estimators': 580,
+        'num_leaves': 105,
+        'reg_alpha': 0.3586467812961639,
+        'reg_lambda': 0.25416364906973876,
+        'subsample': 0.7181162353675755,
     },
-    # 'random_forest': preenchido após o tuning de amanhã
+    'random_forest': {
+        'max_depth': 33,
+        'max_features': 0.682180380667623,
+        'min_samples_leaf': 2,
+        'min_samples_split': 7,
+        'n_estimators': 218
+    }
+}
+
+# Classe 1: Popular (< 5 SM)
+BAIRROS_CLASSE_1 = [
+    'AARAO REIS', 'ALTO DOS PINHEIROS', 'ALTO PARAISO', 'ALVARO CAMARGOS',
+    'ALVORADA', 'ANA LUCIA', 'APARECIDA', 'APARECIDA 7A SECAO',
+    'BAIRRO DAS INDUSTRIAS', 'BALEIA', 'BARREIRO', 'BARREIRO DE CIMA',
+    'BETANIA', 'BOA VISTA', 'BOM JESUS', 'BOM SUCESSO', 'BONFIM',
+    'BRASIL INDUSTRIAL', 'CABANA', 'CACHOEIRINHA', 'CAETANO FURQUIM',
+    'CALIFORNIA', 'CAMARGOS', 'CAMPO ALEGRE', 'CANAA', 'CANDELARIA',
+    'CAPITAO EDUARDO', 'CARDOSO', 'CASA BRANCA', 'CEU AZUL', 'CONFISCO',
+    'CONJ.HAB.', 'CONJ.ATILA DE PAIVA', 'CONJ.JOAO PAULO II', 'COPACABANA',
+    'COQUEIROS', 'DIAMANTE', 'DOM BOSCO', 'DOM JOAQUIM', 'DOM SILVERIO',
+    'DURVAL DE BARROS', 'ENGENHO NOGUEIRA', 'ERMELINDA', 'ESTRELA DALVA',
+    'ETELVINA CARNEIRO', 'EYMARD', 'FERNAO DIAS', 'FLAVIO MARQUES LISBOA',
+    'FLORAMAR', 'FREI EUSTAQUIO', 'FREI LEOPOLDO', 'GAMELEIRA', 'GLALIJA',
+    'GLORIA', 'GOIANIA', 'GORDURAS', 'GOV.BENEDITO VALADARES', 'GUARANI',
+    'HAVAI', 'HELIOPOLIS', 'IAPI', 'INCONFIDENCIA', 'INDEPENDENCIA',
+    'INDUSTRIAL RODRIGUES CUNHA', 'IPANEMA', 'IPIRANGA', 'JAQUELINE',
+    'JARDIM ALVORADA', 'JARDIM COMERCIARIOS', 'JARDIM EUROPA',
+    'JARDIM FELICIDADE', 'JARDIM FILADELFIA', 'JARDIM GUANABARA',
+    'JARDIM MONTANHES', 'JARDIM VITORIA', 'JARDINOPOLIS', 'JATOBA',
+    'JULIANA', 'LAGOA', 'LEBLON', 'LETICIA', 'LINDEIA', 'MADRE GERTRUDES',
+    'MAGNESITA', 'MANTIQUEIRA', 'MARAJO', 'MARIA GORETE', 'MARIA HELENA',
+    'MARIA VIRGINIA', 'MARIZE', 'MILIONARIOS', 'MINAS CAIXA', 'MINASLANDIA',
+    'MORRO DO PAPAGAIO', 'NAZARE', 'NOVA AMERICA', 'NOVA BARROCA',
+    'NOVA CACHOEIRINHA', 'NOVA CINTRA', 'NOVA ESPERANCA', 'NOVA GAMELEIRA',
+    'NOVA PAMPULHA', 'NOVA VISTA', 'OLARIA', "OLHOS D'AGUA", 'PALMEIRAS',
+    'PARAISO', 'PARQUE RIACHUELO', 'PATROCINIO', 'PAULO VI', 'PEDREIRA',
+    'PRADO LOPES', 'PINDORAMA', 'PIRAJA', 'PIRATININGA', 'PONGELUPE',
+    'PRACA XII', 'PRIMAVERA', 'PRIMEIRO DE MAIO', 'PROVIDENCIA', 'REGINA',
+    'RIBEIRO DE ABREU', 'RIO BRANCO', 'S.J.BATISTA VN', 'SALGADO FILHO',
+    'SANTA CRUZ', 'SANTA HELENA', 'SANTA MONICA', 'SANTA TEREZINHA',
+    'SANTO ANDRE', 'SAO BERNARDO', 'SAO CRISTOVAO', 'SAO GABRIEL',
+    'SAO GERALDO', 'SAO JOAO BATISTA', 'SAO MARCOS', 'SAO PAULO',
+    'SAO PEDRO VN', 'SAO SALVADOR', 'SAO THOMAS', 'SARAMENHA', 'SARANDI',
+    'SAUDADE', 'SERRA DO CURRAL', 'SERRA VERDE', 'SERRANO', 'SINIMBU',
+    'SOLIMOES', 'SUMARE', 'SUZANA', 'TAQUARIL', 'TEIXEIRA DIAS', 'TIROL',
+    'TREVO', 'TUPI', 'UNIAO', 'UNIVERSITARIO', 'URUCUIA', 'VALE DO JATOBA',
+    'VERA CRUZ', 'VILA BRASILIA', 'VILA CAFEZAL', 'VILA CEMIG',
+    'VILA MAGNESITA', 'VILA OESTE', 'VILA VIRGINIA', 'VISTA ALEGRE',
+    'WASHINGTON PIRES', 'XANGRILA', 'ZONA RURAL'
+]
+
+# Classe 2: Médio (5-8.5 SM)
+BAIRROS_CLASSE_2 = [
+    'ALIPIO DE MELO', 'BAIRRO DA GRACA', 'BARREIRO DE BAIXO', 'BRAUNAS',
+    'CAICARA', 'CAICARA ADELAIDE', 'CALAFATE', 'CARLOS PRATES', 'CONCORDIA',
+    'CONJUNTO CALIFORNIA I', 'CONJUNTO CALIFORNIA II',
+    'CONJUNTO CELSO MACHADO', 'CONJUNTO ITACOLOMI', 'DOM CABRAL',
+    'ESPLANADA', 'GARCAS', 'HORTO', 'INSTITUTO AGRONOMICO', 'JARDIM AMERICA',
+    'JOAO PINHEIRO', 'LAGOINHA', 'MINAS BRASIL', 'MONSENHOR MESSIAS',
+    'NOVA FLORESTA', 'NOVA GRANADA', 'NOVA SUICA', 'PADRE EUSTAQUIO',
+    'PALMARES', 'PAQUETA', 'PEDRO II', 'PLANALTO', 'POMPEIA', 'RENASCENCA',
+    'SAGRADA FAMILIA', 'SANTA EFIGENIA', 'SANTA INES', 'SANTA MARIA',
+    'SAO FRANCISCO', 'SILVEIRA', 'UFMG', 'VENDA NOVA', 'VILA CLORIS'
+]
+
+# Classe 3: Alto (8.5-14.5 SM)
+BAIRROS_CLASSE_3 = [
+    'ALTO BARROCA', 'ALTO DOS CAICARAS', 'BAIRRO DAS MANSOES', 'BARRO PRETO',
+    'BARROCA', 'BURITIS', 'CASTELO', 'CENTRO', 'CIDADE NOVA', 'AEROPORTO',
+    'COLEGIO BATISTA', 'CORACAO EUCARISTICO', 'DONA CLARA', 'ESTORIL',
+    'FLORESTA', 'GRAJAU', 'ITAPOA', 'JARAGUA', 'JARDIM ATLANTICO',
+    'LIBERDADE', 'NOVO SAO LUCAS', 'OURO PRETO', 'PAMPULHA', 'PRADO',
+    'SANTA AMELIA', 'SANTA BRANCA', 'SANTA ROSA', 'SANTA TEREZA', 'SAO LUCAS'
+]
+
+# Classe 4: Luxo (>14.5 SM)
+BAIRROS_CLASSE_4 = [
+    'SAO JOSE', 'SAO LUIS', 'SAO PEDRO', 'SAVASSI', 'SERRA', 'SION',
+    'VILA PARIS', 'SANTO ANTONIO', 'SAO BENTO', 'PARQUE DAS MANGABEIRAS',
+    'SANTA LUCIA', 'SANTO AGOSTINHO', 'LOURDES', 'LUXEMBURGO', 'MANGABEIRAS',
+    'ANCHIETA', 'BANDEIRANTES', 'CARMO', 'BELVEDERE', 'CIDADE JARDIM',
+    'CORACAO DE JESUS', 'CRUZEIRO', 'FUNCIONARIOS', 'GUTIERREZ'
+]
+
+# Mapa bairro -> número da classe (1=Popular, 2=Médio, 3=Alto, 4=Luxo).
+# Bairros não listados caem na classe 2 (Médio) por padrão — mesma regra
+# que o ibge_features.py já usava.
+GRUPO_BAIRRO_PADRAO = 2
+
+BAIRRO_PARA_CLASSE = {}
+for _classe, _lista in [(1, BAIRROS_CLASSE_1), (2, BAIRROS_CLASSE_2),
+                        (3, BAIRROS_CLASSE_3), (4, BAIRROS_CLASSE_4)]:
+    for _b in _lista:
+        BAIRRO_PARA_CLASSE[_b] = _classe
+
+# ----------------------------------------------------------------------------
+# PISO DE PREÇO/M² POR CLASSE DE BAIRRO (reais de dez/2024, deflacionado)
+# ----------------------------------------------------------------------------
+# Rede de segurança ABSOLUTA contra subdeclaração, complementar ao filtro
+# IQR por bairro+tipo. Um imóvel cujo preço/m² está abaixo do piso da sua
+# classe é declaração parcial/fraudulenta, independentemente da distribuição
+# do bairro (critério imune à contaminação do IQR pelos próprios outliers).
+# Valores conservadores: bem abaixo da mediana real de cada classe, para
+# remover apenas o que é claramente subdeclaração. CALIBRAR olhando a
+# amostra de remoções.
+PISO_PRECO_M2_POR_CLASSE = {
+    1: 800,  # Popular
+    2: 1_200,  # Médio
+    3: 1_800,  # Alto
+    4: 2_500,  # Luxo
 }

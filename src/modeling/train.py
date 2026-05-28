@@ -3,10 +3,9 @@ import numpy as np
 from pathlib import Path
 import sys
 import pickle
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-from lightgbm import LGBMRegressor
+from lightgbm import LGBMRegressor, early_stopping as lgb_early_stopping
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
@@ -14,6 +13,14 @@ from config import (
     ITBI_FINAL,
     OUTPUTS_MODELS, OUTPUTS_TABLES, HIPERPARAMETROS
 )
+
+# Rondas de paciência para early stopping (boosters).
+EARLY_STOPPING_ROUNDS = 50
+
+# Teto generoso para n_estimators dos boosters quando há early stopping;
+# o modelo vai parar antes naturalmente se a validação não melhorar.
+N_ESTIMATORS_MAX = 2000
+
 
 def preparar_dados(df):
     from config import TARGET, COLUNAS_EXCLUIR_MODELO
@@ -41,44 +48,64 @@ def preparar_dados(df):
     print(f"Features: {X.shape[1]} colunas, {X.shape[0]:,} linhas")
     return X, y
 
+
 def dividir_dados(X, y, df_original):
+    """
+    Divisão temporal em três blocos, usada de forma diferente por modelo:
+
+      - Treino (2008-2021): usado por todos os modelos.
+      - Validação (2022): usado APENAS pelos boosters, como eval_set para
+        early stopping. O RF (sem early stopping nativo) é treinado em
+        treino+validação juntos para não desperdiçar dados.
+      - Teste (2023-2024): intocado, avaliação final de todos os modelos.
+
+    Essa assimetria é declarada explicitamente no relatório.
+    """
     print("\n[2/6] Dividindo dados (divisão temporal)...")
 
-    # Adicionar coluna ano_transacao temporariamente para filtrar
     anos = df_original['ano_transacao'].values
 
-    # Criar máscaras temporais
     mask_train = anos <= 2021
     mask_val = anos == 2022
     mask_test = anos >= 2023
 
-    # Dividir
-    X_train = X[mask_train]
-    y_train = y[mask_train]
+    X_train, y_train = X[mask_train], y[mask_train]
+    X_val, y_val = X[mask_val], y[mask_val]
+    X_test, y_test = X[mask_test], y[mask_test]
 
-    X_val = X[mask_val]
-    y_val = y[mask_val]
+    # Treino+val unido para o RF.
+    X_train_full = X[mask_train | mask_val]
+    y_train_full = y[mask_train | mask_val]
 
-    X_test = X[mask_test]
-    y_test = y[mask_test]
-
-    # Estatísticas
     total = len(X)
-    print(f"Treino (2008-2021): {len(X_train):>7,} linhas ({len(X_train) / total * 100:.1f}%)")
-    print(f"Validação (2022): {len(X_val):>7,} linhas ({len(X_val) / total * 100:.1f}%)")
-    print(f"Teste (2023-2024): {len(X_test):>7,} linhas ({len(X_test) / total * 100:.1f}%)")
+    print(f"Treino (2008-2021): {len(X_train):>7,} linhas "
+          f"({len(X_train) / total * 100:.1f}%)")
+    print(f"Validação (2022):   {len(X_val):>7,} linhas "
+          f"({len(X_val) / total * 100:.1f}%)")
+    print(f"Teste (2023-2024):  {len(X_test):>7,} linhas "
+          f"({len(X_test) / total * 100:.1f}%)")
+    print(f"\nRF usará treino+val juntos: {len(X_train_full):,} linhas")
+    print(f"Boosters usarão treino + early stopping na validação")
 
-    print(f"\nDistribuição temporal:")
-    print(f"Treino: {anos[mask_train].min():.0f} - {anos[mask_train].max():.0f}")
-    print(f"Validação: {anos[mask_val].min():.0f} - {anos[mask_val].max():.0f}")
-    print(f"Teste: {anos[mask_test].min():.0f} - {anos[mask_test].max():.0f}")
+    return (X_train, y_train, X_val, y_val, X_test, y_test,
+            X_train_full, y_train_full)
 
-    return X_train, X_val, X_test, y_train, y_val, y_test
 
 def calcular_metricas(y_true, y_pred, nome_modelo):
+    """
+    Métricas SEMPRE em reais. Inclui média (MAPE) e mediana do erro
+    percentual: o MAPE é puxado por poucos imóveis baratos com erro alto,
+    a mediana revela o erro percentual 'típico'.
+    """
+    y_true = np.asarray(y_true, dtype=float)
+    y_pred = np.asarray(y_pred, dtype=float)
+
+    erro_pct = np.abs((y_true - y_pred) / y_true) * 100
+
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    mape = np.mean(erro_pct)
+    mediana_pct = np.median(erro_pct)
     r2 = r2_score(y_true, y_pred)
 
     return {
@@ -86,120 +113,158 @@ def calcular_metricas(y_true, y_pred, nome_modelo):
         'MAE': mae,
         'RMSE': rmse,
         'MAPE': mape,
-        'R²': r2
+        'Mediana_Erro_%': mediana_pct,
+        'R²': r2,
     }
 
-def treinar_random_forest(X_train, y_train, X_val, y_val):
-    print("\n[3/6] Treinando Random Forest...")
+
+def _reportar(metricas, etiqueta):
+    print(f"  [{etiqueta}] "
+          f"MAE R$ {metricas['MAE']:,.2f} | "
+          f"RMSE R$ {metricas['RMSE']:,.2f} | "
+          f"MAPE {metricas['MAPE']:.2f}% | "
+          f"Mediana {metricas['Mediana_Erro_%']:.2f}% | "
+          f"R² {metricas['R²']:.4f}")
+
+
+def treinar_random_forest(X_train_full, y_train_full, X_val, y_val, X_test, y_test):
+    """
+    RF não tem early stopping nativo. Treina em treino+validação (2008-2022)
+    para não desperdiçar dados. Reporta validação e teste para inspeção.
+    """
+    print("\n[3/6] Treinando Random Forest (treino+val 2008-2022)...")
 
     modelo = RandomForestRegressor(
-        n_estimators=100,
-        max_depth=20,
-        min_samples_split=5,
-        min_samples_leaf=2,
-        random_state=42,
-        n_jobs=-1,
-        verbose=0
+        **HIPERPARAMETROS['random_forest'],
+        random_state=42, n_jobs=-1, verbose=0,
     )
 
-    # Treina no espaço logarítmico: log1p comprime a cauda de preços
-    # e faz o modelo otimizar erro proporcional, não absoluto.
-    modelo.fit(X_train, np.log1p(y_train))
+    modelo.fit(X_train_full, np.log1p(y_train_full))
 
-    # Prediz em log e reverte para reais com expm1 (inverso exato de log1p).
-    y_pred_train = np.expm1(modelo.predict(X_train))
+    y_pred_train = np.expm1(modelo.predict(X_train_full))
     y_pred_val = np.expm1(modelo.predict(X_val))
+    y_pred_test = np.expm1(modelo.predict(X_test))
 
-    # Métricas SEMPRE em reais — y_train/y_val nunca foram transformados.
-    metricas_train = calcular_metricas(y_train, y_pred_train, 'Random Forest (Train)')
-    metricas_val = calcular_metricas(y_val, y_pred_val, 'Random Forest (Val)')
+    m_train = calcular_metricas(y_train_full, y_pred_train, 'Random Forest (Train)')
+    m_val = calcular_metricas(y_val, y_pred_val, 'Random Forest (Val)')
+    m_test = calcular_metricas(y_test, y_pred_test, 'Random Forest')
 
-    print(f"MAE (val): R$ {metricas_val['MAE']:,.2f}")
-    print(f"RMSE (val): R$ {metricas_val['RMSE']:,.2f}")
-    print(f"MAPE (val): {metricas_val['MAPE']:.2f}%")
-    print(f"R² (val): {metricas_val['R²']:.4f}")
+    _reportar(m_train, 'train')
+    _reportar(m_val, 'val  ')
+    _reportar(m_test, 'TESTE')
 
-    return modelo, metricas_train, metricas_val
+    return modelo, m_train, m_val, m_test
 
-def treinar_xgboost(X_train, y_train, X_val, y_val):
-    print("\n[4/6] Treinando XGBoost...")
+
+def treinar_xgboost(X_train, y_train, X_val, y_val, X_test, y_test):
+    """
+    XGBoost com early stopping em 2022. Hiperparâmetros do tuning são
+    aplicados, com n_estimators expandido para 2000 (teto) — o early
+    stopping corta antes naturalmente.
+    """
+    print(f"\n[4/6] Treinando XGBoost (treino 2008-2021, early stopping em 2022)...")
+
+    hp = dict(HIPERPARAMETROS['xgboost'])
+    hp.pop('n_estimators', None)  # Vamos sobrescrever com o teto.
 
     modelo = XGBRegressor(
-        **HIPERPARAMETROS['xgboost'],
-        random_state=42,
-        n_jobs=-1,
-        verbosity=1
+        **hp,
+        n_estimators=N_ESTIMATORS_MAX,
+        early_stopping_rounds=EARLY_STOPPING_ROUNDS,
+        random_state=42, n_jobs=-1, verbosity=0,
     )
 
-    # O eval_set também precisa estar em log — mesma escala do treino.
+    # eval_set em log: validação na mesma escala do treino.
     modelo.fit(
         X_train, np.log1p(y_train),
         eval_set=[(X_val, np.log1p(y_val))],
-        verbose=False
+        verbose=False,
     )
+
+    print(f"  Árvores efetivamente usadas (early stopping cortou em): "
+          f"{modelo.best_iteration + 1}")
 
     y_pred_train = np.expm1(modelo.predict(X_train))
     y_pred_val = np.expm1(modelo.predict(X_val))
+    y_pred_test = np.expm1(modelo.predict(X_test))
 
-    metricas_train = calcular_metricas(y_train, y_pred_train, 'XGBoost (Train)')
-    metricas_val = calcular_metricas(y_val, y_pred_val, 'XGBoost (Val)')
+    m_train = calcular_metricas(y_train, y_pred_train, 'XGBoost (Train)')
+    m_val = calcular_metricas(y_val, y_pred_val, 'XGBoost (Val)')
+    m_test = calcular_metricas(y_test, y_pred_test, 'XGBoost')
 
-    print(f"MAE (val): R$ {metricas_val['MAE']:,.2f}")
-    print(f"RMSE (val): R$ {metricas_val['RMSE']:,.2f}")
-    print(f"MAPE (val): {metricas_val['MAPE']:.2f}%")
-    print(f"R² (val): {metricas_val['R²']:.4f}")
+    _reportar(m_train, 'train')
+    _reportar(m_val, 'val  ')
+    _reportar(m_test, 'TESTE')
 
-    return modelo, metricas_train, metricas_val
+    return modelo, m_train, m_val, m_test
 
-def treinar_lightgbm(X_train, y_train, X_val, y_val):
-    print("\n[5/6] Treinando LightGBM...")
+
+def treinar_lightgbm(X_train, y_train, X_val, y_val, X_test, y_test):
+    """
+    LightGBM com early stopping em 2022. n_estimators expandido para 2000;
+    o callback early_stopping da lightgbm corta antes naturalmente.
+    """
+    print(f"\n[5/6] Treinando LightGBM (treino 2008-2021, early stopping em 2022)...")
+
+    hp = dict(HIPERPARAMETROS['lightgbm'])
+    hp.pop('n_estimators', None)
 
     modelo = LGBMRegressor(
-        **HIPERPARAMETROS['lightgbm'],
-        random_state=42,
-        n_jobs=-1,
-        verbose=-1
+        **hp,
+        n_estimators=N_ESTIMATORS_MAX,
+        random_state=42, n_jobs=-1, verbose=-1,
     )
 
     modelo.fit(
         X_train, np.log1p(y_train),
         eval_set=[(X_val, np.log1p(y_val))],
-        callbacks=None
+        callbacks=[lgb_early_stopping(EARLY_STOPPING_ROUNDS, verbose=False)],
     )
+
+    print(f"  Árvores efetivamente usadas (early stopping cortou em): "
+          f"{modelo.best_iteration_}")
 
     y_pred_train = np.expm1(modelo.predict(X_train))
     y_pred_val = np.expm1(modelo.predict(X_val))
+    y_pred_test = np.expm1(modelo.predict(X_test))
 
-    metricas_train = calcular_metricas(y_train, y_pred_train, 'LightGBM (Train)')
-    metricas_val = calcular_metricas(y_val, y_pred_val, 'LightGBM (Val)')
+    m_train = calcular_metricas(y_train, y_pred_train, 'LightGBM (Train)')
+    m_val = calcular_metricas(y_val, y_pred_val, 'LightGBM (Val)')
+    m_test = calcular_metricas(y_test, y_pred_test, 'LightGBM')
 
-    print(f"MAE (val): R$ {metricas_val['MAE']:,.2f}")
-    print(f"RMSE (val): R$ {metricas_val['RMSE']:,.2f}")
-    print(f"MAPE (val): {metricas_val['MAPE']:.2f}%")
-    print(f"R² (val): {metricas_val['R²']:.4f}")
+    _reportar(m_train, 'train')
+    _reportar(m_val, 'val  ')
+    _reportar(m_test, 'TESTE')
 
-    return modelo, metricas_train, metricas_val
+    return modelo, m_train, m_val, m_test
 
-def salvar_modelos_e_resultados(modelos, resultados):
+
+def salvar_modelos_e_resultados(modelos, resultados_test, resultados_val,
+                                resultados_train):
     print("\n[6/6] Salvando modelos e resultados...")
 
-    # Salvar modelos
     for nome, modelo in modelos.items():
         caminho = OUTPUTS_MODELS / f'{nome.lower().replace(" ", "_")}.pkl'
         with open(caminho, 'wb') as f:
             pickle.dump(modelo, f)
         print(f"Modelo salvo: {caminho.name}")
 
-    # Salvar tabela de resultados
-    df_resultados = pd.DataFrame(resultados)
-    caminho_tabela = OUTPUTS_TABLES / 'resultados_modelos.csv'
-    df_resultados.to_csv(caminho_tabela, index=False)
-    print(f"Tabela salva: {caminho_tabela.name}")
+    # Tabela principal: métricas de TESTE.
+    df_test = pd.DataFrame(resultados_test)
+    df_test.to_csv(OUTPUTS_TABLES / 'resultados_modelos.csv', index=False)
+    print(f"Tabela (teste) salva: resultados_modelos.csv")
 
-    return df_resultados
+    # Tabelas auxiliares: validação e treino.
+    pd.DataFrame(resultados_val).to_csv(
+        OUTPUTS_TABLES / 'resultados_modelos_val.csv', index=False)
+    pd.DataFrame(resultados_train).to_csv(
+        OUTPUTS_TABLES / 'resultados_modelos_train.csv', index=False)
+    print(f"Tabelas (val, train) salvas.")
+
+    return df_test
+
 
 def pipeline_completo(path_input=None):
-    # Carregar dados
     if path_input is None:
         path_input = ITBI_FINAL
 
@@ -209,38 +274,62 @@ def pipeline_completo(path_input=None):
     df = pd.read_csv(path_input)
     print(f"{len(df):,} linhas carregadas")
 
-    # Preparar dados
     X, y = preparar_dados(df)
 
-    # Dividir dados
-    X_train, X_val, X_test, y_train, y_val, y_test = dividir_dados(X, y, df)
+    (X_train, y_train, X_val, y_val, X_test, y_test,
+     X_train_full, y_train_full) = dividir_dados(X, y, df)
 
-    # Treinar modelos
-    rf_model, rf_train, rf_val = treinar_random_forest(X_train, y_train, X_val, y_val)
-    xgb_model, xgb_train, xgb_val = treinar_xgboost(X_train, y_train, X_val, y_val)
-    lgb_model, lgb_train, lgb_val = treinar_lightgbm(X_train, y_train, X_val, y_val)
+    rf_model, rf_train, rf_val, rf_test = treinar_random_forest(
+        X_train_full, y_train_full, X_val, y_val, X_test, y_test)
+    xgb_model, xgb_train, xgb_val, xgb_test = treinar_xgboost(
+        X_train, y_train, X_val, y_val, X_test, y_test)
+    lgb_model, lgb_train, lgb_val, lgb_test = treinar_lightgbm(
+        X_train, y_train, X_val, y_val, X_test, y_test)
 
-    # Compilar resultados
     modelos = {
         'Random Forest': rf_model,
         'XGBoost': xgb_model,
-        'LightGBM': lgb_model
+        'LightGBM': lgb_model,
     }
 
-    resultados = [rf_val, xgb_val, lgb_val]
+    resultados_test = [rf_test, xgb_test, lgb_test]
+    resultados_val = [rf_val, xgb_val, lgb_val]
+    resultados_train = [rf_train, xgb_train, lgb_train]
 
-    # Salvar
-    df_resultados = salvar_modelos_e_resultados(modelos, resultados)
+    df_test = salvar_modelos_e_resultados(
+        modelos, resultados_test, resultados_val, resultados_train)
 
-    # Exibir resumo
-    print("\nRESUMO DOS RESULTADOS (VALIDAÇÃO)")
-    print(df_resultados.to_string(index=False))
+    pd.set_option('display.float_format', lambda v: f'{v:,.2f}')
+
+    print("\n" + "=" * 80)
+    print("RESULTADOS NO TESTE (2023-2024) — métricas do artigo")
+    print("=" * 80)
+    print(df_test.to_string(index=False))
+
+    print("\n" + "=" * 80)
+    print("RESULTADOS NA VALIDAÇÃO (2022) — sanidade pré-teste")
+    print("=" * 80)
+    print(pd.DataFrame(resultados_val).to_string(index=False))
+
+    print("\n" + "=" * 80)
+    print("RESULTADOS NO TREINO — checagem de overfitting")
+    print("=" * 80)
+    print(pd.DataFrame(resultados_train).to_string(index=False))
+
+    campeao = min(resultados_test, key=lambda m: m['MAPE'])
+    print("\n" + "=" * 80)
+    print(f"CAMPEÃO (menor MAPE de teste): {campeao['Modelo']} "
+          f"— MAPE {campeao['MAPE']:.2f}%, "
+          f"Mediana {campeao['Mediana_Erro_%']:.2f}%, "
+          f"R² {campeao['R²']:.4f}")
+    print("=" * 80)
 
     print("\nTREINAMENTO CONCLUÍDO!")
     print(f"\nModelos salvos em: {OUTPUTS_MODELS}")
     print(f"Resultados salvos em: {OUTPUTS_TABLES}")
 
-    return modelos, df_resultados, (X_test, y_test)
+    return modelos, df_test, (X_test, y_test)
+
 
 if __name__ == '__main__':
     modelos, resultados, dados_teste = pipeline_completo()

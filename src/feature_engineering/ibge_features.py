@@ -4,86 +4,15 @@ from pathlib import Path
 import sys
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import ITBI_FINAL
+from config import (
+    ITBI_FINAL,
+    BAIRROS_CLASSE_1, BAIRROS_CLASSE_2, BAIRROS_CLASSE_3, BAIRROS_CLASSE_4,
+)
+
 
 # ============================================================================
 # CLASSIFICAÇÃO SOCIOECONÔMICA DOS BAIRROS (IBGE 2005)
 # ============================================================================
-
-# Classe 1: Popular (< 5 SM)
-BAIRROS_CLASSE_1 = [
-    'AARAO REIS', 'ALTO DOS PINHEIROS', 'ALTO PARAISO', 'ALVARO CAMARGOS',
-    'ALVORADA', 'ANA LUCIA', 'APARECIDA', 'APARECIDA 7A SECAO',
-    'BAIRRO DAS INDUSTRIAS', 'BALEIA', 'BARREIRO', 'BARREIRO DE CIMA',
-    'BETANIA', 'BOA VISTA', 'BOM JESUS', 'BOM SUCESSO', 'BONFIM',
-    'BRASIL INDUSTRIAL', 'CABANA', 'CACHOEIRINHA', 'CAETANO FURQUIM',
-    'CALIFORNIA', 'CAMARGOS', 'CAMPO ALEGRE', 'CANAA', 'CANDELARIA',
-    'CAPITAO EDUARDO', 'CARDOSO', 'CASA BRANCA', 'CEU AZUL', 'CONFISCO',
-    'CONJ.HAB.', 'CONJ.ATILA DE PAIVA', 'CONJ.JOAO PAULO II', 'COPACABANA',
-    'COQUEIROS', 'DIAMANTE', 'DOM BOSCO', 'DOM JOAQUIM', 'DOM SILVERIO',
-    'DURVAL DE BARROS', 'ENGENHO NOGUEIRA', 'ERMELINDA', 'ESTRELA DALVA',
-    'ETELVINA CARNEIRO', 'EYMARD', 'FERNAO DIAS', 'FLAVIO MARQUES LISBOA',
-    'FLORAMAR', 'FREI EUSTAQUIO', 'FREI LEOPOLDO', 'GAMELEIRA', 'GLALIJA',
-    'GLORIA', 'GOIANIA', 'GORDURAS', 'GOV.BENEDITO VALADARES', 'GUARANI',
-    'HAVAI', 'HELIOPOLIS', 'IAPI', 'INCONFIDENCIA', 'INDEPENDENCIA',
-    'INDUSTRIAL RODRIGUES CUNHA', 'IPANEMA', 'IPIRANGA', 'JAQUELINE',
-    'JARDIM ALVORADA', 'JARDIM COMERCIARIOS', 'JARDIM EUROPA',
-    'JARDIM FELICIDADE', 'JARDIM FILADELFIA', 'JARDIM GUANABARA',
-    'JARDIM MONTANHES', 'JARDIM VITORIA', 'JARDINOPOLIS', 'JATOBA',
-    'JULIANA', 'LAGOA', 'LEBLON', 'LETICIA', 'LINDEIA', 'MADRE GERTRUDES',
-    'MAGNESITA', 'MANTIQUEIRA', 'MARAJO', 'MARIA GORETE', 'MARIA HELENA',
-    'MARIA VIRGINIA', 'MARIZE', 'MILIONARIOS', 'MINAS CAIXA', 'MINASLANDIA',
-    'MORRO DO PAPAGAIO', 'NAZARE', 'NOVA AMERICA', 'NOVA BARROCA',
-    'NOVA CACHOEIRINHA', 'NOVA CINTRA', 'NOVA ESPERANCA', 'NOVA GAMELEIRA',
-    'NOVA PAMPULHA', 'NOVA VISTA', 'OLARIA', 'OLHOS D\'AGUA', 'PALMEIRAS',
-    'PARAISO', 'PARQUE RIACHUELO', 'PATROCINIO', 'PAULO VI', 'PEDREIRA',
-    'PRADO LOPES', 'PINDORAMA', 'PIRAJA', 'PIRATININGA', 'PONGELUPE',
-    'PRACA XII', 'PRIMAVERA', 'PRIMEIRO DE MAIO', 'PROVIDENCIA', 'REGINA',
-    'RIBEIRO DE ABREU', 'RIO BRANCO', 'S.J.BATISTA VN', 'SALGADO FILHO',
-    'SANTA CRUZ', 'SANTA HELENA', 'SANTA MONICA', 'SANTA TEREZINHA',
-    'SANTO ANDRE', 'SAO BERNARDO', 'SAO CRISTOVAO', 'SAO GABRIEL',
-    'SAO GERALDO', 'SAO JOAO BATISTA', 'SAO MARCOS', 'SAO PAULO',
-    'SAO PEDRO VN', 'SAO SALVADOR', 'SAO THOMAS', 'SARAMENHA', 'SARANDI',
-    'SAUDADE', 'SERRA DO CURRAL', 'SERRA VERDE', 'SERRANO', 'SINIMBU',
-    'SOLIMOES', 'SUMARE', 'SUZANA', 'TAQUARIL', 'TEIXEIRA DIAS', 'TIROL',
-    'TREVO', 'TUPI', 'UNIAO', 'UNIVERSITARIO', 'URUCUIA', 'VALE DO JATOBA',
-    'VERA CRUZ', 'VILA BRASILIA', 'VILA CAFEZAL', 'VILA CEMIG',
-    'VILA MAGNESITA', 'VILA OESTE', 'VILA VIRGINIA', 'VISTA ALEGRE',
-    'WASHINGTON PIRES', 'XANGRILA', 'ZONA RURAL'
-]
-
-# Classe 2: Médio (5-8.5 SM)
-BAIRROS_CLASSE_2 = [
-    'ALIPIO DE MELO', 'BAIRRO DA GRACA', 'BARREIRO DE BAIXO', 'BRAUNAS',
-    'CAICARA', 'CAICARA ADELAIDE', 'CALAFATE', 'CARLOS PRATES', 'CONCORDIA',
-    'CONJUNTO CALIFORNIA I', 'CONJUNTO CALIFORNIA II',
-    'CONJUNTO CELSO MACHADO', 'CONJUNTO ITACOLOMI', 'DOM CABRAL',
-    'ESPLANADA', 'GARCAS', 'HORTO', 'INSTITUTO AGRONOMICO', 'JARDIM AMERICA',
-    'JOAO PINHEIRO', 'LAGOINHA', 'MINAS BRASIL', 'MONSENHOR MESSIAS',
-    'NOVA FLORESTA', 'NOVA GRANADA', 'NOVA SUICA', 'PADRE EUSTAQUIO',
-    'PALMARES', 'PAQUETA', 'PEDRO II', 'PLANALTO', 'POMPEIA', 'RENASCENCA',
-    'SAGRADA FAMILIA', 'SANTA EFIGENIA', 'SANTA INES', 'SANTA MARIA',
-    'SAO FRANCISCO', 'SILVEIRA', 'UFMG', 'VENDA NOVA', 'VILA CLORIS'
-]
-
-# Classe 3: Alto (8.5-14.5 SM)
-BAIRROS_CLASSE_3 = [
-    'ALTO BARROCA', 'ALTO DOS CAICARAS', 'BAIRRO DAS MANSOES', 'BARRO PRETO',
-    'BARROCA', 'BURITIS', 'CASTELO', 'CENTRO', 'CIDADE NOVA', 'AEROPORTO',
-    'COLEGIO BATISTA', 'CORACAO EUCARISTICO', 'DONA CLARA', 'ESTORIL',
-    'FLORESTA', 'GRAJAU', 'ITAPOA', 'JARAGUA', 'JARDIM ATLANTICO',
-    'LIBERDADE', 'NOVO SAO LUCAS', 'OURO PRETO', 'PAMPULHA', 'PRADO',
-    'SANTA AMELIA', 'SANTA BRANCA', 'SANTA ROSA', 'SANTA TEREZA', 'SAO LUCAS'
-]
-
-# Classe 4: Luxo (>14.5 SM)
-BAIRROS_CLASSE_4 = [
-    'SAO JOSE', 'SAO LUIS', 'SAO PEDRO', 'SAVASSI', 'SERRA', 'SION',
-    'VILA PARIS', 'SANTO ANTONIO', 'SAO BENTO', 'PARQUE DAS MANGABEIRAS',
-    'SANTA LUCIA', 'SANTO AGOSTINHO', 'LOURDES', 'LUXEMBURGO', 'MANGABEIRAS',
-    'ANCHIETA', 'BANDEIRANTES', 'CARMO', 'BELVEDERE', 'CIDADE JARDIM',
-    'CORACAO DE JESUS', 'CRUZEIRO', 'FUNCIONARIOS', 'GUTIERREZ'
-]
 
 def criar_mapeamento_classe():
     mapeamento = {}
@@ -134,6 +63,7 @@ def criar_mapeamento_classe():
 
     return mapeamento
 
+
 def carregar_densidade_demografica(path_csv):
     df_densidade = pd.read_csv(path_csv, encoding='utf-8-sig')
 
@@ -157,10 +87,10 @@ def carregar_densidade_demografica(path_csv):
 
     return densidade_dict
 
+
 def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
-    
     print("APLICANDO FEATURES IBGE")
-    
+
     print(f"\nLinhas de entrada: {len(df):,}")
 
     # Carregar mapeamentos
@@ -227,16 +157,23 @@ def aplicar_features_ibge(df, path_densidade_csv, verbose=True):
     df['tipo_x_densidade'] = df['tipo_bairro'] * (df['densidade_demografica'] / 10000)
 
     if 'preco_medio_bairro_loo' in df.columns:
-        ref_por_tipo = df.groupby('tipo_bairro')['preco_medio_bairro_loo'].transform('mean')
-        df['preco_vs_tipo'] = df['preco_medio_bairro_loo'] / ref_por_tipo
+        ANOS_BASE = list(range(2008, 2023))
+        base = df[df['ano_transacao'].isin(ANOS_BASE)]
+        ref_por_tipo = base.groupby('tipo_bairro')['preco_medio_bairro_loo'].mean()
+
+        df['preco_vs_tipo'] = (df['preco_medio_bairro_loo'] /
+                               df['tipo_bairro'].map(ref_por_tipo))
+        # Fallback: classe ausente da base (raro) -> razão neutra 1.0
+        df['preco_vs_tipo'] = df['preco_vs_tipo'].replace(
+            [float('inf'), float('-inf')], 1.0).fillna(1.0)
 
     df['area_vs_densidade'] = df['area_construida_m2'] / (df['densidade_demografica'] + 1)
     df['poder_compra_bairro'] = df['salario_medio_sm'] * df['populacao_bairro']
 
     print(f"4 features de interação criadas")
-    
+
     print("\nFEATURES IBGE APLICADAS COM SUCESSO!")
-    
+
     print(f"\nTotal de features IBGE: 14")
 
     return df
@@ -258,14 +195,16 @@ def processar_dataset_completo(path_itbi_final, path_densidade_csv, salvar=True)
 
     return df
 
+
 if __name__ == '__main__':
     PATH_ITBI = ITBI_FINAL
 
     # Opção 1: Se você colocou o CSV em data/external/
-    PATH_DENSIDADE = Path( __file__).resolve().parent.parent.parent / 'data' / 'external' / 'dataset-densidade-demografica.csv'
-    
+    PATH_DENSIDADE = Path(
+        __file__).resolve().parent.parent.parent / 'data' / 'external' / 'dataset-densidade-demografica.csv'
+
     print("\nPROCESSANDO FEATURES IBGE")
-    
+
     print(f"\nBuscando CSV em: {PATH_DENSIDADE}")
 
     # Verificar se arquivo existe
@@ -275,8 +214,7 @@ if __name__ == '__main__':
 
     df_final = processar_dataset_completo(PATH_ITBI, str(PATH_DENSIDADE), salvar=True)
 
-    
     print("✓✓✓ CONCLUÍDO ✓✓✓")
-    
+
     print("\nPróximo passo: retreinar modelo com features IBGE")
     print("  python test_modelos.py")

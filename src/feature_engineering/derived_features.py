@@ -6,6 +6,13 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_CLEANED, ITBI_FINAL
 
+# Anos usados como base para TODAS as estatísticas de bairro.
+# Mantém coerência com a divisão temporal do train.py (treino+val = <=2022).
+# As estatísticas de bairro são "aprendidas" apenas nesses anos e então
+# aplicadas a todas as transações, eliminando vazamento temporal: nenhuma
+# transação de 2023-2024 entra no cálculo das features de bairro.
+ANOS_BASE_BAIRRO = list(range(2008, 2023))  # 2008-2022 inclusive
+
 def criar_features_proporcoes(df, verbose=True):
     print("\n[1/8] Criando features de proporções...")
 
@@ -49,106 +56,114 @@ def criar_features_interacao_simples(df):
 
     return df
 
+def criar_features_bairro_sem_leakage(df, anos_base=ANOS_BASE_BAIRRO):
+    print("\n[4/8] Calculando features de bairro (sem leakage temporal)...")
 
-def criar_features_bairro_sem_leakage(df):
+    mask_base = df['ano_transacao'].isin(anos_base)
+    df_base = df[mask_base]
+    print(f"  Estatísticas de bairro sobre {len(df_base):,} linhas-base "
+          f"(anos {min(anos_base)}-{max(anos_base)})")
 
-    print("\n[4/8] Calculando features de bairro (sem leakage - otimizado)...")
+    # Estatísticas do bairro calculadas SÓ na base (treino+val).
+    stats_bairro = df_base.groupby('bairro')['valor_base_calculo_real'].agg(
+        ['sum', 'count', 'std', 'min', 'max']
+    )
+    stats_bairro.columns = ['soma', 'count', 'std', 'min', 'max']
 
-    # Pré-calcular estatísticas por bairro
-    stats_bairro = df.groupby('bairro')['valor_base_calculo_real'].agg([
-        'sum', 'count', 'std', 'min', 'max'
-    ]).reset_index()
+    # Mapear estatísticas do bairro para toda transação (pelo bairro).
+    soma_b = df['bairro'].map(stats_bairro['soma'])
+    count_b = df['bairro'].map(stats_bairro['count'])
+    std_b = df['bairro'].map(stats_bairro['std'])
+    min_b = df['bairro'].map(stats_bairro['min'])
+    max_b = df['bairro'].map(stats_bairro['max'])
 
-    stats_bairro.columns = ['bairro', 'soma_total', 'count_total', 'std_total', 'min_total', 'max_total']
+    media_geral = df_base['valor_base_calculo_real'].mean()
+    std_global = df_base['valor_base_calculo_real'].std()
 
-    # Merge com dataset
-    df = df.merge(stats_bairro, on='bairro', how='left')
+    # --- preco_medio_bairro_loo ---
+    # Para linhas-base: LOO (remove o próprio imóvel da soma/contagem do bairro).
+    # Para linhas fora da base: média do bairro sem remover (não está na base).
+    soma_loo = soma_b.where(~mask_base, soma_b - df['valor_base_calculo_real'])
+    count_loo = count_b.where(~mask_base, count_b - 1)
 
-    # Leave-One-Out: média SEM o próprio imóvel
-    df['preco_medio_bairro_loo'] = (df['soma_total'] - df['valor_base_calculo_real']) / (df['count_total'] - 1)
+    df['preco_medio_bairro_loo'] = soma_loo / count_loo
 
-    # Para imóveis únicos no bairro, usar média geral
-    media_geral = df['valor_base_calculo_real'].mean()
-    df.loc[df['count_total'] == 1, 'preco_medio_bairro_loo'] = media_geral
+    # Casos degenerados: bairro com 1 transação na base (count_loo == 0),
+    # ou bairro ausente da base (NaN). Usar média geral da base.
+    df['preco_medio_bairro_loo'] = df['preco_medio_bairro_loo'].replace(
+        [np.inf, -np.inf], np.nan).fillna(media_geral)
 
-    # std é NaN para bairros com uma única transação (precisa de n>=2).
-    # Para esses casos, usar o desvio padrão global como fallback.
-    std_global = df['valor_base_calculo_real'].std()
-    df['std_preco_bairro'] = df['std_total'].fillna(std_global)
+    # --- std_preco_bairro --- (não-LOO; std do bairro na base)
+    df['std_preco_bairro'] = std_b.fillna(std_global)
 
-    # Outras estatísticas (já calculadas, não precisam de LOO)
-    df['num_transacoes_bairro'] = df['count_total']
-    df['preco_min_bairro'] = df['min_total']
-    df['preco_max_bairro'] = df['max_total']
-    df['range_preco_bairro'] = df['max_total'] - df['min_total']
+    # --- demais estatísticas do bairro (na base) ---
+    df['num_transacoes_bairro'] = count_b.fillna(0)
+    df['preco_min_bairro'] = min_b.fillna(media_geral)
+    df['preco_max_bairro'] = max_b.fillna(media_geral)
+    df['range_preco_bairro'] = (df['preco_max_bairro'] - df['preco_min_bairro'])
 
-    # Limpar colunas temporárias
-    df = df.drop(columns=['soma_total', 'count_total', 'std_total', 'min_total', 'max_total'])
-
-    print(f"6 features de bairro criadas (sem leakage)")
+    print(f"6 features de bairro criadas (sem leakage temporal)")
 
     return df
 
+def criar_features_preco_m2_bairro_sem_leakage(df, anos_base=ANOS_BASE_BAIRRO):
+    print("\n[5/8] Calculando preço/m² médio do bairro (sem leakage temporal)...")
 
-def criar_features_preco_m2_bairro_sem_leakage(df):
+    mask_base = df['ano_transacao'].isin(anos_base)
+    df_base = df[mask_base]
 
-    print("\n[5/8] Calculando preço/m² médio do bairro (sem leakage)...")
-
-    # Pré-calcular soma de valores e áreas por bairro
-    stats = df.groupby('bairro').agg({
-        'valor_base_calculo_real': 'sum',
-        'area_construida_m2': 'sum'
-    }).reset_index()
-    stats.columns = ['bairro', 'soma_valor', 'soma_area']
-
-    # Merge
-    df = df.merge(stats, on='bairro', how='left')
-
-    # Calcular SEM o próprio imóvel
-    df['preco_m2_medio_bairro_loo'] = (
-            (df['soma_valor'] - df['valor_base_calculo_real']) /
-            (df['soma_area'] - df['area_construida_m2'])
+    stats = df_base.groupby('bairro').agg(
+        soma_valor=('valor_base_calculo_real', 'sum'),
+        soma_area=('area_construida_m2', 'sum'),
     )
 
-    # Fallback para casos edge
-    preco_m2_global = df['valor_base_calculo_real'].sum() / df['area_construida_m2'].sum()
-    df['preco_m2_medio_bairro_loo'] = df['preco_m2_medio_bairro_loo'].fillna(preco_m2_global)
+    soma_valor_b = df['bairro'].map(stats['soma_valor'])
+    soma_area_b = df['bairro'].map(stats['soma_area'])
 
-    # Limpar temporários
-    df = df.drop(columns=['soma_valor', 'soma_area'])
+    # LOO só para linhas-base; teste usa a soma da base inteira.
+    soma_valor_loo = soma_valor_b.where(
+        ~mask_base, soma_valor_b - df['valor_base_calculo_real'])
+    soma_area_loo = soma_area_b.where(
+        ~mask_base, soma_area_b - df['area_construida_m2'])
+
+    df['preco_m2_medio_bairro_loo'] = soma_valor_loo / soma_area_loo
+
+    preco_m2_global = (df_base['valor_base_calculo_real'].sum() /
+                       df_base['area_construida_m2'].sum())
+    df['preco_m2_medio_bairro_loo'] = df['preco_m2_medio_bairro_loo'].replace(
+        [np.inf, -np.inf], np.nan).fillna(preco_m2_global)
 
     print(f"Feature criada: preco_m2_medio_bairro_loo")
 
     return df
 
-def criar_features_valorizacao_bairro(df):
-    print("\n[6/8] Calculando valorização do bairro...")
+def criar_features_valorizacao_bairro(df, anos_base=ANOS_BASE_BAIRRO):
+    """
+    Valorização real do bairro, calculada SÓ sobre os anos-base.
+    O valor é uma característica do bairro (não do imóvel), então a mesma
+    valorização aprendida na base é atribuída a todas as transações do
+    bairro — inclusive as de teste, que recebem o que se conhecia até 2022.
+    """
+    print("\n[6/8] Calculando valorização do bairro (sem leakage temporal)...")
 
-    # Preço médio por bairro/ano
-    preco_ano = df.groupby(['bairro', 'ano_transacao'])['valor_base_calculo_real'].mean().reset_index()
+    df_base = df[df['ano_transacao'].isin(anos_base)]
+
+    # Preço médio por bairro/ano, só na base.
+    preco_ano = (df_base.groupby(['bairro', 'ano_transacao'])
+                 ['valor_base_calculo_real'].mean().reset_index())
     preco_ano.columns = ['bairro', 'ano', 'preco_medio']
 
-    # Para cada bairro, calcular valorização dos últimos 3 anos
     valorizacao = []
-
     for bairro in df['bairro'].unique():
         df_bairro = preco_ano[preco_ano['bairro'] == bairro].sort_values('ano')
 
         if len(df_bairro) >= 2:
-            # Pegar último ano e 3 anos atrás
-            anos = df_bairro['ano'].values
             precos = df_bairro['preco_medio'].values
-
-            if len(anos) >= 4:
-                # Comparar último ano com 3 anos atrás
-                preco_atual = precos[-1]
-                preco_3anos = precos[-4]
-                val = ((preco_atual - preco_3anos) / preco_3anos) * 100 if preco_3anos > 0 else 0
+            if len(precos) >= 4:
+                preco_atual, preco_ref = precos[-1], precos[-4]
             else:
-                # Comparar primeiro com último disponível
-                preco_atual = precos[-1]
-                preco_inicial = precos[0]
-                val = ((preco_atual - preco_inicial) / preco_inicial) * 100 if preco_inicial > 0 else 0
+                preco_atual, preco_ref = precos[-1], precos[0]
+            val = ((preco_atual - preco_ref) / preco_ref) * 100 if preco_ref > 0 else 0
         else:
             val = 0
 
@@ -162,16 +177,30 @@ def criar_features_valorizacao_bairro(df):
 
     return df
 
-def criar_features_comparativas(df):
-    print("\n[7/8] Criando features comparativas...")
+def criar_features_comparativas(df, anos_base=ANOS_BASE_BAIRRO):
+    """
+    Compara área e idade do imóvel com a média do bairro.
+    As médias de bairro são calculadas SÓ sobre os anos-base, então uma
+    transação de teste é comparada com o perfil do bairro conhecido até 2022.
+    Estas não dependem do alvo (área/idade), mas mantemos a separação
+    temporal por consistência metodológica.
+    """
+    print("\n[7/8] Criando features comparativas (sem leakage temporal)...")
 
-    # Calcular médias por bairro (para área e idade)
-    medias_area = df.groupby('bairro')['area_construida_m2'].mean().to_dict()
-    medias_idade = df.groupby('bairro')['idade_imovel'].mean().to_dict()
+    df_base = df[df['ano_transacao'].isin(anos_base)]
 
-    # Criar comparações
-    df['area_vs_media_bairro'] = df['area_construida_m2'] / df['bairro'].map(medias_area)
-    df['idade_vs_media_bairro'] = df['idade_imovel'] / (df['bairro'].map(medias_idade) + 1)
+    medias_area = df_base.groupby('bairro')['area_construida_m2'].mean()
+    medias_idade = df_base.groupby('bairro')['idade_imovel'].mean()
+
+    # Fallbacks globais (base) para bairros ausentes.
+    area_global = df_base['area_construida_m2'].mean()
+    idade_global = df_base['idade_imovel'].mean()
+
+    area_ref = df['bairro'].map(medias_area).fillna(area_global)
+    idade_ref = df['bairro'].map(medias_idade).fillna(idade_global)
+
+    df['area_vs_media_bairro'] = df['area_construida_m2'] / area_ref
+    df['idade_vs_media_bairro'] = df['idade_imovel'] / (idade_ref + 1)
 
     print(f"2 features comparativas criadas")
 

@@ -7,6 +7,7 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import *
 
+
 def converter_numero_brasileiro(valor):
     if pd.isna(valor):
         return np.nan
@@ -26,6 +27,7 @@ def converter_numero_brasileiro(valor):
     except ValueError:
         return np.nan
 
+
 def converter_data_brasileira(data_str):
     if pd.isna(data_str):
         return pd.NaT
@@ -35,6 +37,7 @@ def converter_data_brasileira(data_str):
     except ValueError:
         return pd.NaT
 
+
 def extrair_cep(endereco):
     if pd.isna(endereco):
         return None
@@ -43,6 +46,7 @@ def extrair_cep(endereco):
     if match:
         return match.group(1).replace('-', '')
     return None
+
 
 def renomear_colunas(df, verbose=True):
     mapeamento = {
@@ -75,6 +79,7 @@ def renomear_colunas(df, verbose=True):
 
     return df.rename(columns=mapeamento)
 
+
 def converter_numeros_brasileiros(df, verbose=True):
     if verbose:
         print("\n[2/8] Convertendo valores numéricos...")
@@ -92,6 +97,7 @@ def converter_numeros_brasileiros(df, verbose=True):
 
     return df
 
+
 def converter_datas(df, verbose=True):
     if verbose:
         print("\n[3/8] Convertendo datas...")
@@ -106,6 +112,7 @@ def converter_datas(df, verbose=True):
 
     return df
 
+
 def extrair_cep_coluna(df):
     print("\n[4/8] Extraindo CEP...")
 
@@ -116,6 +123,7 @@ def extrair_cep_coluna(df):
 
     return df
 
+
 def padronizar_bairros(df):
     print("\n[5/8] Padronizando bairros...")
 
@@ -125,6 +133,7 @@ def padronizar_bairros(df):
     print(f"{n_bairros} bairros únicos")
 
     return df
+
 
 def criar_feature_padrao_acabamento(df):
     print("\n[*/*] Codificando padrão de acabamento (ordinal)...")
@@ -150,6 +159,7 @@ def criar_feature_padrao_acabamento(df):
           f"{n_nulos} nulos a remover no dropna")
     return df
 
+
 def criar_features_basicas(df):
     print("\n[6/8] Criando features básicas...")
 
@@ -165,6 +175,47 @@ def criar_features_basicas(df):
     print("idade_imovel criado")
     print("is_apartamento criado")
 
+    return df
+
+def filtrar_subdeclaracao_por_classe(df):
+    print(f"\n[7.6/8] Filtrando subdeclaração por piso de classe de bairro...")
+    print(f"  Linhas antes: {len(df):,}")
+
+    # Classe de cada imóvel (mesma regra do ibge_features: padrão = Médio).
+    classe = df['bairro'].map(BAIRRO_PARA_CLASSE).fillna(GRUPO_BAIRRO_PADRAO)
+
+    # Piso correspondente à classe de cada imóvel.
+    piso = classe.map(PISO_PRECO_M2_POR_CLASSE)
+
+    mask_ok = df['preco_m2'] >= piso
+    removidos = int((~mask_ok).sum())
+
+    print(f"  ✓ Subdeclarações removidas (preço/m² abaixo do piso da classe): "
+          f"{removidos:,} ({removidos / len(df) * 100:.2f}%)")
+
+    # Sanity check: o que está sendo cortado, por classe.
+    df_rem = df[~mask_ok]
+    if len(df_rem) > 0:
+        nomes_classe = {1: 'Popular', 2: 'Médio', 3: 'Alto', 4: 'Luxo'}
+        classe_rem = classe[~mask_ok]
+        print(f"  Remoções por classe:")
+        for c in sorted(nomes_classe):
+            n = int((classe_rem == c).sum())
+            if n:
+                print(f"    {nomes_classe[c]:8s} (piso R$ "
+                      f"{PISO_PRECO_M2_POR_CLASSE[c]:,}/m²): {n:,}")
+
+        cols = ['bairro', 'tipo_construtivo', 'area_construida_m2',
+                'valor_base_calculo_real', 'preco_m2']
+        print(f"\n  Amostra (menores preços/m² removidos):")
+        for _, r in df_rem.nsmallest(8, 'preco_m2')[cols].iterrows():
+            print(f"    {r['bairro']:18s} {r['tipo_construtivo']:3s} "
+                  f"{r['area_construida_m2']:>6.0f}m²  "
+                  f"R$ {r['valor_base_calculo_real']:>12,.0f}  "
+                  f"(R$ {r['preco_m2']:>8,.0f}/m²)")
+
+    df = df[mask_ok].copy()
+    print(f"\n  Linhas depois: {len(df):,}")
     return df
 
 def aplicar_filtros_rigorosos(df):
@@ -246,11 +297,14 @@ def aplicar_filtros_rigorosos(df):
     print(f"Duplicatas: {removidos_duplicatas:,} removidos")
 
     # FILTRO 6: Outliers de preço/m² relativos ao bairro
-    ANOS_TREINO = list(range(2008, 2022))  # 2008-2021, igual ao train.py
+    ANOS_TREINO = list(range(2008, 2022))
     df = filtrar_outliers_preco_m2_por_bairro(
         df, anos_treino=ANOS_TREINO,
         k_iqr_inf=1.5, k_iqr_sup=3.0, min_transacoes=30
     )
+
+    # Filtro 7
+    df = filtrar_subdeclaracao_por_classe(df)
 
     # Resumo
     linhas_final = len(df)
@@ -264,8 +318,7 @@ def aplicar_filtros_rigorosos(df):
 
     return df
 
-def filtrar_outliers_preco_m2_por_bairro(df, anos_treino=None, k_iqr_inf=1.5,k_iqr_sup=3.0, min_transacoes=30):
-
+def filtrar_outliers_preco_m2_por_bairro(df, anos_treino=None, k_iqr_inf=1.5, k_iqr_sup=3.0, min_transacoes=30):
     print(f"\n[7.5/8] Filtrando outliers de preço/m² por bairro e tipo...")
     print(f"Linhas antes: {len(df):,}")
 
@@ -383,26 +436,24 @@ def deflacionar_valores(df):
 
     f_min, f_max = fator_serie.min(), fator_serie.max()
     print(f"Fatores aplicados — varia de {f_min:.3f}x "
-            f"(transações recentes) a {f_max:.3f}x (mais antigas)")
+          f"(transações recentes) a {f_max:.3f}x (mais antigas)")
     med_nom = df['valor_base_calculo'].median()
     med_real = df['valor_base_calculo_real'].median()
     print(f"Mediana base de cálculo: "
-            f"R$ {med_nom:,.0f} (nominal) -> "
-            f"R$ {med_real:,.0f} (dez/2024)")
+          f"R$ {med_nom:,.0f} (nominal) -> "
+          f"R$ {med_real:,.0f} (dez/2024)")
 
     return df
 
 def limpar_dataset_itbi(df=None, path_input=None):
-
     # Carregar dados
     if df is None:
         if path_input is None:
             path_input = ITBI_RAW
         df = pd.read_csv(path_input, encoding='utf-8')
 
-    
     print("PIPELINE DE LIMPEZA - ITBI BELO HORIZONTE")
-    
+
     print(f"\nArquivo de entrada: {path_input}")
     print(f"Linhas iniciais: {len(df):,}\n")
 
@@ -431,7 +482,7 @@ def limpar_dataset_itbi(df=None, path_input=None):
 
     # Resumo final
     print("LIMPEZA CONCLUÍDA")
-    
+
     print(f"\nDataset final: {len(df_clean):,} linhas, {len(df_clean.columns)} colunas")
     print(f"Período: {df_clean['ano_transacao'].min():.0f} - {df_clean['ano_transacao'].max():.0f}")
     print(f"Valor médio (base cálc., dez/2024): R$ {df_clean['valor_base_calculo_real'].mean():,.2f}")
@@ -439,6 +490,7 @@ def limpar_dataset_itbi(df=None, path_input=None):
     print(f"Preço/m² médio: R$ {df_clean['preco_m2'].mean():,.2f}")
 
     return df_clean
+
 
 def salvar_dataset_limpo(df, path_output=None):
     if path_output is None:
@@ -448,6 +500,7 @@ def salvar_dataset_limpo(df, path_output=None):
 
     print(f"\nDataset salvo: {path_output}")
     print(f"Tamanho: {df.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
+
 
 if __name__ == "__main__":
     print("Carregando dados brutos...")

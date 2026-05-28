@@ -18,7 +18,21 @@ N_ITER = 50
 N_FOLDS = 4
 RANDOM_STATE = 42
 
-MODELOS_A_TUNAR = ['xgboost', 'lightgbm']
+MODELOS_A_TUNAR = ['xgboost', 'lightgbm', 'random_forest']
+
+
+# ============================================================================
+# UTILITÁRIO: conversão de tipos numpy para JSON
+# ============================================================================
+
+def _converter(obj):
+    """JSON nativo não serializa np.int64 / np.float64."""
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        return float(obj)
+    return obj
+
 
 # ============================================================================
 # 1. CARREGAR E PREPARAR DADOS
@@ -65,18 +79,10 @@ tscv = TimeSeriesSplit(n_splits=N_FOLDS)
 SCORING = 'neg_mean_absolute_error'
 
 # Espaços de busca por modelo.
-# Para o RF, o teto de n_estimators é moderado para o tempo não estourar.
+# Ordem dos dicionários = ordem de execução: boosters primeiro (rápidos),
+# Random Forest por último (mais lento). Assim os hiperparâmetros dos
+# boosters já estão salvos em disco antes do RF começar.
 espacos = {
-    'random_forest': {
-        'estimador': RandomForestRegressor(random_state=RANDOM_STATE, n_jobs=1),
-        'distribuicoes': {
-            'n_estimators': randint(80, 220),
-            'max_depth': randint(10, 35),
-            'min_samples_split': randint(2, 20),
-            'min_samples_leaf': randint(1, 12),
-            'max_features': uniform(0.4, 0.6),  # fração: 0.4 a 1.0
-        },
-    },
     'xgboost': {
         'estimador': XGBRegressor(random_state=RANDOM_STATE, n_jobs=1,
                                   verbosity=0),
@@ -88,6 +94,7 @@ espacos = {
             'colsample_bytree': uniform(0.6, 0.4),
             'reg_alpha': uniform(0.0, 1.0),
             'reg_lambda': uniform(0.5, 2.0),
+            'min_child_weight': randint(1, 20),
         },
     },
     'lightgbm': {
@@ -101,15 +108,27 @@ espacos = {
             'colsample_bytree': uniform(0.6, 0.4),
             'num_leaves': randint(20, 150),
             'min_child_samples': randint(10, 80),
+            'reg_alpha': uniform(0.0, 1.0),
+            'reg_lambda': uniform(0.0, 1.0),
+        },
+    },
+    'random_forest': {
+        'estimador': RandomForestRegressor(random_state=RANDOM_STATE, n_jobs=1),
+        'distribuicoes': {
+            'n_estimators': randint(80, 220),
+            'max_depth': randint(10, 35),
+            'min_samples_split': randint(2, 20),
+            'min_samples_leaf': randint(1, 12),
+            'max_features': uniform(0.4, 0.6),  # fração: 0.4 a 1.0
         },
     },
 }
 
 # ============================================================================
-# 3. EXECUTAR O TUNING
+# 3. EXECUTAR O TUNING (salvamento incremental, modelo a modelo)
 # ============================================================================
 
-resultados = {}
+caminho = OUTPUTS_TABLES / 'melhores_hiperparametros.json'
 
 for nome, cfg in espacos.items():
     if nome not in MODELOS_A_TUNAR:
@@ -119,7 +138,7 @@ for nome, cfg in espacos.items():
     print("\n" + "=" * 80)
     print(f"TUNANDO: {nome}")
     print("=" * 80)
-    print(f"  {N_ITER} combinações × {N_FOLDS} folds = {N_ITER * N_FOLDS} treinos")
+    print(f"{N_ITER} combinações × {N_FOLDS} folds = {N_ITER * N_FOLDS} treinos")
 
     inicio = time.time()
 
@@ -129,7 +148,7 @@ for nome, cfg in espacos.items():
         n_iter=N_ITER,
         scoring=SCORING,
         cv=tscv,
-        n_jobs=-1,            # paraleliza as combinações nos 12 núcleos
+        n_jobs=-1,            # paraleliza as combinações nos núcleos disponíveis
         random_state=RANDOM_STATE,
         verbose=2,
         error_score='raise',
@@ -149,43 +168,28 @@ for nome, cfg in espacos.items():
     for k, v in busca.best_params_.items():
         print(f"    {k}: {v}")
 
-    resultados[nome] = {
-        'melhores_parametros': busca.best_params_,
-        'melhor_mae_log': melhor_mae_log,
-        'duracao_min': duracao,
-    }
-
-# ============================================================================
-# 4. SALVAR
-# ============================================================================
-
-# Converter tipos numpy para tipos Python nativos (JSON não serializa np.int).
-def _converter(obj):
-    if isinstance(obj, (np.integer,)):
-        return int(obj)
-    if isinstance(obj, (np.floating,)):
-        return float(obj)
-    return obj
-
-resultados_limpos = {}
-for nome, r in resultados.items():
-    params_limpos = {k: _converter(v) for k, v in r['melhores_parametros'].items()}
-    resultados_limpos[nome] = {
+    # --- Salvamento incremental: persiste o resultado deste modelo agora ---
+    # Assim, se algo der errado num modelo posterior (ex.: pane durante o RF),
+    # os modelos já tunados estão preservados em disco.
+    params_limpos = {k: _converter(v) for k, v in busca.best_params_.items()}
+    resultado_modelo = {
         'melhores_parametros': params_limpos,
-        'melhor_mae_log': float(r['melhor_mae_log']),
-        'duracao_min': float(r['duracao_min']),
+        'melhor_mae_log': float(melhor_mae_log),
+        'duracao_min': float(duracao),
     }
 
-caminho = OUTPUTS_TABLES / 'melhores_hiperparametros.json'
-if caminho.exists():
-    with open(caminho, 'r', encoding='utf8') as f:
-        json_final = json.load(f)
-    print(f"JSON existente encontrado - {list(json_final.keys())}")
-else:
-    json_final = {}
+    if caminho.exists():
+        with open(caminho, 'r', encoding='utf8') as f:
+            json_final = json.load(f)
+    else:
+        json_final = {}
 
-with open(caminho, 'w', encoding='utf-8') as f:
-    json.dump(resultados_limpos, f, indent=2, ensure_ascii=False)
+    json_final[nome] = resultado_modelo
+
+    with open(caminho, 'w', encoding='utf-8') as f:
+        json.dump(json_final, f, indent=2, ensure_ascii=False)
+
+    print(f"  → Salvo em {caminho}")
 
 print("\n" + "=" * 80)
 print("TUNING CONCLUÍDO")
