@@ -19,7 +19,11 @@ from config import (
 )
 
 EARLY_STOPPING_ROUNDS = 50
-N_ESTIMATORS_MAX = 2000
+N_ESTIMATORS_MAX = 4000
+# Fração final (por data) do treino usada só para early stopping dos boosters.
+# Depois do early stopping, o booster é RE-TREINADO no treino inteiro.
+FRAC_EARLY_STOPPING = 0.12
+
 
 # ─── ITEM 5: alvo opcional em R$/m² ─────────────────────────────────────────
 def _y_para_modelo(y, area):
@@ -40,7 +44,6 @@ def _vetor_monotonia(colunas, framework):
     cons = []
     for c in colunas:
         s = MONOTONIC_CONSTRAINTS.get(c, 0)
-        # em R$/m² a relação com área deixa de ser monotônica
         if PREVER_PRECO_M2 and c in ('area_construida_m2', 'area_total_m2',
                                      'area_terreno_m2'):
             s = 0
@@ -68,41 +71,52 @@ def preparar_dados(df):
     print(f"Features: {X.shape[1]} colunas, {X.shape[0]:,} linhas")
     return X, y
 
+
 def dividir_dados(X, y, df_original):
+    """
+    Split novo: TODOS os modelos treinam no MESMO conjunto (treino_full), para a
+    comparação RF × boosters ser justa. A 'validação' some como camada de
+    relatório — quem estima generalização é o evaluate.py (backtest). Os boosters
+    usam uma CAUDA recente do treino só para early stopping (depois re-treinam
+    no treino inteiro).
+    """
     print("\n[2/6] Dividindo dados (divisão temporal)...")
     anos = df_original['ano_transacao'].values
 
     if TREINAR_APENAS_REGIME_NOVO:
-        # ITEM 1: split DENTRO do regime novo (>=2023). 2023 = treino+val,
-        # 2024 = teste. Evita misturar o regime antigo (alvo de outra natureza).
+        # ITEM 1: tudo dentro do regime novo. treino_full = 2023; teste = 2024.
         regime = classificar_regime(df_original['data_transacao'])
         mask_novo = regime == 'novo'
-        mask_train = mask_novo & (anos <= 2023)
-        mask_val = mask_novo & (anos == 2023)   # val = parte recente de 2023
-        # refinamento simples: val = 2º semestre de 2023
-        mes = df_original['mes_transacao'].values
-        mask_val = mask_novo & (anos == 2023) & (mes >= 7)
-        mask_train = mask_novo & ((anos < 2023) | ((anos == 2023) & (mes < 7)))
+        mask_train_full = mask_novo & (anos <= 2023)
         mask_test = mask_novo & (anos >= 2024)
-        print("  [regime novo] treino<=2023H1 | val=2023H2 | teste>=2024")
+        print("  [regime novo] treino_full = 2023 | teste >= 2024")
     else:
-        mask_train = anos <= 2021
-        mask_val = anos == 2022
-        mask_test = anos >= 2023
+        mask_train_full = anos <= 2022       # RF e boosters treinam aqui
+        mask_test = anos >= 2023             # holdout do artigo
+        print("  treino_full = 2008-2022 | teste >= 2023")
 
-    X_train, y_train = X[mask_train], y[mask_train]
-    X_val, y_val = X[mask_val], y[mask_val]
+    X_train_full, y_train_full = X[mask_train_full], y[mask_train_full]
     X_test, y_test = X[mask_test], y[mask_test]
-    X_train_full = X[mask_train | mask_val]
-    y_train_full = y[mask_train | mask_val]
+
+    # datas do treino_full, para recortar a cauda de early stopping por tempo
+    datas_tf = pd.to_datetime(df_original.loc[mask_train_full, 'data_transacao'])
 
     total = len(X)
-    print(f"Treino:    {len(X_train):>7,} ({len(X_train)/total*100:.1f}%)")
-    print(f"Validação: {len(X_val):>7,} ({len(X_val)/total*100:.1f}%)")
-    print(f"Teste:     {len(X_test):>7,} ({len(X_test)/total*100:.1f}%)")
-    print(f"\nRF usará treino+val: {len(X_train_full):,} linhas")
-    return (X_train, y_train, X_val, y_val, X_test, y_test,
-            X_train_full, y_train_full)
+    print(f"Treino (todos): {len(X_train_full):>7,} "
+          f"({len(X_train_full)/total*100:.1f}%)")
+    print(f"Teste:          {len(X_test):>7,} ({len(X_test)/total*100:.1f}%)")
+    return X_train_full, y_train_full, X_test, y_test, datas_tf
+
+
+def _split_early_stopping(X_tf, y_tf, datas_tf, frac=FRAC_EARLY_STOPPING):
+    """Separa a cauda mais recente (por data) do treino para early stopping."""
+    ordem = np.argsort(datas_tf.values, kind='stable')
+    n_tail = max(int(len(ordem) * frac), 1)
+    idx_tail = ordem[-n_tail:]
+    idx_fit = ordem[:-n_tail]
+    return (X_tf.iloc[idx_fit], y_tf.iloc[idx_fit],
+            X_tf.iloc[idx_tail], y_tf.iloc[idx_tail])
+
 
 def calcular_metricas(y_true, y_pred, nome_modelo):
     y_true = np.asarray(y_true, dtype=float)
@@ -125,8 +139,8 @@ def _reportar(metricas, etiqueta):
           f"R² {metricas['R²']:.4f}")
 
 
-def treinar_random_forest(X_train_full, y_train_full, X_val, y_val, X_test, y_test):
-    print("\n[3/6] Treinando Random Forest...")
+def treinar_random_forest(X_train_full, y_train_full, X_test, y_test):
+    print("\n[3/6] Treinando Random Forest (treino 2008-2022)...")
     area_full = X_train_full['area_construida_m2'].values
     modelo = RandomForestRegressor(
         **HIPERPARAMETROS['random_forest'],
@@ -135,72 +149,70 @@ def treinar_random_forest(X_train_full, y_train_full, X_val, y_val, X_test, y_te
     modelo.fit(X_train_full, _y_para_modelo(y_train_full, area_full))
 
     y_pred_train = _pred_para_reais(modelo.predict(X_train_full), area_full)
-    y_pred_val = _pred_para_reais(modelo.predict(X_val), X_val['area_construida_m2'].values)
-    y_pred_test = _pred_para_reais(modelo.predict(X_test), X_test['area_construida_m2'].values)
-
+    y_pred_test = _pred_para_reais(modelo.predict(X_test),
+                                   X_test['area_construida_m2'].values)
     m_train = calcular_metricas(y_train_full, y_pred_train, 'Random Forest (Train)')
-    m_val = calcular_metricas(y_val, y_pred_val, 'Random Forest (Val)')
     m_test = calcular_metricas(y_test, y_pred_test, 'Random Forest')
-    _reportar(m_train, 'train'); _reportar(m_val, 'val '); _reportar(m_test, 'TESTE')
-    return modelo, m_train, m_val, m_test
+    _reportar(m_train, 'train'); _reportar(m_test, 'TESTE')
+    return modelo, m_train, m_test
 
-def treinar_xgboost(X_train, y_train, X_val, y_val, X_test, y_test):
-    print(f"\n[4/6] Treinando XGBoost (monotonia + regularizado)...")
-    hp = dict(HIPERPARAMETROS['xgboost'])
+
+def _treinar_booster(framework, X_tf, y_tf, datas_tf, X_test, y_test):
+    """
+    Passo 1: acha best_iteration via early stopping numa cauda recente do treino.
+    Passo 2: RE-TREINA no treino_full inteiro (2008-2022) com esse n_estimators.
+    Assim o booster treina nos MESMOS dados da RF (comparação justa).
+    """
+    X_fit, y_fit, X_es, y_es = _split_early_stopping(X_tf, y_tf, datas_tf)
+    area_fit = X_fit['area_construida_m2'].values
+    area_es = X_es['area_construida_m2'].values
+    area_tf = X_tf['area_construida_m2'].values
+    mono = _vetor_monotonia(list(X_tf.columns), framework)
+
+    hp = dict(HIPERPARAMETROS[framework])
     hp.pop('n_estimators', None)
-    area_tr = X_train['area_construida_m2'].values
-    modelo = XGBRegressor(
-        **hp, n_estimators=N_ESTIMATORS_MAX,
-        early_stopping_rounds=EARLY_STOPPING_ROUNDS,
-        monotone_constraints=_vetor_monotonia(list(X_train.columns), 'xgboost'),
-        random_state=42, n_jobs=-1, verbosity=0,
-    )
-    modelo.fit(
-        X_train, _y_para_modelo(y_train, area_tr),
-        eval_set=[(X_val, _y_para_modelo(y_val, X_val['area_construida_m2'].values))],
-        verbose=False,
-    )
-    print(f"Árvores usadas (early stopping): {modelo.best_iteration + 1}")
 
-    y_pred_train = _pred_para_reais(modelo.predict(X_train), area_tr)
-    y_pred_val = _pred_para_reais(modelo.predict(X_val), X_val['area_construida_m2'].values)
-    y_pred_test = _pred_para_reais(modelo.predict(X_test), X_test['area_construida_m2'].values)
+    # ── passo 1: early stopping na cauda ──
+    if framework == 'xgboost':
+        m_es = XGBRegressor(**hp, n_estimators=N_ESTIMATORS_MAX,
+                            early_stopping_rounds=EARLY_STOPPING_ROUNDS,
+                            monotone_constraints=mono,
+                            random_state=42, n_jobs=-1, verbosity=0)
+        m_es.fit(X_fit, _y_para_modelo(y_fit, area_fit),
+                 eval_set=[(X_es, _y_para_modelo(y_es, area_es))], verbose=False)
+        melhor_n = m_es.best_iteration + 1
+    else:  # lightgbm
+        m_es = LGBMRegressor(**hp, n_estimators=N_ESTIMATORS_MAX,
+                             monotone_constraints=mono,
+                             random_state=42, n_jobs=-1, verbose=-1)
+        m_es.fit(X_fit, _y_para_modelo(y_fit, area_fit),
+                 eval_set=[(X_es, _y_para_modelo(y_es, area_es))],
+                 callbacks=[lgb_early_stopping(EARLY_STOPPING_ROUNDS, verbose=False)])
+        melhor_n = m_es.best_iteration_
+    print(f"  early stopping (cauda recente do treino) -> {melhor_n} árvores")
 
-    m_train = calcular_metricas(y_train, y_pred_train, 'XGBoost (Train)')
-    m_val = calcular_metricas(y_val, y_pred_val, 'XGBoost (Val)')
-    m_test = calcular_metricas(y_test, y_pred_test, 'XGBoost')
-    _reportar(m_train, 'train'); _reportar(m_val, 'val'); _reportar(m_test, 'TESTE')
-    return modelo, m_train, m_val, m_test
+    # ── passo 2: re-treina no treino_full inteiro com melhor_n ──
+    if framework == 'xgboost':
+        modelo = XGBRegressor(**hp, n_estimators=melhor_n,
+                              monotone_constraints=mono,
+                              random_state=42, n_jobs=-1, verbosity=0)
+    else:
+        modelo = LGBMRegressor(**hp, n_estimators=melhor_n,
+                               monotone_constraints=mono,
+                               random_state=42, n_jobs=-1, verbose=-1)
+    modelo.fit(X_tf, _y_para_modelo(y_tf, area_tf))
 
-def treinar_lightgbm(X_train, y_train, X_val, y_val, X_test, y_test):
-    print(f"\n[5/6] Treinando LightGBM (monotonia + regularizado)...")
-    hp = dict(HIPERPARAMETROS['lightgbm'])
-    hp.pop('n_estimators', None)
-    area_tr = X_train['area_construida_m2'].values
-    modelo = LGBMRegressor(
-        **hp, n_estimators=N_ESTIMATORS_MAX,
-        monotone_constraints=_vetor_monotonia(list(X_train.columns), 'lightgbm'),
-        random_state=42, n_jobs=-1, verbose=-1,
-    )
-    modelo.fit(
-        X_train, _y_para_modelo(y_train, area_tr),
-        eval_set=[(X_val, _y_para_modelo(y_val, X_val['area_construida_m2'].values))],
-        callbacks=[lgb_early_stopping(EARLY_STOPPING_ROUNDS, verbose=False)],
-    )
-    print(f" Árvores usadas (early stopping): {modelo.best_iteration_}")
+    y_pred_train = _pred_para_reais(modelo.predict(X_tf), area_tf)
+    y_pred_test = _pred_para_reais(modelo.predict(X_test),
+                                   X_test['area_construida_m2'].values)
+    nome = 'XGBoost' if framework == 'xgboost' else 'LightGBM'
+    m_train = calcular_metricas(y_tf, y_pred_train, f'{nome} (Train)')
+    m_test = calcular_metricas(y_test, y_pred_test, nome)
+    _reportar(m_train, 'train'); _reportar(m_test, 'TESTE')
+    return modelo, m_train, m_test
 
-    y_pred_train = _pred_para_reais(modelo.predict(X_train), area_tr)
-    y_pred_val = _pred_para_reais(modelo.predict(X_val), X_val['area_construida_m2'].values)
-    y_pred_test = _pred_para_reais(modelo.predict(X_test), X_test['area_construida_m2'].values)
 
-    m_train = calcular_metricas(y_train, y_pred_train, 'LightGBM (Train)')
-    m_val = calcular_metricas(y_val, y_pred_val, 'LightGBM (Val)')
-    m_test = calcular_metricas(y_test, y_pred_test, 'LightGBM')
-    _reportar(m_train, 'train'); _reportar(m_val, 'val '); _reportar(m_test, 'TESTE')
-    return modelo, m_train, m_val, m_test
-
-def salvar_modelos_e_resultados(modelos, resultados_test, resultados_val,
-                                resultados_train):
+def salvar_modelos_e_resultados(modelos, resultados_test, resultados_train):
     print("\n[6/6] Salvando modelos e resultados...")
     for nome, modelo in modelos.items():
         caminho = OUTPUTS_MODELS / f'{nome.lower().replace(" ", "_")}.pkl'
@@ -210,12 +222,11 @@ def salvar_modelos_e_resultados(modelos, resultados_test, resultados_val,
 
     df_test = pd.DataFrame(resultados_test)
     df_test.to_csv(OUTPUTS_TABLES / 'resultados_modelos.csv', index=False)
-    pd.DataFrame(resultados_val).to_csv(
-        OUTPUTS_TABLES / 'resultados_modelos_val.csv', index=False)
     pd.DataFrame(resultados_train).to_csv(
         OUTPUTS_TABLES / 'resultados_modelos_train.csv', index=False)
-    print("Tabelas (teste, val, train) salvas.")
+    print("Tabelas (teste, train) salvas.")
     return df_test
+
 
 def pipeline_completo(path_input=None):
     if path_input is None:
@@ -226,17 +237,19 @@ def pipeline_completo(path_input=None):
     print(f"{len(df):,} linhas carregadas")
 
     X, y = preparar_dados(df)
-    (X_train, y_train, X_val, y_val, X_test, y_test,
-     X_train_full, y_train_full) = dividir_dados(X, y, df)
+    X_tf, y_tf, X_test, y_test, datas_tf = dividir_dados(X, y, df)
 
-    rf_model, rf_train, rf_val, rf_test = treinar_random_forest(
-        X_train_full, y_train_full, X_val, y_val, X_test, y_test)
-    xgb_model, xgb_train, xgb_val, xgb_test = treinar_xgboost(
-        X_train, y_train, X_val, y_val, X_test, y_test)
-    lgb_model, lgb_train, lgb_val, lgb_test = treinar_lightgbm(
-        X_train, y_train, X_val, y_val, X_test, y_test)
+    rf_model, rf_train, rf_test = treinar_random_forest(X_tf, y_tf, X_test, y_test)
 
-    # ITEM 5: ENSEMBLE (média XGB+LGBM em R$). Modelos empatados -> média estável.
+    print("\n[4/6] Treinando XGBoost (early stopping + re-treino no treino full)...")
+    xgb_model, xgb_train, xgb_test = _treinar_booster(
+        'xgboost', X_tf, y_tf, datas_tf, X_test, y_test)
+
+    print("\n[5/6] Treinando LightGBM (early stopping + re-treino no treino full)...")
+    lgb_model, lgb_train, lgb_test = _treinar_booster(
+        'lightgbm', X_tf, y_tf, datas_tf, X_test, y_test)
+
+    # ENSEMBLE (média XGB+LGBM em R$)
     area_test = X_test['area_construida_m2'].values
     pred_ens = (_pred_para_reais(xgb_model.predict(X_test), area_test) +
                 _pred_para_reais(lgb_model.predict(X_test), area_test)) / 2.0
@@ -245,11 +258,9 @@ def pipeline_completo(path_input=None):
 
     modelos = {'Random Forest': rf_model, 'XGBoost': xgb_model, 'LightGBM': lgb_model}
     resultados_test = [rf_test, xgb_test, lgb_test, ens_test]
-    resultados_val = [rf_val, xgb_val, lgb_val]
     resultados_train = [rf_train, xgb_train, lgb_train]
 
-    df_test = salvar_modelos_e_resultados(
-        modelos, resultados_test, resultados_val, resultados_train)
+    df_test = salvar_modelos_e_resultados(modelos, resultados_test, resultados_train)
 
     pd.set_option('display.float_format', lambda v: f'{v:,.2f}')
     print("\n" + "=" * 80)
@@ -263,8 +274,11 @@ def pipeline_completo(path_input=None):
           f"— MAPE {campeao['MAPE']:.2f}%, Mediana {campeao['Mediana_Erro_%']:.2f}%, "
           f"R² {campeao['R²']:.4f}")
     print("=" * 80)
-    print("\nTREINAMENTO CONCLUÍDO!")
+    print("\nLembrete: o número HONESTO de generalização é o backtest do "
+          "evaluate.py. Este teste 2023-2024 é o holdout único do artigo.")
+    print("TREINAMENTO CONCLUÍDO!")
     return modelos, df_test, (X_test, y_test)
+
 
 if __name__ == '__main__':
     modelos, resultados, dados_teste = pipeline_completo()

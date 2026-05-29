@@ -10,17 +10,6 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import (ITBI_FINAL, OUTPUTS_MODELS, OUTPUTS_TABLES,
                     TARGET, COLUNAS_EXCLUIR_MODELO, classificar_regime)
 
-# =============================================================================
-#  POR QUE TUDO AQUI (e não em 2 arquivos backtest_*.py):
-#  Existe UM só conceito de avaliação honesta — o backtest rolling-origin:
-#  treina em ano <= Y, testa em Y+1, nunca avalia no que treinou. A "versão de
-#  regime" é apenas esse mesmo backtest RESTRITO ao regime novo (>=2023), que é
-#  onde o alvo é estacionário. As duas viram parâmetros da mesma função.
-#
-#  Lembrete do item 2: o "val" do train.py NÃO é holdout (a RF treina nele; os
-#  boosters fazem early stopping nele). O número honesto é este backtest.
-# =============================================================================
-
 
 # ─── métricas (item 7: não só MAPE, que estoura no barato) ──────────────────
 def calcular_metricas(y_true, y_pred, nome_modelo=None):
@@ -113,7 +102,6 @@ def fn_xgboost(df_tr, df_te):
     mdl.fit(X_tr, np.log1p(y_tr))
     return np.expm1(mdl.predict(X_te))
 
-
 def fn_ensemble(df_tr, df_te):
     return (fn_lightgbm(df_tr, df_te) + fn_xgboost(df_tr, df_te)) / 2.0
 
@@ -131,15 +119,17 @@ def fn_separado_por_tipo(df_tr, df_te, base=fn_lightgbm):
 
 # ─── backtest rolling-origin (item 2/7) ─────────────────────────────────────
 def backtest_rolling(df, treinar_e_prever, anos_corte, nome='modelo',
-                     apenas_regime_novo=False):
+                     apenas_regime_novo=False, silencioso=False):
     """
     Para cada Y em anos_corte: treina em ano<=Y, testa em ano==Y+1.
     apenas_regime_novo=True -> restringe treino e teste ao regime novo (>=2023)
     e faz o rolling por TRIMESTRE (há poucos anos no regime novo).
+    Retorna o DataFrame de resultados por janela.
     """
-    print("\n" + "=" * 80)
-    print(f"BACKTEST {'(REGIME NOVO) ' if apenas_regime_novo else ''}— {nome}")
-    print("=" * 80)
+    if not silencioso:
+        print("\n" + "=" * 80)
+        print(f"BACKTEST {'(REGIME NOVO) ' if apenas_regime_novo else ''}— {nome}")
+        print("=" * 80)
     df = df.copy()
     df['_data'] = pd.to_datetime(df['data_transacao'])
 
@@ -163,16 +153,45 @@ def backtest_rolling(df, treinar_e_prever, anos_corte, nome='modelo',
         m = calcular_metricas(te[TARGET].values, y_pred)
         m['treino_ate'] = str(ate); m['testa'] = str(alvo); m['n'] = len(te)
         res.append(m)
-        print(f"  treino<= {ate} | teste {alvo}: MAPE {m['MAPE']:5.1f}% | "
-              f"MdAPE {m['MdAPE']:5.1f}% | RMSLE {m['RMSLE']:.3f} | "
-              f"R² {m['R²']:.3f} (n={m['n']:,})")
+        if not silencioso:
+            print(f"  treino<= {ate} | teste {alvo}: MAPE {m['MAPE']:5.1f}% | "
+                  f"MdAPE {m['MdAPE']:5.1f}% | RMSLE {m['RMSLE']:.3f} | "
+                  f"R² {m['R²']:.3f} (n={m['n']:,})")
 
     res = pd.DataFrame(res)
-    if len(res):
+    if len(res) and not silencioso:
         print(f"\n  RESUMO ({nome}) — média ± desvio:")
         for c in ['MAPE', 'MdAPE', 'RMSLE', 'R²']:
             print(f"    {c:6s}: {res[c].mean():7.3f} ± {res[c].std():.3f}")
     return res
+
+
+def tabela_comparativa(df, modelos, anos, apenas_regime_novo=False):
+    """Roda o MESMO backtest para vários modelos e imprime uma tabela única
+    com média ± desvio. modelos = dict {nome: funcao_treina_preve}."""
+    titulo = "REGIME NOVO" if apenas_regime_novo else "SÉRIE INTEIRA"
+    print("\n" + "#" * 80)
+    print(f"#  COMPARATIVO DE MODELOS — {titulo}")
+    print("#" * 80)
+    linhas = []
+    for nome, fn in modelos.items():
+        res = backtest_rolling(df, fn, anos, nome,
+                               apenas_regime_novo=apenas_regime_novo,
+                               silencioso=True)
+        if len(res):
+            linhas.append({
+                'Modelo': nome,
+                'MAPE': f"{res['MAPE'].mean():.2f} ± {res['MAPE'].std():.2f}",
+                'MdAPE': f"{res['MdAPE'].mean():.2f} ± {res['MdAPE'].std():.2f}",
+                'RMSLE': f"{res['RMSLE'].mean():.3f}",
+                'R²': f"{res['R²'].mean():.3f}",
+                '_ord': res['MdAPE'].mean(),
+            })
+    tab = pd.DataFrame(linhas).sort_values('_ord').drop(columns='_ord')
+    print("\n" + tab.to_string(index=False))
+    melhor = tab.iloc[0]['Modelo']
+    print(f"\n  → Melhor por MdAPE médio: {melhor}")
+    return tab
 
 
 # ─── ITEM 1: os dados antigos ajudam ou atrapalham o regime novo? ───────────
@@ -226,17 +245,25 @@ if __name__ == '__main__':
     df = pd.read_csv(ITBI_FINAL)
     anos = list(range(2018, 2024))
 
-    # 1) backtest na série inteira: baseline vs modelo (mostra o salto de regime)
-    backtest_rolling(df, fn_baseline, anos, 'BASELINE R$/m²')
-    backtest_rolling(df, fn_lightgbm, anos, 'LightGBM regularizado')
+    # TODOS os modelos no MESMO backtest, para a comparação ser completa.
+    modelos = {
+        'Baseline R$/m²': fn_baseline,
+        'XGBoost': fn_xgboost,
+        'LightGBM': fn_lightgbm,
+        'Ensemble': fn_ensemble,
+    }
 
-    # 2) backtest HONESTO restrito ao regime novo (a sua régua de verdade)
-    backtest_rolling(df, fn_lightgbm, anos, 'LightGBM (regime novo)',
-                     apenas_regime_novo=True)
-    backtest_rolling(df, fn_ensemble, anos, 'Ensemble (regime novo)',
-                     apenas_regime_novo=True)
-    backtest_rolling(df, fn_separado_por_tipo, anos, 'AP/CA separados (regime novo)',
-                     apenas_regime_novo=True)
+    # (1) Série inteira — mostra o salto de regime e compara todos.
+    tab_serie = tabela_comparativa(df, modelos, anos, apenas_regime_novo=False)
 
-    # 3) treinar só no novo ajuda?
+    # (2) Regime novo — a régua honesta para escolher o modelo.
+    tab_novo = tabela_comparativa(df, modelos, anos, apenas_regime_novo=True)
+
+    # (3) Salva as tabelas para o artigo.
+    tab_serie.to_csv(OUTPUTS_TABLES / 'comparativo_serie_inteira.csv', index=False)
+    tab_novo.to_csv(OUTPUTS_TABLES / 'comparativo_regime_novo.csv', index=False)
+
+    # (4) Os dados antigos ajudam o regime novo? (com o modelo campeão)
     comparar_origem_treino(df, fn_lightgbm)
+
+    print("\nTabelas comparativas salvas em outputs/tables/.")

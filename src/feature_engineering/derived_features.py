@@ -3,6 +3,8 @@ import numpy as np
 from pathlib import Path
 import sys
 
+from src.feature_engineering.features_espaciais import criar_features_espaciais
+
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_CLEANED, ITBI_FINAL, TARGET
 
@@ -266,6 +268,7 @@ def aplicar_features_completo(df_input=None, path_input=None, salvar=True):
     df = criar_features_bairro_sem_leakage(df)
     df = criar_features_preco_m2_bairro_sem_leakage(df)
     df = criar_features_valorizacao_bairro(df)
+    df = criar_features_espaciais(df)
     df = criar_features_comparativas(df)
     df = criar_features_comparaveis(df)
     df = criar_feature_zona_uso(df)

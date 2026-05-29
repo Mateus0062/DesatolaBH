@@ -11,6 +11,9 @@ OUTPUTS_MODELS = BASE_DIR / 'outputs' / 'models'
 OUTPUTS_FIGURES = BASE_DIR / 'outputs' / 'figures'
 OUTPUTS_TABLES = BASE_DIR / 'outputs' / 'tables'
 
+OUTPUTS_TABLES_TRAIN2 = BASE_DIR / 'outputs' / 'tables' / 'treino_ate_2023'
+OUTPUTS_MODELS_TRAIN2 = BASE_DIR / 'outputs' / 'models' / 'treino_ate_2023'
+
 # Criar diretórios se não existirem
 for dir_path in [DATA_RAW, DATA_PROCESSED, DATA_FINAL,
                  OUTPUTS_MODELS, OUTPUTS_FIGURES, OUTPUTS_TABLES]:
@@ -19,6 +22,8 @@ for dir_path in [DATA_RAW, DATA_PROCESSED, DATA_FINAL,
 ITBI_RAW = DATA_RAW / 'ITBI_Relatorios.csv'
 ITBI_CLEANED = DATA_PROCESSED / 'ITBI_cleaned.csv'
 ITBI_FINAL = DATA_FINAL / 'ITBI_final_features.csv'
+
+
 
 MIN_AREA_M2 = 10
 MAX_AREA_M2 = 10_000
@@ -65,7 +70,7 @@ COLUNAS_EXCLUIR_MODELO = [
     "salario_medio_sm", "faixa_salarial", "grupo_bairro_num",
     "inicio_ano", "fim_de_ano", "imovel_novo", "valorizacao_bairro_3anos",
     # string crua (entra como zona_uso_te):
-    "zona_uso",
+    "zona_uso", "provavel_teardown", "area_km2_bairro", "populacao_bairro", "domicilios_bairro", "trimestre", "fator_construcao", "depreciacao_estimada",
 ]
 
 IPCA_VAR_MENSAL = {
@@ -128,19 +133,34 @@ IPCA_MES_BASE = (2024, 12)  # data-base: reais de dezembro/2024
 
 HIPERPARAMETROS = {
     "xgboost": {
-        "learning_rate": 0.03, "max_depth": 5, "min_child_weight": 20,
-        "subsample": 0.7, "colsample_bytree": 0.7,
-        "reg_alpha": 1.0, "reg_lambda": 5.0, "n_estimators": 2000,
+        "colsample_bytree": 0.6321296730347047,
+        "gamma": 0.04707849413428006,
+        "learning_rate": 0.05359786331478119,
+        "max_depth": 9,
+        "min_child_weight": 56,
+        "reg_alpha": 0.5259908096680156,
+        "reg_lambda": 1.1544499164857522,
+        "subsample": 0.8671775480513688,
+        "n_estimators": 4000,   # o train.py sobrescreve com N_ESTIMATORS_MAX
     },
     "lightgbm": {
-        "learning_rate": 0.03, "max_depth": 6, "num_leaves": 31,
-        "min_child_samples": 60, "subsample": 0.7, "subsample_freq": 1,
-        "colsample_bytree": 0.7, "reg_alpha": 1.0, "reg_lambda": 5.0,
-        "n_estimators": 2000,
+        "colsample_bytree": 0.694791287941726,
+        "learning_rate": 0.07145599889878906,
+        "max_depth": 10,
+        "min_child_samples": 109,
+        "num_leaves": 109,
+        "reg_alpha": 2.887945244033775,
+        "reg_lambda": 7.523821084609852,
+        "subsample": 0.8435909721327942,
+        "subsample_freq": 1,
+        "n_estimators": 4000,
     },
     "random_forest": {
-        "max_depth": 18, "max_features": 0.5,
-        "min_samples_leaf": 10, "min_samples_split": 20, "n_estimators": 300,
+        "max_depth": 18,
+        "max_features": 0.5,
+        "min_samples_leaf": 10,
+        "min_samples_split": 20,
+        "n_estimators": 300,
     },
 }
 

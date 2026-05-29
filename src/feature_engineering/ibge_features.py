@@ -199,8 +199,7 @@ if __name__ == '__main__':
     PATH_ITBI = ITBI_FINAL
 
     # Opção 1: Se você colocou o CSV em data/external/
-    PATH_DENSIDADE = Path(
-        __file__).resolve().parent.parent.parent / 'data' / 'external' / 'dataset-densidade-demografica.csv'
+    PATH_DENSIDADE = Path(__file__).resolve().parent.parent.parent / 'data' / 'external' / 'dataset-densidade-demografica.csv'
 
     print("\nPROCESSANDO FEATURES IBGE")
 
