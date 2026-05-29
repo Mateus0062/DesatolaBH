@@ -1,35 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar.">
-      <change afterPath="$PROJECT_DIR$/ablacao_boosters.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/external/ceps_geocodificados.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/external/ceps_unicos.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/geocodificar.R" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/feature_engineering/features_espaciais.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modeling/train_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DesatolaBH.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DesatolaBH.iml" afterDir="false" />
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/final/ITBI_final_features.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/final/ITBI_final_features.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_construida_m2.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_construida_m2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_preco_medio_bairro_loo.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_preco_medio_bairro_loo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_importancia_barras.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_importancia_barras.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_summary.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_summary.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/melhores_hiperparametros.json" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/melhores_hiperparametros.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_val.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos_val.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/shap_ranking_importancia.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/shap_ranking_importancia.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/explicability/shap_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/explicability/shap_analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/ibge_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +102,7 @@
       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\recomendador" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.ablacao_boosters">
+  <component name="RunManager" selected="Python.train">
     <configuration name="ablacao_boosters" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DesatolaBH" />
       <option name="ENV_FILES" value="" />
@@ -252,10 +230,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.train" />
         <item itemvalue="Python.shap_analysis" />
         <item itemvalue="Python.evaluate" />
         <item itemvalue="Python.ablacao_boosters" />
-        <item itemvalue="Python.train" />
         <item itemvalue="Python.lime_local" />
       </list>
     </recent_temporary>
@@ -288,6 +266,7 @@
       <workItem from="1779887559544" duration="1280000" />
       <workItem from="1779906394639" duration="19502000" />
       <workItem from="1779989629078" duration="4183000" />
+      <workItem from="1780077132504" duration="842000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -329,7 +308,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779994650175</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
+      <option name="closed" value="true" />
+      <created>1780077467709</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1780077467709</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +337,8 @@
     <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
     <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
     <MESSAGE value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
+    <MESSAGE value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DesatolaBH$tuning_hiperparametros.coverage" NAME="tuning_hiperparametros Coverage Results" MODIFIED="1780025803928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
@@ -370,8 +358,8 @@
     <SUITE FILE_PATH="coverage/DesatolaBH$shap_analysis.coverage" NAME="shap_analysis Coverage Results" MODIFIED="1780074469481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
     <SUITE FILE_PATH="coverage/DesatolaBH$listar_colunas.coverage" NAME="listar_colunas Coverage Results" MODIFIED="1780072195104" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
     <SUITE FILE_PATH="coverage/DesatolaBH$shap_local.coverage" NAME="shap_local Coverage Results" MODIFIED="1779994133567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1780056049658" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
     <SUITE FILE_PATH="coverage/DesatolaBH$features_espaciais.coverage" NAME="features_espaciais Coverage Results" MODIFIED="1780064837701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1780077415748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
     <SUITE FILE_PATH="coverage/DesatolaBH$auditar_leakege.coverage" NAME="auditar_leakege Coverage Results" MODIFIED="1779989924720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_leakege" />
   </component>
 </project>
