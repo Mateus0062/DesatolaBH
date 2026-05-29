@@ -61,6 +61,11 @@ COLUNAS_EXCLUIR_MODELO = [
 
     # --- Splitters temporais: usados para dividir, não para prever ---
     'ano_transacao', 'mes_transacao',
+
+    "salario_medio_sm", "faixa_salarial", "grupo_bairro_num",
+    "inicio_ano", "fim_de_ano", "imovel_novo", "valorizacao_bairro_3anos",
+    # string crua (entra como zona_uso_te):
+    "zona_uso",
 ]
 
 IPCA_VAR_MENSAL = {
@@ -122,34 +127,21 @@ IPCA_MES_BASE = (2024, 12)  # data-base: reais de dezembro/2024
 # Criando variaveis para armazenar o parametros dos modelos aqui
 
 HIPERPARAMETROS = {
-    'xgboost': {
-        'colsample_bytree': 0.8675365010654429,
-        'learning_rate': 0.203117483419074,
-        'max_depth': 10,
-        'min_child_weight': 3,
-        'n_estimators': 598,
-        'reg_alpha': 0.38292687475378984,
-        'reg_lambda': 2.4434241907782077,
-        'subsample': 0.9395655297064336,
+    "xgboost": {
+        "learning_rate": 0.03, "max_depth": 5, "min_child_weight": 20,
+        "subsample": 0.7, "colsample_bytree": 0.7,
+        "reg_alpha": 1.0, "reg_lambda": 5.0, "n_estimators": 2000,
     },
-    'lightgbm': {
-        'colsample_bytree': 0.8784119186699892,
-        'learning_rate': 0.17531773932591585,
-        'max_depth': 10,
-        'min_child_samples': 41,
-        'n_estimators': 580,
-        'num_leaves': 105,
-        'reg_alpha': 0.3586467812961639,
-        'reg_lambda': 0.25416364906973876,
-        'subsample': 0.7181162353675755,
+    "lightgbm": {
+        "learning_rate": 0.03, "max_depth": 6, "num_leaves": 31,
+        "min_child_samples": 60, "subsample": 0.7, "subsample_freq": 1,
+        "colsample_bytree": 0.7, "reg_alpha": 1.0, "reg_lambda": 5.0,
+        "n_estimators": 2000,
     },
-    'random_forest': {
-        'max_depth': 33,
-        'max_features': 0.682180380667623,
-        'min_samples_leaf': 2,
-        'min_samples_split': 7,
-        'n_estimators': 218
-    }
+    "random_forest": {
+        "max_depth": 18, "max_features": 0.5,
+        "min_samples_leaf": 10, "min_samples_split": 20, "n_estimators": 300,
+    },
 }
 
 # Classe 1: Popular (< 5 SM)
@@ -254,3 +246,43 @@ PISO_PRECO_M2_POR_CLASSE = {
     3: 1_800,  # Alto
     4: 2_500,  # Luxo
 }
+
+import numpy as np  # se já não estiver importado no topo
+
+import pandas as pd
+DATA_INICIO_TRANSICAO = pd.Timestamp("2022-01-01")
+DATA_REGIME_NOVO = pd.Timestamp("2023-01-01")
+DATA_MUDANCA_REGIME = DATA_REGIME_NOVO  # alias p/ o script de diagnóstico
+
+
+def classificar_regime(datas):
+    d = pd.to_datetime(datas)
+    cond = [d < DATA_INICIO_TRANSICAO, d < DATA_REGIME_NOVO]
+    return np.select(cond, ["antigo", "transicao"], default="novo")
+
+
+# ─── ITEM 9: piso de erro grosseiro no regime novo ──────────────────────────
+# No regime novo a base É o valor declarado; não filtramos subdeclaração (seria
+# remover o próprio alvo). Só cortamos erro óbvio.
+PISO_PRECO_M2_ERRO_GROSSEIRO = 300
+
+# ─── ITEM 5: restrições de monotonicidade (feature -> sinal) ────────────────
+MONOTONIC_CONSTRAINTS = {
+    "area_construida_m2": 1, "area_total_m2": 1, "area_terreno_m2": 1,
+    "padrao_acabamento_num": 1, "idade_imovel": -1,
+    "preco_medio_bairro_loo": 1, "preco_m2_medio_bairro_loo": 1,
+}
+
+# ─── ITEM 3: zona_uso entra via target encoding temporal (numérica) ─────────
+# A coluna string 'zona_uso' continua excluída; a versão numérica 'zona_uso_te'
+# (criada no derived_features) é que entra no modelo.
+
+# ─── ITEM 5/6: toggles ──────────────────────────────────────────────────────
+PREVER_PRECO_M2 = False          # True -> modela log(R$/m²) e multiplica por área
+TREINAR_APENAS_REGIME_NOVO = False  # True -> split temporal DENTRO do regime novo
+
+# ─── ITEM 8: banda de previsão ──────────────────────────────────────────────
+QUANTIS = [0.1, 0.5, 0.9]
+NIVEL_CONFORMAL = 0.80
+
+

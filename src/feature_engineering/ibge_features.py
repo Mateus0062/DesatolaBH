@@ -9,7 +9,6 @@ from config import (
     BAIRROS_CLASSE_1, BAIRROS_CLASSE_2, BAIRROS_CLASSE_3, BAIRROS_CLASSE_4,
 )
 
-
 # ============================================================================
 # CLASSIFICAÇÃO SOCIOECONÔMICA DOS BAIRROS (IBGE 2005)
 # ============================================================================

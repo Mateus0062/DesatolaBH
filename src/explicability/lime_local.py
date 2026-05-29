@@ -1,18 +1,3 @@
-"""
-Explicabilidade local — LIME por imóvel individual.
-
-Roda o LIME nos MESMOS três imóveis do shap_local.py (típico, caro,
-pior erro) para corroborar as explicações do SHAP. O objetivo é
-comparar: se LIME e SHAP apontam as mesmas features, a explicação
-ganha confiança; se divergem, é um achado a discutir no artigo.
-
-LIME é uma aproximação linear local — diferente do SHAP (Shapley
-exato). Tem aleatoriedade nas perturbações, então a semente é fixada
-para reprodutibilidade.
-
-O modelo prevê log1p(preço). O LIME explica nesse espaço log; os pesos
-são lidos de forma multiplicativa (e^peso) para apresentação em %.
-"""
 import pandas as pd
 import numpy as np
 import pickle

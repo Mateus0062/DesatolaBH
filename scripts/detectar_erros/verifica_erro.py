@@ -1,28 +1,3 @@
-"""
-scripts/detectar_erros/diagnostico_leakage_overfitting.py
-
-Bateria completa de diagnóstico, em duas frentes:
-
-  PARTE A — LEAKAGE (sobre os modelos JÁ treinados, sem retreinar)
-    A1. Confirma que nenhuma versão do alvo está em X.
-    A2. Correlação de cada feature com o alvo (ranking).
-    A3. Teste de leakage temporal das features de bairro: recalcula as
-        estatísticas de bairro usando SÓ o treino e mede o quanto elas
-        mudam em relação às do dataset inteiro.
-
-  PARTE B — OVERFITTING (sobre os modelos JÁ treinados)
-    B1. Gap dev-vs-teste por modelo (MAPE, mediana, R²).
-    B2. Erro por faixa de preço (onde mora o overfit).
-    B3. Importância das features no modelo campeão (concentração).
-
-  PARTE C — TESTE QUE EXIGE RETREINO (opcional, controlado por flag)
-    C1. Remove as features de bairro derivadas de preço, retreina o
-        campeão e mede quanto o teste piora — quantifica a dependência
-        do modelo dessas features.
-
-Carrega os modelos de outputs/models/ (pickle), igual ao evaluate.py.
-Não altera nada no pipeline; só mede.
-"""
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -36,7 +11,7 @@ from config import ITBI_FINAL, OUTPUTS_MODELS, TARGET, COLUNAS_EXCLUIR_MODELO
 # Configuração
 # ----------------------------------------------------------------------------
 RODAR_PARTE_C = False   # True para rodar o teste que retreina (mais lento)
-CAMPEAO = 'xgboost'   # modelo para análises B3 e C
+CAMPEAO = 'random_forest'   # modelo para análises B3 e C
 
 # Features de bairro derivadas de preço (alvo dos testes de leakage)
 FEATURES_BAIRRO_PRECO = [
@@ -45,7 +20,6 @@ FEATURES_BAIRRO_PRECO = [
     'range_preco_bairro', 'valorizacao_bairro_3anos',
     'area_vs_media_bairro', 'idade_vs_media_bairro', 'preco_vs_tipo',
 ]
-
 
 def carregar_modelo(nome):
     caminho = OUTPUTS_MODELS / f'{nome}.pkl'
