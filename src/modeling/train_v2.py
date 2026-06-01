@@ -21,8 +21,6 @@ OUT_TABLES_V2.mkdir(parents=True, exist_ok=True)
 
 
 def dividir_dados_v2(X, y, df_original):
-    """Treino_full = 2008-2023 ; teste = 2024. Mesma filosofia do train.py:
-    todos treinam no mesmo conjunto; boosters usam cauda recente p/ early stop."""
     print("\n[2/6] Dividindo dados (cenário operação: treino<=2023, teste=2024)...")
     anos = df_original['ano_transacao'].values
     mask_train_full = anos <= 2023

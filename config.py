@@ -23,8 +23,6 @@ ITBI_RAW = DATA_RAW / 'ITBI_Relatorios.csv'
 ITBI_CLEANED = DATA_PROCESSED / 'ITBI_cleaned.csv'
 ITBI_FINAL = DATA_FINAL / 'ITBI_final_features.csv'
 
-
-
 MIN_AREA_M2 = 10
 MAX_AREA_M2 = 10_000
 MIN_VALOR = 50_000

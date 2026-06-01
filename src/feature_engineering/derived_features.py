@@ -279,7 +279,7 @@ def aplicar_features_completo(df_input=None, path_input=None, salvar=True):
 
     if salvar:
         df.to_csv(ITBI_FINAL, index=False, encoding='utf-8')
-        print(f"\n✓ Dataset salvo: {ITBI_FINAL}")
+        print(f"\nDataset salvo: {ITBI_FINAL}")
         print(f"Tamanho: {df.memory_usage(deep=True).sum() / 1024 ** 2:.2f} MB")
     return df
 

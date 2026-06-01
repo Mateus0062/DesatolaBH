@@ -120,12 +120,6 @@ def fn_separado_por_tipo(df_tr, df_te, base=fn_lightgbm):
 # ─── backtest rolling-origin (item 2/7) ─────────────────────────────────────
 def backtest_rolling(df, treinar_e_prever, anos_corte, nome='modelo',
                      apenas_regime_novo=False, silencioso=False):
-    """
-    Para cada Y em anos_corte: treina em ano<=Y, testa em ano==Y+1.
-    apenas_regime_novo=True -> restringe treino e teste ao regime novo (>=2023)
-    e faz o rolling por TRIMESTRE (há poucos anos no regime novo).
-    Retorna o DataFrame de resultados por janela.
-    """
     if not silencioso:
         print("\n" + "=" * 80)
         print(f"BACKTEST {'(REGIME NOVO) ' if apenas_regime_novo else ''}— {nome}")

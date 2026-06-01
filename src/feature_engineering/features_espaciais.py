@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import ITBI_CLEANED, TARGET
+from config import ITBI_CLEANED, TARGET, DATA_EXTERNAL
 
 # Centro de BH (Praça Sete) — referência para distância radial.
 CENTRO_BH = (-19.9191, -43.9386)
 
 PATH_CEPS_UNICOS = Path('data/external/ceps_unicos.csv')
-PATH_GEO = Path('data/external/ceps_geocodificados.csv')
+PATH_GEO = DATA_EXTERNAL / 'ceps_geocodificados1.csv'
 
 # Níveis de precisão do geocodebr considerados CONFIÁVEIS (coordenada fina).
 # 'municipio' e 'cep' são grosseiros (apontam para um ponto único) -> descartar
