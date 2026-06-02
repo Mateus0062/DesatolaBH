@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 9 - Correção do modelo e adição de novas features. Vou re-tunar">
+      <change afterPath="$PROJECT_DIR$/src/modeling/analisar_atipicos.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/modeling/export_graficos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DesatolaBH.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DesatolaBH.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/external/ceps_geocodificados.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/external/ceps_geocodificados1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/models/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_dev.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_val.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_teste.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/features_espaciais.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/features_espaciais.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/train_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/train_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modeling/gerar_graficos.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/gerar_graficos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sistema_decisao/recomendador.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema_decisao/recomendador.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +39,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -46,7 +49,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Mateus0062/DesatolaBH.git&quot;,
-    &quot;accountId&quot;: &quot;c0a9b387-ab7d-4a3c-b8f9-10aa4cbc5c4b&quot;
+    &quot;accountId&quot;: &quot;9a7dd128-97ab-4211-a2a0-160a6e7e925b&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -61,48 +64,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Limpeza.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ablacao_boosters.executor&quot;: &quot;Run&quot;,
-    &quot;Python.analisar_erros.executor&quot;: &quot;Run&quot;,
-    &quot;Python.auditar_leakege.executor&quot;: &quot;Run&quot;,
-    &quot;Python.demonstrar_recomendador.executor&quot;: &quot;Run&quot;,
-    &quot;Python.derived_features.executor&quot;: &quot;Run&quot;,
-    &quot;Python.evaluate.executor&quot;: &quot;Run&quot;,
-    &quot;Python.features_espaciais.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ibge_features.executor&quot;: &quot;Run&quot;,
-    &quot;Python.lime_local.executor&quot;: &quot;Run&quot;,
-    &quot;Python.listar_colunas.executor&quot;: &quot;Run&quot;,
-    &quot;Python.recomendador.executor&quot;: &quot;Run&quot;,
-    &quot;Python.shap_analysis.executor&quot;: &quot;Run&quot;,
-    &quot;Python.shap_local.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_modelos.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train_v2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.tuning_hiperparametros.executor&quot;: &quot;Run&quot;,
-    &quot;Python.verifica.executor&quot;: &quot;Run&quot;,
-    &quot;Python.verifica_erro.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mateus Mattos/PycharmProjects/DesatolaBH/data/external&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Limpeza.executor": "Run",
+    "Python.analisar_atipicos.executor": "Run",
+    "Python.analisar_erros.executor": "Run",
+    "Python.auditar_leakege.executor": "Run",
+    "Python.backtest.executor": "Run",
+    "Python.backtest_regime.executor": "Run",
+    "Python.bairro_features_temporal.executor": "Run",
+    "Python.demonstrar_recomendador.executor": "Run",
+    "Python.derived_features.executor": "Run",
+    "Python.evaluate.executor": "Run",
+    "Python.export_graficos.executor": "Run",
+    "Python.features_extra.executor": "Run",
+    "Python.gerar_graficos.executor": "Run",
+    "Python.ibge_features.executor": "Run",
+    "Python.lime_local.executor": "Run",
+    "Python.limpeza_por_regime.executor": "Run",
+    "Python.listar_colunas.executor": "Run",
+    "Python.recomendador.executor": "Run",
+    "Python.shap_analysis.executor": "Run",
+    "Python.shap_local.executor": "Run",
+    "Python.test_modelos.executor": "Run",
+    "Python.train.executor": "Run",
+    "Python.train_v2.executor": "Run",
+    "Python.tuning_hiperparametros.executor": "Run",
+    "Python.verifica.executor": "Run",
+    "Python.verifica_erro.executor": "Run",
+    "Python.verificar_break_temporal.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Mateus Mattos/PycharmProjects/DesatolaBH/data/raw",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\external" />
       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\raw" />
+      <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\data\external" />
       <recent name="C:\Users\mateu\PycharmProjects\DesatolaBH\data\raw" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -114,7 +124,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="ablacao_boosters" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Limpeza" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DesatolaBH" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -123,14 +133,14 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/limpeza_dados" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ablacao_boosters.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/limpeza_dados/Limpeza.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,32 +149,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="derived_features" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="DesatolaBH" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/feature_engineering" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="DEBUG_JUST_MY_CODE" value="false" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/feature_engineering/derived_features.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="evaluate" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DesatolaBH" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,7 +165,7 @@
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/modeling/evaluate.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/modeling/backtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -189,7 +174,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="shap_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="backtest_regime" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DesatolaBH" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/modeling" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/modeling/backtest_regime.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="lime_local" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DesatolaBH" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -205,7 +215,7 @@
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/explicability/shap_analysis.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/explicability/lime_local.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -241,18 +251,18 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.derived_features" />
         <item itemvalue="Python.train" />
-        <item itemvalue="Python.shap_analysis" />
-        <item itemvalue="Python.evaluate" />
-        <item itemvalue="Python.ablacao_boosters" />
+        <item itemvalue="Python.Limpeza" />
+        <item itemvalue="Python.backtest_regime" />
+        <item itemvalue="Python.backtest" />
+        <item itemvalue="Python.lime_local" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-c59985aa861c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.24374.152" />
+        <option value="bundled-python-sdk-024ed6589d45-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.23567.174" />
       </set>
     </attachedChunks>
   </component>
@@ -277,9 +287,8 @@
       <workItem from="1779887559544" duration="1280000" />
       <workItem from="1779906394639" duration="19502000" />
       <workItem from="1779989629078" duration="4183000" />
-      <workItem from="1780077132504" duration="1260000" />
-      <workItem from="1780329801986" duration="3039000" />
-      <workItem from="1780335282465" duration="6338000" />
+      <workItem from="1780002191471" duration="14581000" />
+      <workItem from="1780408664602" duration="700000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -321,23 +330,7 @@
       <option name="project" value="LOCAL" />
       <updated>1779994650175</updated>
     </task>
-    <task id="LOCAL-00006" summary="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
-      <option name="closed" value="true" />
-      <created>1780077467709</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1780077467709</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
-      <option name="closed" value="true" />
-      <created>1780078065830</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1780078065830</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -358,29 +351,35 @@
     <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
     <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
     <MESSAGE value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
-    <MESSAGE value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DesatolaBH$tuning_hiperparametros.coverage" NAME="tuning_hiperparametros Coverage Results" MODIFIED="1780025803928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$lime_local.coverage" NAME="lime_local Coverage Results" MODIFIED="1779994186119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$train_v2.coverage" NAME="train_v2 Coverage Results" MODIFIED="1780339529255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1780330389452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$evaluate.coverage" NAME="evaluate Coverage Results" MODIFIED="1780340002202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$recomendador.coverage" NAME="recomendador Coverage Results" MODIFIED="1779846160710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/sistema_decisao" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$analisar_erros.coverage" NAME="analisar_erros Coverage Results" MODIFIED="1779845539339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$verifica.coverage" NAME="verifica Coverage Results" MODIFIED="1780070373907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$derived_features.coverage" NAME="derived_features Coverage Results" MODIFIED="1780337943105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$ibge_features.coverage" NAME="ibge_features Coverage Results" MODIFIED="1780339089915" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$demonstrar_recomendador.coverage" NAME="demonstrar_recomendador Coverage Results" MODIFIED="1779847072041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/recomendador" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$test_modelos.coverage" NAME="test_modelos Coverage Results" MODIFIED="1779977924495" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$ablacao_boosters.coverage" NAME="ablacao_boosters Coverage Results" MODIFIED="1780060738308" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$verifica_erro.coverage" NAME="verifica_erro Coverage Results" MODIFIED="1779990313481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$shap_analysis.coverage" NAME="shap_analysis Coverage Results" MODIFIED="1780074469481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$listar_colunas.coverage" NAME="listar_colunas Coverage Results" MODIFIED="1780072195104" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$shap_local.coverage" NAME="shap_local Coverage Results" MODIFIED="1779994133567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$features_espaciais.coverage" NAME="features_espaciais Coverage Results" MODIFIED="1780334129506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1780339134407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$evaluate.coverage" NAME="evaluate Coverage Results" MODIFIED="1780350378822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$analisar_erros.coverage" NAME="analisar_erros Coverage Results" MODIFIED="1780006334980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$analisar_atipicos.coverage" NAME="analisar_atipicos Coverage Results" MODIFIED="1780409168385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1780348310176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$backtest_regime.coverage" NAME="backtest_regime Coverage Results" MODIFIED="1780016170417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$gerar_graficos.coverage" NAME="gerar_graficos Coverage Results" MODIFIED="1780360024319" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$listar_colunas.coverage" NAME="listar_colunas Coverage Results" MODIFIED="1780019701937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$verifica_erro.coverage" NAME="verifica_erro Coverage Results" MODIFIED="1780019654142" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1780349463567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1780012793290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$shap_local.coverage" NAME="shap_local Coverage Results" MODIFIED="1780006791680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$recomendador.coverage" NAME="recomendador Coverage Results" MODIFIED="1780352855969" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/sistema_decisao" />
     <SUITE FILE_PATH="coverage/DesatolaBH$auditar_leakege.coverage" NAME="auditar_leakege Coverage Results" MODIFIED="1779989924720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_leakege" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$verifica.coverage" NAME="verifica Coverage Results" MODIFIED="1780006403059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$export_graficos.coverage" NAME="export_graficos Coverage Results" MODIFIED="1780357611126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$shap_analysis.coverage" NAME="shap_analysis Coverage Results" MODIFIED="1780006625018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$demonstrar_recomendador.coverage" NAME="demonstrar_recomendador Coverage Results" MODIFIED="1780006559997" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/recomendador" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$derived_features.coverage" NAME="derived_features Coverage Results" MODIFIED="1780348402728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$lime_local.coverage" NAME="lime_local Coverage Results" MODIFIED="1780006893080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$verificar_break_temporal.coverage" NAME="verificar_break_temporal Coverage Results" MODIFIED="1780011813768" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/diagnostico" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$features_extra.coverage" NAME="features_extra Coverage Results" MODIFIED="1780016123521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$ibge_features.coverage" NAME="ibge_features Coverage Results" MODIFIED="1780349406942" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$bairro_features_temporal.coverage" NAME="bairro_features_temporal Coverage Results" MODIFIED="1780013257818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_engineering" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$test_modelos.coverage" NAME="test_modelos Coverage Results" MODIFIED="1779977924495" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$tuning_hiperparametros.coverage" NAME="tuning_hiperparametros Coverage Results" MODIFIED="1779908450464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$train_v2.coverage" NAME="train_v2 Coverage Results" MODIFIED="1780349844579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$limpeza_por_regime.coverage" NAME="limpeza_por_regime Coverage Results" MODIFIED="1780016196312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
   </component>
 </project>

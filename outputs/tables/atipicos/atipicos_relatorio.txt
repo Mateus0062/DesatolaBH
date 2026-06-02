@@ -1,0 +1,38 @@
+======================================================================
+RELATÓRIO — IMÓVEIS ATÍPICOS (preço real < R$ 100.000)
+======================================================================
+
+Total de atípicos no holdout (>= 2023): 17 (0.06% das 30.559 transações de teste)
+
+ERRO DO MODELO:
+  Atípicos : MAPE  102.0%  | MdAPE   96.3%
+  Normais  : MAPE   18.1%  | MdAPE   14.4%
+  O modelo SUPERAVALIA 100% dos atípicos (prevê acima do valor real).
+
+ÁREA CONSTRUÍDA (m²):
+  Atípicos : mediana   55.2 | mín 19.8 | máx 95.2
+  Normais  : mediana  103.0
+
+PREÇO/m² REAL (R$):
+  Atípicos : mediana R$ 1.447
+  Normais  : mediana R$ 4.205
+
+TIPO CONSTRUTIVO (atípicos):
+  CA: 11
+  AP: 6
+
+BAIRROS mais frequentes (atípicos):
+  RIBEIRO DE ABREU: 3
+  COLEGIO BATISTA: 1
+  OURO PRETO: 1
+  SERRA VERDE: 1
+  DOM BOSCO: 1
+
+----------------------------------------------------------------------
+LEITURA (hipóteses a verificar caso a caso na tabela .csv):
+  Áreas muito pequenas + preço/m² baixo sugerem unidades que não são
+  imóveis residenciais plenos (vagas de garagem, boxes, frações), ou
+  subdeclaração que escapou da limpeza. O modelo, treinado na massa de
+  imóveis normais, projeta um preço 'de imóvel inteiro' e por isso
+  superavalia — gerando o erro alto desta faixa.
+======================================================================
