@@ -1,0 +1,28 @@
+<changelist name="Uncommitted_changes_before_Update_at_02_06_2026_11_47_[Changes]" date="1780411654833" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_06_2026_11_47_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 02/06/2026 11:47 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/lightgbm.pkl" />
+    <option name="AFTER_PATH" value="outputs/models/lightgbm.pkl" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_06_2026_11_47_[Changes]/lightgbm.pkl" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/random_forest.pkl" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/treino_ate_2023/random_forest.pkl" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/treino_ate_2023/xgboost.pkl" />
+    <option name="AFTER_PATH" value="outputs/models/treino_ate_2023/xgboost.pkl" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_06_2026_11_47_[Changes]/xgboost.pkl" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/treino_ate_2023/lightgbm.pkl" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="outputs/models/xgboost.pkl" />
+    <option name="AFTER_PATH" value="outputs/models/xgboost.pkl" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_06_2026_11_47_[Changes]/xgboost1.pkl" />
+  </binary>
+</changelist>

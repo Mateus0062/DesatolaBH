@@ -1,0 +1,383 @@
+Index: outputs/tables/resultados_modelos_dev.csv
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/outputs/tables/resultados_modelos_dev.csv b/outputs/tables/resultados_modelos_dev.csv
+deleted file mode 100644
+--- a/outputs/tables/resultados_modelos_dev.csv	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
++++ /dev/null	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
+@@ -1,4 +0,0 @@
+-Modelo,MAE,RMSE,MAPE,Mediana_Erro_%,R²
+-Random Forest (Dev),22100.366461540434,102072.90979439413,3.4746415188423003,0.9254807846600528,0.9754481676257539
+-XGBoost (Dev),24266.34284425902,49670.18863774463,4.0731315258452785,2.779116693879298,0.994186274286631
+-LightGBM (Dev),39984.29363727491,94740.34375987033,6.689514278309235,4.4564145266959665,0.9788489061649428
+Index: outputs/tables/resultados_teste.csv
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/outputs/tables/resultados_teste.csv b/outputs/tables/resultados_teste.csv
+deleted file mode 100644
+--- a/outputs/tables/resultados_teste.csv	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
++++ /dev/null	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
+@@ -1,4 +0,0 @@
+-Modelo,MAE,RMSE,MAPE,R²
+-Random Forest,136820.25899136838,241512.03781596458,26.575229002006417,0.8175097684606074
+-Xgboost,123982.31320725159,223967.02490466923,22.708630901479633,0.8430612390577844
+-Lightgbm,123715.2062064538,223525.4337387905,22.53037860494972,0.8436794947945263
+Index: outputs/tables/resultados_modelos_val.csv
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/outputs/tables/resultados_modelos_val.csv b/outputs/tables/resultados_modelos_val.csv
+deleted file mode 100644
+--- a/outputs/tables/resultados_modelos_val.csv	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
++++ /dev/null	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
+@@ -1,4 +0,0 @@
+-Modelo,MAE,RMSE,MAPE,Mediana_Erro_%,R²
+-Random Forest (Val),74988.9921181113,166611.33342445866,12.163555604371677,8.98133166568438,0.9225174323404571
+-XGBoost (Val),111225.82604375694,210521.5288954117,19.2505187249514,16.00528918004832,0.8762948003169293
+-LightGBM (Val),107620.02546235123,206396.45466673793,18.650640976473937,15.425877785371517,0.881095199137509
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"12bb67c8-9b9b-4054-871e-6b21bf943aaa\" name=\"Changes\" comment=\"Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/config.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/config.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/data/external/ceps_geocodificados.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/data/external/ceps_geocodificados1.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/resultados_modelos.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/resultados_modelos.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/scripts/detectar_erros/verifica.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/scripts/detectar_erros/verifica.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/feature_engineering/derived_features.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/feature_engineering/derived_features.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/feature_engineering/features_espaciais.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/feature_engineering/features_espaciais.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/modeling/evaluate.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/modeling/evaluate.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/modeling/train_v2.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/modeling/train_v2.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Jupyter Notebook\" />\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;Mateus0062&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/Mateus0062/DesatolaBH.git&quot;,\r\n    &quot;accountId&quot;: &quot;c0a9b387-ab7d-4a3c-b8f9-10aa4cbc5c4b&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 3,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3DXM7T1jnl6qfyo8VwdVOS6ntui\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\r\n    &quot;Python.Limpeza.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.ablacao_boosters.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.analisar_erros.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.auditar_leakege.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.demonstrar_recomendador.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.derived_features.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.evaluate.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.features_espaciais.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.ibge_features.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.lime_local.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.listar_colunas.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.recomendador.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.shap_analysis.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.shap_local.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.test_modelos.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.train.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.train_v2.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.tuning_hiperparametros.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.verifica.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.verifica_erro.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mateus Mattos/PycharmProjects/DesatolaBH/data/external&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\data\\external\" />\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\data\\raw\" />\r\n      <recent name=\"C:\\Users\\mateu\\PycharmProjects\\DesatolaBH\\data\\raw\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\scripts\\detectar_erros\" />\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\scripts\\teste modelos\" />\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\scripts\\detectar erros\" />\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\scripts\\detectar leakege\" />\r\n      <recent name=\"C:\\Users\\Mateus Mattos\\PycharmProjects\\DesatolaBH\\scripts\\recomendador\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"ablacao_boosters\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DesatolaBH\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"DEBUG_JUST_MY_CODE\" value=\"false\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"RUN_TOOL\" value=\"\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/ablacao_boosters.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"derived_features\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DesatolaBH\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/src/feature_engineering\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"DEBUG_JUST_MY_CODE\" value=\"false\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"RUN_TOOL\" value=\"\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/src/feature_engineering/derived_features.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"evaluate\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DesatolaBH\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/src/modeling\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"DEBUG_JUST_MY_CODE\" value=\"false\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"RUN_TOOL\" value=\"\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/src/modeling/evaluate.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"shap_analysis\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DesatolaBH\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/src/explicability\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"DEBUG_JUST_MY_CODE\" value=\"false\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"RUN_TOOL\" value=\"\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/src/explicability/shap_analysis.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"train\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DesatolaBH\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/src/modeling\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"DEBUG_JUST_MY_CODE\" value=\"false\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"RUN_TOOL\" value=\"\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/src/modeling/train.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.derived_features\" />\r\n        <item itemvalue=\"Python.train\" />\r\n        <item itemvalue=\"Python.shap_analysis\" />\r\n        <item itemvalue=\"Python.evaluate\" />\r\n        <item itemvalue=\"Python.ablacao_boosters\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-c59985aa861c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.24374.152\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"12bb67c8-9b9b-4054-871e-6b21bf943aaa\" name=\"Changes\" comment=\"\" />\r\n      <created>1778423796055</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1778423796055</updated>\r\n      <workItem from=\"1778423797093\" duration=\"4772000\" />\r\n      <workItem from=\"1779212075618\" duration=\"216000\" />\r\n      <workItem from=\"1779279620134\" duration=\"11442000\" />\r\n      <workItem from=\"1779453726298\" duration=\"13299000\" />\r\n      <workItem from=\"1779726189712\" duration=\"9160000\" />\r\n      <workItem from=\"1779801058166\" duration=\"9480000\" />\r\n      <workItem from=\"1779812250499\" duration=\"915000\" />\r\n      <workItem from=\"1779814941924\" duration=\"1156000\" />\r\n      <workItem from=\"1779819021077\" duration=\"3594000\" />\r\n      <workItem from=\"1779835278625\" duration=\"11802000\" />\r\n      <workItem from=\"1779882370581\" duration=\"3385000\" />\r\n      <workItem from=\"1779887559544\" duration=\"1280000\" />\r\n      <workItem from=\"1779906394639\" duration=\"19502000\" />\r\n      <workItem from=\"1779989629078\" duration=\"4183000\" />\r\n      <workItem from=\"1780077132504\" duration=\"1260000\" />\r\n      <workItem from=\"1780329801986\" duration=\"3039000\" />\r\n      <workItem from=\"1780335282465\" duration=\"6338000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779390812460</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779390812460</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Fase 5 - Análise e melhoria do modelo\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779736383634</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779736383634</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779813119131</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779813119131</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779815391767</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779815391768</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779994650174</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779994650175</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1780077467709</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1780077467709</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1780078065830</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1780078065830</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"8\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Fase 5 - Análise e melhoria do modelo\" />\r\n    <MESSAGE value=\"Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1.\" />\r\n    <MESSAGE value=\"Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar.\" />\r\n    <MESSAGE value=\"Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$tuning_hiperparametros.coverage\" NAME=\"tuning_hiperparametros Coverage Results\" MODIFIED=\"1780025803928\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/modeling\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$lime_local.coverage\" NAME=\"lime_local Coverage Results\" MODIFIED=\"1779994186119\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/explicability\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$train_v2.coverage\" NAME=\"train_v2 Coverage Results\" MODIFIED=\"1780339529255\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/modeling\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$Limpeza.coverage\" NAME=\"Limpeza Coverage Results\" MODIFIED=\"1780330389452\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/limpeza_dados\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$evaluate.coverage\" NAME=\"evaluate Coverage Results\" MODIFIED=\"1780340002202\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/modeling\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$recomendador.coverage\" NAME=\"recomendador Coverage Results\" MODIFIED=\"1779846160710\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/sistema_decisao\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$analisar_erros.coverage\" NAME=\"analisar_erros Coverage Results\" MODIFIED=\"1779845539339\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/detectar_erros\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$verifica.coverage\" NAME=\"verifica Coverage Results\" MODIFIED=\"1780070373907\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/detectar_erros\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$derived_features.coverage\" NAME=\"derived_features Coverage Results\" MODIFIED=\"1780337943105\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/feature_engineering\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$ibge_features.coverage\" NAME=\"ibge_features Coverage Results\" MODIFIED=\"1780339089915\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/feature_engineering\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$demonstrar_recomendador.coverage\" NAME=\"demonstrar_recomendador Coverage Results\" MODIFIED=\"1779847072041\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/recomendador\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$test_modelos.coverage\" NAME=\"test_modelos Coverage Results\" MODIFIED=\"1779977924495\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/teste_modelos\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$ablacao_boosters.coverage\" NAME=\"ablacao_boosters Coverage Results\" MODIFIED=\"1780060738308\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$verifica_erro.coverage\" NAME=\"verifica_erro Coverage Results\" MODIFIED=\"1779990313481\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/detectar_erros\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$shap_analysis.coverage\" NAME=\"shap_analysis Coverage Results\" MODIFIED=\"1780074469481\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/explicability\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$listar_colunas.coverage\" NAME=\"listar_colunas Coverage Results\" MODIFIED=\"1780072195104\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/teste_modelos\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$shap_local.coverage\" NAME=\"shap_local Coverage Results\" MODIFIED=\"1779994133567\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/explicability\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$features_espaciais.coverage\" NAME=\"features_espaciais Coverage Results\" MODIFIED=\"1780334129506\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/feature_engineering\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$train.coverage\" NAME=\"train Coverage Results\" MODIFIED=\"1780339134407\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/src/modeling\" />\r\n    <SUITE FILE_PATH=\"coverage/DesatolaBH$auditar_leakege.coverage\" NAME=\"auditar_leakege Coverage Results\" MODIFIED=\"1779989924720\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/scripts/detectar_leakege\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
++++ b/.idea/workspace.xml	(date 1780411589891)
+@@ -1,24 +1,8 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo.">
++    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment=".">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/data/external/ceps_geocodificados.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/external/ceps_geocodificados1.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/detectar_erros/verifica.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/features_espaciais.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/features_espaciais.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/modeling/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/evaluate.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/modeling/train_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/modeling/train_v2.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -35,7 +19,6 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+   &quot;lastFilter&quot;: {
+@@ -113,7 +96,7 @@
+       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\recomendador" />
+     </key>
+   </component>
+-  <component name="RunManager">
++  <component name="RunManager" selected="Python.ablacao_boosters">
+     <configuration name="ablacao_boosters" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="DesatolaBH" />
+       <option name="ENV_FILES" value="" />
+@@ -279,7 +262,8 @@
+       <workItem from="1779989629078" duration="4183000" />
+       <workItem from="1780077132504" duration="1260000" />
+       <workItem from="1780329801986" duration="3039000" />
+-      <workItem from="1780335282465" duration="6338000" />
++      <workItem from="1780335282465" duration="6610000" />
++      <workItem from="1780411248232" duration="333000" />
+     </task>
+     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+       <option name="closed" value="true" />
+@@ -337,7 +321,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1780078065830</updated>
+     </task>
+-    <option name="localTasksCounter" value="8" />
++    <task id="LOCAL-00008" summary=".">
++      <option name="closed" value="true" />
++      <created>1780345206973</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1780345206973</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -359,7 +351,8 @@
+     <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
+     <MESSAGE value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
+     <MESSAGE value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
+-    <option name="LAST_COMMIT_MESSAGE" value="Fase 10 - Modelo pronto e treinado. Adicionais da nova versão :&#10;&#10;2 train.py -&gt; Descobrimos algumas incosistências nos dados do ITBI de Belo Horizonte entre 2022 e 2023.&#10;&#10;1 - train.py -&gt; treina os modelos com dados até 2022 e testa 2023 e 2024 &#10;&#10;2 - train_v2.py -&gt; treina os modelos até 2023, pegando o novo regime. Depois comparamos os resultados e detalhamos no artigo." />
++    <MESSAGE value="." />
++    <option name="LAST_COMMIT_MESSAGE" value="." />
+   </component>
+   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+     <SUITE FILE_PATH="coverage/DesatolaBH$tuning_hiperparametros.coverage" NAME="tuning_hiperparametros Coverage Results" MODIFIED="1780025803928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+Index: src/sistema_decisao/recomendador.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># src/sistema_decisao/recomendador_v2.py\r\n# ITEM 8 (parte 2) — Recomendador baseado em BANDA, não em ponto.\r\n# Regra: só chama de \"caro\"/\"barato\" quando o preço pedido sai do intervalo\r\n# calibrado [inferior, superior]. Dentro da banda = indistinguível do ruído do\r\n# modelo, então a recomendação honesta é \"alinhado / dentro da incerteza\".\r\n\r\nimport sys\r\nfrom pathlib import Path\r\n\r\nimport numpy as np\r\nimport pandas as pd\r\n\r\nsys.path.append(str(Path(__file__).resolve().parent.parent.parent))\r\nfrom config import ITBI_FINAL, TARGET\r\nfrom src.sistema_decisao.intervalos import (treinar_base_log,\r\n                                            IntervaloConformal)\r\n\r\n\r\nclass RecomendadorV2:\r\n    def __init__(self, intervalo_conformal):\r\n        self.conf = intervalo_conformal\r\n\r\n    def analisar(self, df_imovel, preco_pedido):\r\n        if isinstance(df_imovel, dict):\r\n            df_imovel = pd.DataFrame([df_imovel])\r\n        banda = self.conf.prever(df_imovel).iloc[0]\r\n        inf, prev, sup = banda[\"inferior\"], banda[\"previsto\"], banda[\"superior\"]\r\n        largura_rel = (sup - inf) / prev * 100\r\n\r\n        if preco_pedido > sup:\r\n            acao, prio = \"REDUZIR PREÇO\", \"ALTA\"\r\n            just = (f\"Preço acima do teto da faixa estimada \"\r\n                    f\"(R$ {inf:,.0f}–{sup:,.0f}). Mesmo considerando a \"\r\n                    f\"incerteza do modelo (±{largura_rel/2:.0f}%), está caro.\")\r\n            sugerido = sup\r\n        elif preco_pedido < inf:\r\n            acao, prio = \"POSSÍVEL OPORTUNIDADE / SUBDECLARAÇÃO\", \"MÉDIA\"\r\n            just = (f\"Preço abaixo do piso da faixa estimada \"\r\n                    f\"(R$ {inf:,.0f}–{sup:,.0f}). Pode ser barganha real ou \"\r\n                    f\"subdeclaração — investigar.\")\r\n            sugerido = inf\r\n        else:\r\n            acao, prio = \"DENTRO DA FAIXA DE MERCADO\", \"BAIXA\"\r\n            just = (f\"Preço dentro do intervalo estimado \"\r\n                    f\"(R$ {inf:,.0f}–{sup:,.0f}). A diferença para o ponto \"\r\n                    f\"central está dentro da incerteza do modelo — sem ação.\")\r\n            sugerido = preco_pedido\r\n\r\n        return {\r\n            \"preco_pedido\": preco_pedido,\r\n            \"previsto\": prev,\r\n            \"faixa_inferior\": inf,\r\n            \"faixa_superior\": sup,\r\n            \"largura_rel_%\": largura_rel,\r\n            \"acao\": acao,\r\n            \"prioridade\": prio,\r\n            \"justificativa\": just,\r\n            \"preco_sugerido\": sugerido,\r\n        }\r\n\r\n    def relatorio(self, a):\r\n        print(\"\\n\" + \"=\" * 70)\r\n        print(\"ANÁLISE DO IMÓVEL (com banda de incerteza)\")\r\n        print(\"=\" * 70)\r\n        print(f\"  Preço pedido : R$ {a['preco_pedido']:>13,.2f}\")\r\n        print(f\"  Estimado     : R$ {a['previsto']:>13,.2f}\")\r\n        print(f\"  Faixa        : R$ {a['faixa_inferior']:>13,.2f} – \"\r\n              f\"R$ {a['faixa_superior']:,.2f}  (±{a['largura_rel_%']/2:.0f}%)\")\r\n        print(f\"  Recomendação : {a['acao']}  [{a['prioridade']}]\")\r\n        print(f\"  {a['justificativa']}\")\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    df = pd.read_csv(ITBI_FINAL)\r\n    tr = df[df[\"ano_transacao\"] <= 2021]\r\n    cal = df[df[\"ano_transacao\"] == 2022]\r\n    base, cols = treinar_base_log(tr)\r\n    conf = IntervaloConformal(base, cols).calibrar(cal)\r\n    rec = RecomendadorV2(conf)\r\n\r\n    exemplo = df[df[\"ano_transacao\"] == 2024].iloc[[0]]\r\n    prev = conf.prever(exemplo).iloc[0][\"previsto\"]\r\n    for fator in (1.30, 1.00, 0.70):\r\n        a = rec.analisar(exemplo, prev * fator)\r\n        rec.relatorio(a)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/sistema_decisao/recomendador.py b/src/sistema_decisao/recomendador.py
+--- a/src/sistema_decisao/recomendador.py	(revision 79c11ee7b5b7c3d3947c27767a37b0f0e7931365)
++++ b/src/sistema_decisao/recomendador.py	(date 1780411590336)
+@@ -1,61 +1,132 @@
+-# src/sistema_decisao/recomendador_v2.py
+-# ITEM 8 (parte 2) — Recomendador baseado em BANDA, não em ponto.
+-# Regra: só chama de "caro"/"barato" quando o preço pedido sai do intervalo
+-# calibrado [inferior, superior]. Dentro da banda = indistinguível do ruído do
+-# modelo, então a recomendação honesta é "alinhado / dentro da incerteza".
+-
+ import sys
+ from pathlib import Path
++import pickle
+ 
+ import numpy as np
+ import pandas as pd
+ 
+ sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+-from config import ITBI_FINAL, TARGET
+-from src.sistema_decisao.intervalos import (treinar_base_log,
+-                                            IntervaloConformal)
++from config import (ITBI_FINAL, OUTPUTS_MODELS_TRAIN2, TARGET,
++                    COLUNAS_EXCLUIR_MODELO, HIPERPARAMETROS,
++                    QUANTIS, NIVEL_CONFORMAL, classificar_regime)
++
++
++def _Xy(df):
++    y = df[TARGET].copy()
++    aux = ['_data', '_periodo']
++    X = df.drop(columns=[c for c in COLUNAS_EXCLUIR_MODELO + [TARGET] + aux
++                         if c in df.columns])
++    return X, y
++
++
++class RecomendadorBanda:
++    """Recomendador com faixa de preço justo (quantis + conformal)."""
++
++    def __init__(self, quantis=QUANTIS, nivel_conformal=NIVEL_CONFORMAL):
++        self.quantis = sorted(quantis)
++        self.nivel = nivel_conformal
++        self.modelos_q = {}
++        self.colunas = None
++        self.qhat_ = None  # margem conformal (espaço log)
++
++    # ─── treino ─────────────────────────────────────────────────────────────
++    def treinar(self, df_treino, df_calib):
++        """df_treino: ajusta os quantis. df_calib: calibra a banda conformal.
++        Ambos em log(R$)."""
++        from lightgbm import LGBMRegressor
++        X_tr, y_tr = _Xy(df_treino)
++        self.colunas = list(X_tr.columns)
++        y_tr_log = np.log1p(y_tr)
++
++        hp = dict(HIPERPARAMETROS['lightgbm'])
++        hp.pop('n_estimators', None)
++        for q in self.quantis:
++            m = LGBMRegressor(objective='quantile', alpha=q, n_estimators=1500,
++                              random_state=42, n_jobs=-1, verbose=-1, **hp)
++            m.fit(X_tr, y_tr_log)
++            self.modelos_q[q] = m
++        print(f"  {len(self.quantis)} modelos de quantil treinados "
++              f"({self.quantis})")
+ 
++        # calibração conformal: usa o quantil mediano como ponto e mede o erro
++        # absoluto em log no conjunto de calibração.
++        self._calibrar(df_calib)
++        return self
+ 
+-class RecomendadorV2:
+-    def __init__(self, intervalo_conformal):
+-        self.conf = intervalo_conformal
++    def _calibrar(self, df_calib):
++        X_cal, y_cal = _Xy(df_calib)
++        X_cal = X_cal[self.colunas]
++        q_med = self._mediana()
++        pred_log = self.modelos_q[q_med].predict(X_cal)
++        scores = np.abs(np.log1p(y_cal.values) - pred_log)
++        n = len(scores)
++        nivel_aj = np.ceil((n + 1) * self.nivel) / n
++        self.qhat_ = float(np.quantile(scores, min(nivel_aj, 1.0)))
++        print(f"  margem conformal (log) qhat = {self.qhat_:.4f} "
++              f"-> fator ×÷{np.exp(self.qhat_):.2f}")
+ 
+-    def analisar(self, df_imovel, preco_pedido):
++    def _mediana(self):
++        # quantil mais próximo de 0.5 entre os treinados
++        return min(self.quantis, key=lambda q: abs(q - 0.5))
++
++    # ─── previsão da faixa ───────────────────────────────────────────────────
++    def prever_faixa(self, df_imovel):
++        """Retorna DataFrame com inferior/previsto/superior (em R$).
++        A faixa é o MAIOR intervalo entre (p10,p90) e a banda conformal —
++        assim cobrimos tanto a dispersão dos quantis quanto a calibração."""
+         if isinstance(df_imovel, dict):
+             df_imovel = pd.DataFrame([df_imovel])
+-        banda = self.conf.prever(df_imovel).iloc[0]
+-        inf, prev, sup = banda["inferior"], banda["previsto"], banda["superior"]
++        X = _Xy(df_imovel)[0] if TARGET in df_imovel.columns else \
++            df_imovel.drop(columns=[c for c in COLUNAS_EXCLUIR_MODELO
++                                    if c in df_imovel.columns], errors='ignore')
++        X = X[self.colunas]
++
++        q_lo, q_med, q_hi = self.quantis[0], self._mediana(), self.quantis[-1]
++        log_med = self.modelos_q[q_med].predict(X)
++        prev = np.expm1(log_med)
++
++        # banda dos quantis
++        inf_q = np.expm1(self.modelos_q[q_lo].predict(X))
++        sup_q = np.expm1(self.modelos_q[q_hi].predict(X))
++        # banda conformal (em torno da mediana)
++        inf_c = np.expm1(log_med - self.qhat_)
++        sup_c = np.expm1(log_med + self.qhat_)
++
++        inferior = np.minimum(inf_q, inf_c)
++        superior = np.maximum(sup_q, sup_c)
++        return pd.DataFrame({'inferior': inferior, 'previsto': prev,
++                             'superior': superior}, index=df_imovel.index)
++
++    # ─── recomendação ────────────────────────────────────────────────────────
++    def analisar(self, df_imovel, preco_pedido):
++        faixa = self.prever_faixa(df_imovel).iloc[0]
++        inf, prev, sup = faixa['inferior'], faixa['previsto'], faixa['superior']
+         largura_rel = (sup - inf) / prev * 100
+ 
+         if preco_pedido > sup:
+-            acao, prio = "REDUZIR PREÇO", "ALTA"
+-            just = (f"Preço acima do teto da faixa estimada "
+-                    f"(R$ {inf:,.0f}–{sup:,.0f}). Mesmo considerando a "
+-                    f"incerteza do modelo (±{largura_rel/2:.0f}%), está caro.")
++            acao, prio = 'REDUZIR PREÇO', 'ALTA'
++            just = (f"Preço pedido acima do teto da faixa estimada "
++                    f"(R$ {inf:,.0f}–{sup:,.0f}). Mesmo considerando a incerteza "
++                    f"do modelo, está caro.")
+             sugerido = sup
+         elif preco_pedido < inf:
+-            acao, prio = "POSSÍVEL OPORTUNIDADE / SUBDECLARAÇÃO", "MÉDIA"
+-            just = (f"Preço abaixo do piso da faixa estimada "
++            acao, prio = 'POSSÍVEL OPORTUNIDADE / SUBDECLARAÇÃO', 'MÉDIA'
++            just = (f"Preço pedido abaixo do piso da faixa estimada "
+                     f"(R$ {inf:,.0f}–{sup:,.0f}). Pode ser barganha real ou "
+-                    f"subdeclaração — investigar.")
++                    f"valor subdeclarado — investigar.")
+             sugerido = inf
+         else:
+-            acao, prio = "DENTRO DA FAIXA DE MERCADO", "BAIXA"
++            acao, prio = 'DENTRO DA FAIXA DE MERCADO', 'BAIXA'
+             just = (f"Preço dentro do intervalo estimado "
+-                    f"(R$ {inf:,.0f}–{sup:,.0f}). A diferença para o ponto "
+-                    f"central está dentro da incerteza do modelo — sem ação.")
++                    f"(R$ {inf:,.0f}–{sup:,.0f}). A diferença para o valor "
++                    f"central é indistinguível da incerteza do modelo — sem ação.")
+             sugerido = preco_pedido
+ 
+         return {
+-            "preco_pedido": preco_pedido,
+-            "previsto": prev,
+-            "faixa_inferior": inf,
+-            "faixa_superior": sup,
+-            "largura_rel_%": largura_rel,
+-            "acao": acao,
+-            "prioridade": prio,
+-            "justificativa": just,
+-            "preco_sugerido": sugerido,
++            'preco_pedido': preco_pedido, 'previsto': prev,
++            'faixa_inferior': inf, 'faixa_superior': sup,
++            'largura_rel_%': largura_rel, 'acao': acao, 'prioridade': prio,
++            'preco_sugerido': sugerido, 'justificativa': just,
+         }
+ 
+     def relatorio(self, a):
+@@ -64,22 +135,61 @@
+         print("=" * 70)
+         print(f"  Preço pedido : R$ {a['preco_pedido']:>13,.2f}")
+         print(f"  Estimado     : R$ {a['previsto']:>13,.2f}")
+-        print(f"  Faixa        : R$ {a['faixa_inferior']:>13,.2f} – "
++        print(f"  Faixa justa  : R$ {a['faixa_inferior']:>13,.2f} – "
+               f"R$ {a['faixa_superior']:,.2f}  (±{a['largura_rel_%']/2:.0f}%)")
+         print(f"  Recomendação : {a['acao']}  [{a['prioridade']}]")
++        print(f"  Sugerido     : R$ {a['preco_sugerido']:,.2f}")
+         print(f"  {a['justificativa']}")
+ 
++    # ─── persistência ────────────────────────────────────────────────────────
++    def salvar(self, caminho):
++        with open(caminho, 'wb') as f:
++            pickle.dump({'quantis': self.quantis, 'nivel': self.nivel,
++                         'modelos_q': self.modelos_q, 'colunas': self.colunas,
++                         'qhat_': self.qhat_}, f)
++        print(f"  Recomendador salvo: {caminho}")
++
++    @classmethod
++    def carregar(cls, caminho):
++        with open(caminho, 'rb') as f:
++            d = pickle.load(f)
++        r = cls(quantis=d['quantis'], nivel_conformal=d['nivel'])
++        r.modelos_q = d['modelos_q']; r.colunas = d['colunas']; r.qhat_ = d['qhat_']
++        return r
++
++
++def cobertura_empirica(rec, df_teste):
++    """Valida: ~NIVEL_CONFORMAL das transações devem cair dentro da faixa."""
++    faixa = rec.prever_faixa(df_teste)
++    y = df_teste[TARGET].values
++    dentro = (y >= faixa['inferior'].values) & (y <= faixa['superior'].values)
++    return dentro.mean()
+ 
+-if __name__ == "__main__":
++
++if __name__ == '__main__':
+     df = pd.read_csv(ITBI_FINAL)
+-    tr = df[df["ano_transacao"] <= 2021]
+-    cal = df[df["ano_transacao"] == 2022]
+-    base, cols = treinar_base_log(tr)
+-    conf = IntervaloConformal(base, cols).calibrar(cal)
+-    rec = RecomendadorV2(conf)
++    df['_data'] = pd.to_datetime(df['data_transacao'])
++    regime = classificar_regime(df['_data'])
++
++    # treino<=2023 (regime novo incluso) ; calibração e teste em 2024.
++    df_2024 = df[df['ano_transacao'] == 2024].sort_values('_data')
++    corte = len(df_2024) // 2
++    df_calib = df_2024.iloc[:corte]      # 1ª metade de 2024 -> calibra
++    df_teste = df_2024.iloc[corte:]      # 2ª metade -> valida cobertura
++    df_treino = df[df['ano_transacao'] <= 2023]
++
++    print("Treinando recomendador com banda (LightGBM quantílico)...")
++    rec = RecomendadorBanda().treinar(df_treino, df_calib)
++
++    cob = cobertura_empirica(rec, df_teste)
++    print(f"\nCobertura empírica no teste: {cob*100:.1f}% "
++          f"(alvo {NIVEL_CONFORMAL*100:.0f}%)")
+ 
+-    exemplo = df[df["ano_transacao"] == 2024].iloc[[0]]
+-    prev = conf.prever(exemplo).iloc[0]["previsto"]
++    rec.salvar(OUTPUTS_MODELS_TRAIN2 / 'recomendador_banda.pkl')
++
++    # demonstração: 3 cenários de preço pedido para um imóvel
++    exemplo = df_teste.iloc[[0]]
++    prev = rec.prever_faixa(exemplo).iloc[0]['previsto']
++    print("\nDEMONSTRAÇÃO (imóvel de exemplo):")
+     for fator in (1.30, 1.00, 0.70):
+-        a = rec.analisar(exemplo, prev * fator)
+-        rec.relatorio(a)
+\ No newline at end of file
++        rec.relatorio(rec.analisar(exemplo, prev * fator))

@@ -7,11 +7,33 @@ from pathlib import Path
 from lime.lime_tabular import LimeTabularExplainer
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import ITBI_FINAL, OUTPUTS_MODELS
-from src.modeling.train import preparar_dados, dividir_dados
+from config import ITBI_FINAL, OUTPUTS_MODELS_TRAIN2
+from src.modeling.train import preparar_dados
 
 RANDOM_STATE = 42
 N_FEATURES_MOSTRAR = 8
+ANO_TESTE_OPERACAO = 2024  # holdout do modelo de operação (train_v2, treino<=2023)
+
+
+def carregar_modelo(nome_arquivo):
+    caminho = OUTPUTS_MODELS_TRAIN2 / nome_arquivo
+    with open(caminho, 'rb') as f:
+        modelo = pickle.load(f)
+    print(f"  Modelo carregado: {caminho.name} (operação, treino<=2023)")
+    return modelo
+
+
+def preparar_treino_teste():
+    """Treino = <=2023 (mesmo do modelo de operação; o LIME aprende a
+    distribuição das perturbações dele). Teste = 2024 (holdout)."""
+    df = pd.read_csv(ITBI_FINAL)
+    X, y = preparar_dados(df)
+    anos = df['ano_transacao'].values
+    X_train = X[anos <= 2023]
+    X_test = X[anos == ANO_TESTE_OPERACAO]
+    y_test = y[anos == ANO_TESTE_OPERACAO]
+    return X_train, X_test, y_test
+
 
 # Mesmos imóveis do shap_local.py — selecionados pela mesma lógica,
 # para a comparação SHAP vs LIME ser sobre os mesmos casos.
@@ -38,25 +60,21 @@ def selecionar_imoveis(modelo, X_test, y_test):
     return {'tipico': idx_tipico, 'caro': idx_caro, 'pior_erro': idx_pior}, aux
 
 
-def carregar_modelo(nome_arquivo):
-    caminho = OUTPUTS_MODELS / nome_arquivo
-    with open(caminho, 'rb') as f:
-        modelo = pickle.load(f)
-    print(f"  Modelo carregado: {caminho.name}")
-    return modelo
-
-
 def explicar_imovel(explainer, modelo, X_test, idx, rotulo, info):
     print("\n" + "=" * 80)
     print(f"IMÓVEL: {rotulo.upper()}  (índice {idx})")
     print("=" * 80)
 
     x = X_test.loc[idx]
+    colunas = list(X_test.columns)
 
-    # O LIME chama predict várias vezes nas perturbações.
-    # O modelo prevê em log — o LIME explica nesse espaço.
+    # O LIME chama predict várias vezes nas perturbações. Ele passa um ndarray;
+    # reconstruímos um DataFrame com os nomes/colunas que o modelo espera, para
+    # não perder as categóricas nativas do LightGBM. O modelo prevê em log —
+    # o LIME explica nesse espaço (leitura multiplicativa via e^peso).
     def predict_log(dados):
-        return modelo.predict(dados)
+        dados_df = pd.DataFrame(dados, columns=colunas)
+        return modelo.predict(dados_df)
 
     explicacao = explainer.explain_instance(
         data_row=x.values,
@@ -83,18 +101,20 @@ def explicar_imovel(explainer, modelo, X_test, idx, rotulo, info):
     return explicacao
 
 
-def main(nome_modelo='xgboost.pkl'):
+def main(nome_modelo='lightgbm.pkl'):
     print("=" * 80)
-    print("ANÁLISE LIME — EXPLICABILIDADE LOCAL")
+    print("ANÁLISE LIME — EXPLICABILIDADE LOCAL (modelo de operação)")
     print("=" * 80)
     print(f"\nModelo a explicar: {nome_modelo}")
 
     modelo = carregar_modelo(nome_modelo)
 
-    print("\n[1/3] Reconstruindo conjunto de teste e treino...")
-    df = pd.read_csv(ITBI_FINAL)
-    X, y = preparar_dados(df)
-    X_train, _, _, _, X_test, y_test, _, _ = dividir_dados(X, y, df)
+    print("\n[1/3] Reconstruindo conjunto de treino (<=2023) e teste (2024)...")
+    X_train, X_test, y_test = preparar_treino_teste()
+    if hasattr(modelo, 'feature_names_in_'):
+        ordem = list(modelo.feature_names_in_)
+        X_train = X_train[ordem]
+        X_test = X_test[ordem]
     print(f"  Treino: {len(X_train):,} | Teste: {len(X_test):,}")
 
     selecao, aux = selecionar_imoveis(modelo, X_test, y_test)
@@ -118,5 +138,6 @@ def main(nome_modelo='xgboost.pkl'):
     print("ANÁLISE LIME CONCLUÍDA")
     print("=" * 80)
 
+
 if __name__ == '__main__':
-    main(nome_modelo='xgboost.pkl')
+    main(nome_modelo='lightgbm.pkl')

@@ -13,20 +13,19 @@ import matplotlib.ticker as mticker
 
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import (ITBI_FINAL, ITBI_RAW, OUTPUTS_FIGURES, DATA_MUDANCA_REGIME, TARGET, OUTPUTS_MODELS, OUTPUTS_TABLES)
+from config import (ITBI_FINAL, ITBI_RAW, OUTPUTS_FIGURES, DATA_MUDANCA_REGIME, TARGET, OUTPUTS_MODELS, OUTPUTS_TABLES, OUTPUTS_MODELS_TRAIN2)
 
 DPI = 300
 
 # ── Caminhos do projeto ───────────────────────────────────────────────────────
-MODELO_LGBM = OUTPUTS_MODELS / 'lightgbm.pkl'
+MODELO_LGBM = OUTPUTS_MODELS_TRAIN2 / 'lightgbm.pkl'  # modelo de operação (train2.py)
 RESULTADOS_DIR = OUTPUTS_TABLES / 'resultados_gerar_grafico'
 
 # ── Parâmetros ────────────────────────────────────────────────────────────────
-ANO_TESTE_INICIO = 2023      # holdout: linhas com ano >= isto são teste
-TARGET_EM_LOG = False        # a coluna TARGET está em log(R$)? (não — está em R$)
-MODELO_PREVE_LOG = True      # o modelo prevê em log(R$)? (sim -> aplica expm1 na predição)
-SHAP_AMOSTRA = 2000          # nº de imóveis do teste usados no SHAP (custo controlado)
-MIN_TRANSACOES_MES = 30      # fig1a: descarta meses do raw com poucas transações
+ANO_TESTE_INICIO = 2023
+TARGET_EM_LOG = False
+MODELO_PREVE_LOG = True
+MIN_TRANSACOES_MES = 30
 
 # ── Nomes de coluna no dataset FINAL (snake_case) ─────────────────────────────
 COL_DATA = "data_transacao"      # se não houver data completa, uso COL_ANO + COL_MES
@@ -225,25 +224,6 @@ def fig3b_erro_por_trimestre(df_trim):
     _linha_regime(ax)
     ax.legend()
     return _salvar(fig, "fig3b_erro_por_trimestre.png")
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# BLOCO 4 — INTERPRETABILIDADE (SHAP)
-# ══════════════════════════════════════════════════════════════════════════════
-def fig4_shap(shap_values, max_display=15):
-    import shap
-    caminhos = []
-    plt.figure(figsize=(8, 6))
-    shap.plots.beeswarm(shap_values, max_display=max_display, show=False)
-    fig = plt.gcf()
-    fig.suptitle("Importância das variáveis (SHAP) — distribuição", y=1.0, fontsize=13, fontweight="bold")
-    caminhos.append(_salvar(fig, "fig4a_shap_beeswarm.png"))
-    plt.figure(figsize=(8, 6))
-    shap.plots.bar(shap_values, max_display=max_display, show=False)
-    fig = plt.gcf()
-    fig.suptitle("Importância média das variáveis (|SHAP| médio)", y=1.0, fontsize=13, fontweight="bold")
-    caminhos.append(_salvar(fig, "fig4b_shap_bar.png"))
-    return caminhos
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -468,16 +448,6 @@ def _build_faixa(teste):
     return out.dropna(subset=["n"])
 
 
-def _build_shap(teste, modelo):
-    import shap
-    limpo = teste.drop(columns=[c for c in teste.columns if c.startswith("_")])
-    X, _ = _xy(limpo)
-    n = min(SHAP_AMOSTRA, len(X))
-    Xs = X.sample(n, random_state=0)
-    explainer = shap.TreeExplainer(modelo)
-    return explainer(Xs)
-
-
 def carregar_real():
     logger.info("Carregando dataset final: %s", ITBI_FINAL)
     df_final = pd.read_csv(ITBI_FINAL)
@@ -507,14 +477,13 @@ def carregar_real():
         lon=lon, lat=lat, preco_m2_geo=preco_m2_geo,
         df_backtest=df_backtest, df_trim=df_trim,
         df_faixa=_build_faixa(teste), df_ex=df_ex,
-        _teste=teste, _modelo=modelo,
     )
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # ORQUESTRAÇÃO
 # ══════════════════════════════════════════════════════════════════════════════
-def gerar_todas(d, com_shap=True):
+def gerar_todas(d):
     fig1_quebra_regime(d["mensal_raw"], d["erro_mensal"])
     fig2a_dist_preco_m2(d["preco_raw"], d["preco_limpo"])
     fig2b_mapa_calor_bh(d["lon"], d["lat"], d["preco_m2_geo"])
@@ -525,18 +494,13 @@ def gerar_todas(d, com_shap=True):
         fig3b_erro_por_trimestre(d["df_trim"])
     if d["df_ex"] is not None:
         fig5b_banda_incerteza(d["df_ex"])
-    if com_shap:
-        sv = d.get("shap_values") or _build_shap(d["_teste"], d["_modelo"])
-        fig4_shap(sv)
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Gera as figuras do artigo (DesatolaBH).")
-    ap.add_argument("--sem-shap", action="store_true", help="não gera as figuras SHAP")
-    args = ap.parse_args()
+    argparse.ArgumentParser(description="Gera as figuras do artigo (DesatolaBH).").parse_args()
     aplicar_estilo()
     d = carregar_real()
-    gerar_todas(d, com_shap=not args.sem_shap)
+    gerar_todas(d)
     logger.info("Figuras em: %s", OUTPUTS_FIGURES.resolve())
 
 
