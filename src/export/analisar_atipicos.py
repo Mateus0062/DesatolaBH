@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import (ITBI_FINAL, OUTPUTS_MODELS, OUTPUTS_TABLES, TARGET, OUTPUTS_MODELS_TRAIN2)
+from config import (ITBI_FINAL, OUTPUTS_MODELS, OUTPUTS_TABLES, TARGET)
 from src.modeling.evaluate import _Xy
 
 # ── parâmetros ────────────────────────────────────────────────────────────────
-MODELO_LGBM = OUTPUTS_MODELS_TRAIN2 / 'lightgbm.pkl'
+MODELO_LGBM = OUTPUTS_MODELS / 'lightgbm.pkl'
 ANO_TESTE_INICIO = 2023
 LIMITE_ATIPICO = 100_000
 MODELO_PREVE_LOG = True

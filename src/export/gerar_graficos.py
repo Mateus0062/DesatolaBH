@@ -22,7 +22,7 @@ MODELO_LGBM = OUTPUTS_MODELS_TRAIN2 / 'lightgbm.pkl'  # modelo de operação (tr
 RESULTADOS_DIR = OUTPUTS_TABLES / 'resultados_gerar_grafico'
 
 # ── Parâmetros ────────────────────────────────────────────────────────────────
-ANO_TESTE_INICIO = 2023
+ANO_TESTE_INICIO = 2024
 TARGET_EM_LOG = False
 MODELO_PREVE_LOG = True
 MIN_TRANSACOES_MES = 30
@@ -38,7 +38,7 @@ COL_LON = "lon"
 # ── Nomes de coluna no dataset RAW (schema original do ITBI; difere do final) ──
 COL_RAW_BASE = "Valor Base Calculo"
 COL_RAW_DECLARADO = "Valor Declarado"
-COL_RAW_AREA = "Area Construida Adquirida"   # numerador do preço/m² = declarado / área
+COL_RAW_AREA = "Area Construida Adquirida"
 COL_RAW_DATA = "Data Quitacao Transacao"
 
 # ── Import dos helpers do projeto (para reusar o MESMO _Xy do treino) ─────────
