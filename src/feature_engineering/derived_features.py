@@ -8,7 +8,6 @@ from src.feature_engineering.features_espaciais import criar_features_espaciais
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_CLEANED, ITBI_FINAL, TARGET
 
-
 # =============================================================================
 #  ITEM 4 — Estatísticas de bairro com JANELA RETROATIVA (backward).
 #

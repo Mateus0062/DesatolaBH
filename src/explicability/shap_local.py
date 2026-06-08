@@ -10,18 +10,18 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import ITBI_FINAL, OUTPUTS_FIGURES, OUTPUTS_MODELS_TRAIN2
+from config import ITBI_FINAL, OUTPUTS_FIGURES, OUTPUTS_MODELS
 from src.modeling.train import preparar_dados
 
 N_FEATURES_MOSTRAR = 8   # quantas features de maior efeito detalhar por imóvel
-ANO_TESTE_OPERACAO = 2024  # holdout do modelo de operação (train_v2, treino<=2023)
+ANO_TESTE_OPERACAO = 2023  # holdout do modelo de operação (train, treino<=2022)
 
 
 def carregar_modelo(nome_arquivo):
-    caminho = OUTPUTS_MODELS_TRAIN2 / nome_arquivo
+    caminho = OUTPUTS_MODELS / nome_arquivo
     with open(caminho, 'rb') as f:
         modelo = pickle.load(f)
-    print(f"  Modelo carregado: {caminho.name} (operação, treino<=2023)")
+    print(f"  Modelo carregado: {caminho.name} (operação, treino<=2022)")
     return modelo
 
 
@@ -30,7 +30,7 @@ def preparar_teste():
     que o train_v2 deixou de fora). Mesmo recorte do shap_analysis.py."""
     df = pd.read_csv(ITBI_FINAL)
     X, y = preparar_dados(df)
-    mask = (df['ano_transacao'] == ANO_TESTE_OPERACAO).values
+    mask = (df['ano_transacao'] >= ANO_TESTE_OPERACAO).values
     return X[mask], y[mask]
 
 
@@ -147,11 +147,11 @@ def main(nome_modelo='lightgbm.pkl'):
 
     modelo = carregar_modelo(nome_modelo)
 
-    print("\n[2/4] Reconstruindo conjunto de teste (2024, holdout da operação)...")
+    print("\n[2/4] Reconstruindo conjunto de teste (2023, holdout da operação)...")
     X_test, y_test = preparar_teste()
     if hasattr(modelo, 'feature_names_in_'):
         X_test = X_test[list(modelo.feature_names_in_)]
-    print(f"  Conjunto de teste (2024): {len(X_test):,} imóveis")
+    print(f"  Conjunto de teste (2023): {len(X_test):,} imóveis")
 
     selecao, aux = selecionar_imoveis(modelo, X_test, y_test)
 

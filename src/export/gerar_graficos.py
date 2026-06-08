@@ -18,11 +18,11 @@ from config import (ITBI_FINAL, ITBI_RAW, OUTPUTS_FIGURES, DATA_MUDANCA_REGIME, 
 DPI = 300
 
 # ── Caminhos do projeto ───────────────────────────────────────────────────────
-MODELO_LGBM = OUTPUTS_MODELS_TRAIN2 / 'lightgbm.pkl'  # modelo de operação (train2.py)
+MODELO_LGBM = OUTPUTS_MODELS / 'lightgbm.pkl'  # modelo de operação (train2.py)
 RESULTADOS_DIR = OUTPUTS_TABLES / 'resultados_gerar_grafico'
 
 # ── Parâmetros ────────────────────────────────────────────────────────────────
-ANO_TESTE_INICIO = 2024
+ANO_TESTE_INICIO = 2023
 TARGET_EM_LOG = False
 MODELO_PREVE_LOG = True
 MIN_TRANSACOES_MES = 30
@@ -265,10 +265,10 @@ def fig5b_banda_incerteza(df_ex):
     ax.xaxis.set_major_formatter(FMT_REAIS_COMPACTO)
     ax.xaxis.set_major_locator(mticker.MaxNLocator(6))
     ax.set_xlabel("preço (R$)")
-    ax.set_title("Recomendador: preço pedido vs. faixa de preço justo (p10–p90)")
+    ax.set_title("Recomendador: preço pedido vs. faixa do recomendador (banda ~±31%)")
     from matplotlib.lines import Line2D
     handles = [
-        Line2D([0], [0], color=COR["grade"], lw=9, label="faixa p10–p90 (preço justo)"),
+        Line2D([0], [0], color=COR["grade"], lw=9, label="faixa do recomendador (banda ~±31%)"),
         Line2D([0], [0], marker="o", color="w", markerfacecolor=COR["primaria"], ms=9, label="previsão central (p50)"),
     ] + [Line2D([0], [0], marker="X", color="w", markerfacecolor=c, ms=11, label=mapa_lbl[k])
          for k, c in mapa_cor.items()]

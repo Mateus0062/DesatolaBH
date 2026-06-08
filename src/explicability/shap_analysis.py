@@ -10,7 +10,7 @@ matplotlib.use('Agg')  # backend sem janela — só salva arquivos
 import matplotlib.pyplot as plt
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-from config import ITBI_FINAL, OUTPUTS_FIGURES, OUTPUTS_MODELS_TRAIN2
+from config import ITBI_FINAL, OUTPUTS_FIGURES, OUTPUTS_MODELS
 from src.modeling.train import preparar_dados
 
 TAMANHO_AMOSTRA = 5000
@@ -19,28 +19,28 @@ N_DEPENDENCE_PLOTS = 5  # quantas features de topo ganham dependence plot
 
 # Modelo de OPERAÇÃO = train_v2 (treino 2008-2023). Seu holdout real é 2024,
 # então é em 2024 que explicamos as previsões — dado que o modelo NÃO viu.
-ANO_TESTE_OPERACAO = 2024
+ANO_TESTE_OPERACAO = 2023
 
 
 def carregar_modelo(nome_arquivo):
-    caminho = OUTPUTS_MODELS_TRAIN2 / nome_arquivo
+    caminho = OUTPUTS_MODELS / nome_arquivo
     with open(caminho, 'rb') as f:
         modelo = pickle.load(f)
-    print(f"Modelo carregado: {caminho.name} (operação, treino<=2023)")
+    print(f"Modelo carregado: {caminho.name} (operação, treino<=2022)")
     return modelo
 
 
 def preparar_amostra_teste():
-    """Amostra do conjunto de teste do modelo de operação = transações de 2024
+    """Amostra do conjunto de teste do modelo de operação = transações de 2023
     (o que o train_v2 deixou de fora). Coerente com o modelo explicado."""
-    print("\n[1/4] Reconstruindo conjunto de teste (2024, holdout da operação)...")
+    print("\n[1/4] Reconstruindo conjunto de teste (2023)...")
 
     df = pd.read_csv(ITBI_FINAL)
     X, y = preparar_dados(df)
 
-    # Recorta 2024 pelo índice (X e df compartilham índice).
-    mask_2024 = (df['ano_transacao'] == ANO_TESTE_OPERACAO).values
-    X_test = X[mask_2024]
+    # Recorta 2023 pelo índice (X e df compartilham índice).
+    mask = (df['ano_transacao'] >= ANO_TESTE_OPERACAO).values
+    X_test = X[mask]
     print(f"Conjunto de teste (2024): {len(X_test):,} imóveis")
 
     n = min(TAMANHO_AMOSTRA, len(X_test))
@@ -48,7 +48,6 @@ def preparar_amostra_teste():
     print(f"Amostra para SHAP: {len(X_amostra):,} imóveis "
           f"(random_state={RANDOM_STATE})")
     return X_amostra
-
 
 def calcular_shap(modelo, X_amostra):
     print("\n[2/4] Calculando valores SHAP (TreeExplainer)...")

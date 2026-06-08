@@ -12,7 +12,7 @@ from src.modeling.train import preparar_dados
 
 RANDOM_STATE = 42
 N_FEATURES_MOSTRAR = 8
-ANO_TESTE_OPERACAO = 2024  # holdout do modelo de operação (train_v2, treino<=2023)
+ANO_TESTE_OPERACAO = 2023  # holdout do modelo de operação (train_v2, treino<=2023)
 
 
 def carregar_modelo(nome_arquivo):
@@ -29,9 +29,9 @@ def preparar_treino_teste():
     df = pd.read_csv(ITBI_FINAL)
     X, y = preparar_dados(df)
     anos = df['ano_transacao'].values
-    X_train = X[anos <= 2023]
-    X_test = X[anos == ANO_TESTE_OPERACAO]
-    y_test = y[anos == ANO_TESTE_OPERACAO]
+    X_train = X[anos <= 2022]
+    X_test = X[anos >= ANO_TESTE_OPERACAO]
+    y_test = y[anos >= ANO_TESTE_OPERACAO]
     return X_train, X_test, y_test
 
 

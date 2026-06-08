@@ -1,133 +1,123 @@
 import sys
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+sys.path.append(str(Path(__file__).resolve().parent))
 from config import (ITBI_FINAL, OUTPUTS_TABLES, OUTPUTS_MODELS_TRAIN2, TARGET)
-from src.modeling.evaluate import (backtest_rolling, fn_baseline, fn_xgboost,
-                                   fn_lightgbm, fn_ensemble)
+from src.modeling.evaluate import fn_baseline, fn_lightgbm
 from src.sistema_decisao.recomendador import RecomendadorBanda
 
-# ── parâmetros ────────────────────────────────────────────────────────────────
-OUT = OUTPUTS_TABLES / 'resultados_gerar_grafico'
-OUT.mkdir(parents=True, exist_ok=True)
-ANOS = list(range(2018, 2024))           # mesmos anos do seu evaluate.py
-N_EXEMPLOS = 5                            # imóveis na figura da banda
+RESULTADOS_DIR = OUTPUTS_TABLES / 'resultados_gerar_grafico'
+RESULTADOS_DIR.mkdir(parents=True, exist_ok=True)
 
-# fig3b: True -> trimestres do REGIME NOVO (curva curta, pós jul/2023).
-#        False -> série inteira ANUAL (mostra o salto de regime; rótulo vira ano).
-TRIMESTRE_REGIME_NOVO = True
+ANOS_CORTE = list(range(2011, 2024))
 
-# pedido = previsto * fator, para ilustrar dentro/caro/barato (a situação real
-# é decidida pelo SEU recomendador.analisar, não forçada aqui).
-FATORES_PEDIDO = [1.00, 1.50, 0.60, 1.15, 0.85]
-
-
-def _std(s):
-    v = s.std()
-    return float(v) if pd.notna(v) else 0.0
-
-
-# ── fig3a ─────────────────────────────────────────────────────────────────────
-def exportar_backtest_modelos(df):
-    modelos = {'Baseline R$/m²': fn_baseline, 'XGBoost': fn_xgboost,
-               'LightGBM': fn_lightgbm, 'Ensemble': fn_ensemble}
-    linhas = []
-    for nome, fn in modelos.items():
-        res = backtest_rolling(df, fn, ANOS, nome,
-                               apenas_regime_novo=True, silencioso=True)
-        if len(res):
-            linhas.append({'modelo': nome,
-                           'mape_medio': float(res['MAPE'].mean()),
-                           'mape_std': _std(res['MAPE'])})
-    caminho = OUT / 'backtest_modelos.csv'
-    pd.DataFrame(linhas).to_csv(caminho, index=False)
-    print(f"  salvo: {caminho}")
-
-
-# ── fig3b ─────────────────────────────────────────────────────────────────────
-def exportar_erro_por_trimestre(df):
-    rb = backtest_rolling(df, fn_baseline, ANOS, 'baseline',
-                          apenas_regime_novo=TRIMESTRE_REGIME_NOVO, silencioso=True)
-    rl = backtest_rolling(df, fn_lightgbm, ANOS, 'lightgbm',
-                          apenas_regime_novo=TRIMESTRE_REGIME_NOVO, silencioso=True)
-    b = rb[['testa', 'MAPE']].rename(columns={'MAPE': 'baseline'})
-    l = rl[['testa', 'MAPE']].rename(columns={'MAPE': 'lightgbm'})
-    m = b.merge(l, on='testa', how='outer')
-    if TRIMESTRE_REGIME_NOVO:
-        m['trimestre'] = pd.PeriodIndex(m['testa'], freq='Q').to_timestamp()
-    else:
-        m['trimestre'] = pd.to_datetime(m['testa'].astype(str) + '-01-01', errors='coerce')
-    m = m.sort_values('trimestre')
-    caminho = OUT / 'erro_por_trimestre.csv'
-    m[['trimestre', 'baseline', 'lightgbm']].to_csv(caminho, index=False)
-    print(f"  salvo: {caminho}")
-
-
-# ── fig5b ─────────────────────────────────────────────────────────────────────
-def _carregar_ou_treinar_recomendador(df):
-    pkl = OUTPUTS_MODELS_TRAIN2 / 'recomendador_banda.pkl'
-    if pkl.exists():
-        print(f"  recomendador carregado de {pkl.name}")
-        return RecomendadorBanda.carregar(pkl)
-    print("  recomendador_banda.pkl não encontrado — treinando (treino<=2023, calib=1ª metade 2024)...")
+# ── fig1(b) + fig3b: predições out-of-sample linha a linha, série inteira ─────
+def predicoes_rolling(df, anos=ANOS_CORTE):
     df = df.copy()
     df['_data'] = pd.to_datetime(df['data_transacao'])
-    df_2024 = df[df['ano_transacao'] == 2024].sort_values('_data')
-    corte = len(df_2024) // 2
-    return RecomendadorBanda().treinar(df[df['ano_transacao'] <= 2023],
-                                       df_2024.iloc[:corte])
+    blocos = []
+    for Y in anos:
+        tr = df[df['ano_transacao'] <= Y]
+        te = df[df['ano_transacao'] == Y + 1]
+        if len(te) < 100 or len(tr) < 500:
+            continue
+        print(f"    origem treino<={Y} | teste {Y + 1} (n={len(te):,})...")
+        pred_lgbm = fn_lightgbm(tr, te)
+        pred_base = fn_baseline(tr, te)
+        blocos.append(pd.DataFrame({
+            'data_transacao': te['_data'].values,
+            'real': te[TARGET].values,
+            'pred': pred_lgbm,
+            'pred_baseline': pred_base,
+        }))
+    return pd.concat(blocos, ignore_index=True)
 
 
+def exportar_predicoes_e_trimestre(df):
+    print("\n[1/3] Predições rolling-origin (fig1b + fig3b)...")
+    p = predicoes_rolling(df)
+
+    # fig1(b): a série inteira out-of-sample (é isso que faz o salto aparecer)
+    p[['data_transacao', 'real', 'pred']].to_csv(
+        RESULTADOS_DIR / 'predicoes_backtest.csv', index=False)
+    print(f"  salvo: predicoes_backtest.csv ({len(p):,} linhas)")
+
+    # fig3b: MAPE por trimestre, baseline vs LightGBM
+    p['trimestre'] = pd.to_datetime(p['data_transacao']).dt.to_period('Q').dt.to_timestamp()
+    p['ape_lgbm'] = np.abs(p['pred'] - p['real']) / np.maximum(p['real'], 1) * 100
+    p['ape_base'] = np.abs(p['pred_baseline'] - p['real']) / np.maximum(p['real'], 1) * 100
+    trim = (p.groupby('trimestre')
+            .agg(lightgbm=('ape_lgbm', 'mean'),
+                 baseline=('ape_base', 'mean'),
+                 n=('ape_lgbm', 'size'))
+            .reset_index())
+    trim.to_csv(RESULTADOS_DIR / 'erro_por_trimestre.csv', index=False)
+    print(f"  salvo: erro_por_trimestre.csv ({len(trim)} trimestres)")
+
+
+# ── fig3a: a partir do comparativo que o evaluate.py já salvou (rápido) ───────
+def exportar_backtest_modelos():
+    print("\n[2/3] Backtest por modelo (fig3a) — a partir do comparativo do evaluate.py...")
+    origem = OUTPUTS_TABLES / 'comparativo_regime_novo.csv'
+    if not origem.exists():
+        print(f"  [aviso] {origem} não existe. Rode o evaluate.py primeiro. Pulando fig3a.")
+        return
+    comp = pd.read_csv(origem)
+    partes = comp['MAPE'].astype(str).str.split('±', expand=True)   # "14.36 ± 0.48"
+    out = pd.DataFrame({
+        'modelo': comp['Modelo'],
+        'mape_medio': pd.to_numeric(partes[0].str.strip(), errors='coerce'),
+        'mape_std': pd.to_numeric(partes[1].str.strip(), errors='coerce') if partes.shape[1] > 1 else 0.0,
+    })
+    out.to_csv(RESULTADOS_DIR / 'backtest_modelos.csv', index=False)
+    print(f"  salvo: backtest_modelos.csv\n{out.to_string(index=False)}")
+
+
+# ── fig5b: bandas do recomendador em 3 imóveis-exemplo ────────────────────────
 def exportar_exemplos_recomendador(df):
-    rec = _carregar_ou_treinar_recomendador(df)
-    teste = df[df['ano_transacao'] == 2024].copy()
-    exemplos = teste.sample(min(N_EXEMPLOS, len(teste)), random_state=1)
-    faixa = rec.prever_faixa(exemplos)
+    print("\n[3/3] Exemplos do recomendador (fig5b)...")
+    caminho_rec = OUTPUTS_MODELS_TRAIN2 / 'recomendador_banda.pkl'
+    if not caminho_rec.exists():
+        print(f"  [aviso] {caminho_rec} não existe. Rode o recomendador.py primeiro. Pulando fig5b.")
+        return
+    rec = RecomendadorBanda.carregar(caminho_rec)
 
-    mapa = {'REDUZIR PREÇO': 'caro',
-            'POSSÍVEL OPORTUNIDADE / SUBDECLARAÇÃO': 'barato',
-            'DENTRO DA FAIXA DE MERCADO': 'dentro'}
+    df_2024 = df[df['ano_transacao'] == 2024].sort_values(TARGET)
+    n = len(df_2024)
+    # três imóveis cobrindo valor baixo/médio/alto, para a figura ser legível
+    idxs = [df_2024.index[n // 5], df_2024.index[n // 2], df_2024.index[4 * n // 5]]
+    faixa = rec.prever_faixa(df_2024.loc[idxs])
 
-    fatores = (FATORES_PEDIDO * ((len(exemplos) // len(FATORES_PEDIDO)) + 1))[:len(exemplos)]
+    # um cenário de cada situação. 'dentro' usa pedido 25% acima do central, de
+    # propósito, para a figura ilustrar o caso "acima do p50 mas dentro da banda".
+    cenarios = [
+        ('Imóvel A (pedido +25%, ainda dentro)', 'dentro'),
+        ('Imóvel B (sobrepreço)', 'caro'),
+        ('Imóvel C (subdeclarado)', 'barato'),
+    ]
     linhas = []
-    for (idx, row), fator in zip(exemplos.iterrows(), fatores):
-        prev = float(faixa.loc[idx, 'previsto'])
-        pedido = prev * fator
-        a = rec.analisar(exemplos.loc[[idx]], pedido)
-        bairro = str(row.get('bairro', '?')).title()
-        tipo = str(row.get('tipo_construtivo', ''))
-        linhas.append({
-            'rotulo': f"{tipo} {bairro}".strip(),
-            'p10': float(faixa.loc[idx, 'inferior']),
-            'p50': prev,
-            'p90': float(faixa.loc[idx, 'superior']),
-            'pedido': pedido,
-            'situacao': mapa.get(a['acao'], 'dentro'),
-        })
-    caminho = OUT / 'exemplos_recomendador.csv'
-    pd.DataFrame(linhas).to_csv(caminho, index=False)
-    print(f"  salvo: {caminho}")
-
-
-def main():
-    print(f"Carregando dataset final: {ITBI_FINAL}")
-    df = pd.read_csv(ITBI_FINAL)
-
-    print("\n[1/3] Backtest por modelo (regime novo)...")
-    exportar_backtest_modelos(df)
-
-    print("\n[2/3] Erro por trimestre (baseline vs LightGBM)...")
-    exportar_erro_por_trimestre(df)
-
-    print("\n[3/3] Exemplos do recomendador (banda p10/p50/p90)...")
-    exportar_exemplos_recomendador(df)
-
-    print(f"\nPronto. CSVs em {OUT}")
-    print("Agora rode: python src/modeling/gerar_graficos.py")
+    for (rotulo, alvo), (idx, f) in zip(cenarios, faixa.iterrows()):
+        inf, p50, sup = f['inferior'], f['previsto'], f['superior']
+        if alvo == 'caro':
+            pedido = sup * 1.12
+        elif alvo == 'barato':
+            pedido = inf * 0.85
+        else:
+            pedido = p50 * 1.25
+        situ = 'caro' if pedido > sup else 'barato' if pedido < inf else 'dentro'
+        linhas.append({'rotulo': rotulo, 'p10': inf, 'p50': p50, 'p90': sup,
+                       'pedido': pedido, 'situacao': situ})
+    pd.DataFrame(linhas).to_csv(RESULTADOS_DIR / 'exemplos_recomendador.csv', index=False)
+    print(f"  salvo: exemplos_recomendador.csv\n{pd.DataFrame(linhas).to_string(index=False)}")
 
 
 if __name__ == '__main__':
-    main()
+    df = pd.read_csv(ITBI_FINAL)
+    exportar_predicoes_e_trimestre(df)
+    exportar_backtest_modelos()
+    exportar_exemplos_recomendador(df)
+    print(f"\nPronto. CSVs em: {RESULTADOS_DIR}")
+    print("Agora rode o gerar_graficos.py (com MODELO_LGBM = OUTPUTS_MODELS e "
+          "ANO_TESTE_INICIO = 2023) — todas as figuras devem sair.")

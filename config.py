@@ -65,10 +65,9 @@ COLUNAS_EXCLUIR_MODELO = [
     # --- Splitters temporais: usados para dividir, não para prever ---
     'ano_transacao', 'mes_transacao',
 
-    "salario_medio_sm", "faixa_salarial", "grupo_bairro_num",
-    "inicio_ano", "fim_de_ano", "imovel_novo", "valorizacao_bairro_3anos",
+    "inicio_ano", "fim_de_ano", "imovel_novo",
     # string crua (entra como zona_uso_te):
-    "zona_uso", "provavel_teardown", "area_km2_bairro", "populacao_bairro", "domicilios_bairro", "trimestre", "fator_construcao", "depreciacao_estimada",
+    "provavel_teardown", "area_km2_bairro", "trimestre", "fator_construcao", "depreciacao_estimada", "grupo_bairro", "valorizacao_bairro_3anos"
 ]
 
 IPCA_VAR_MENSAL = {
