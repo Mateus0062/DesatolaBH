@@ -1,58 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="nem sei mais em que pé esse trabalho tá">
-      <change afterPath="$PROJECT_DIR$/ruidos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DesatolaBH.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DesatolaBH.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2026_17_24_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2026_17_24__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_05_2026_00_33_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_29_05_2026_00_33__Changes_.xml" beforeDir="false" />
+    <list default="true" id="12bb67c8-9b9b-4054-871e-6b21bf943aaa" name="Changes" comment="final finalzinho">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig1_quebra_regime.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/fig1_quebra_regime.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig3a_backtest_modelos.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/fig3a_backtest_modelos.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig3b_erro_por_trimestre.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/fig3b_erro_por_trimestre.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig4a_shap_beeswarm.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig4b_shap_bar.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig5a_erro_por_faixa.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/fig5a_erro_por_faixa.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/fig5b_banda_incerteza.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/fig5b_banda_incerteza.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/item1_break_nivel_razao.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/item1_erro_por_mes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_construida_m2.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_construida_m2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_terreno_m2.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_terreno_m2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_total_m2.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_area_total_m2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_fracao_ideal.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_fracao_ideal.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_dependence_idade_imovel.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_dependence_idade_imovel.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_importancia_barras.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_importancia_barras.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_local_caro.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_local_caro.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_local_pior_erro.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_local_pior_erro.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_local_tipico.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_local_tipico.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/figures/shap_summary.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/figures/shap_summary.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/lightgbm.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/random_forest.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/lightgbm.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/random_forest.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/recomendador_banda.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/recomendador_banda.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/treino_ate_2023/xgboost.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/models/xgboost.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/models/xgboost.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_regime_novo.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/comparativo_serie_inteira.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/backtest_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/backtest_modelos.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/erro_por_trimestre.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/erro_por_trimestre.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/exemplos_recomendador.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_gerar_grafico/exemplos_recomendador.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/resultados_modelos_train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/shap_ranking_importancia.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/shap_ranking_importancia.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/tables/treino_ate_2023/resultados_modelos_train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/explicability/lime_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/explicability/lime_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/explicability/shap_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/explicability/shap_analysis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/explicability/shap_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/explicability/shap_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/export/export_graficos.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/export/export_graficos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/export/gerar_graficos.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/export/gerar_graficos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_engineering/derived_features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modeling/export_graficos.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +105,7 @@
       <recent name="C:\Users\Mateus Mattos\PycharmProjects\DesatolaBH\scripts\recomendador" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.backtest">
+  <component name="RunManager">
     <configuration name="Limpeza" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DesatolaBH" />
       <option name="ENV_FILES" value="" />
@@ -324,6 +275,8 @@
       <workItem from="1780580984087" duration="3204000" />
       <workItem from="1780692222213" duration="158000" />
       <workItem from="1780952192825" duration="4101000" />
+      <workItem from="1780956924151" duration="301000" />
+      <workItem from="1780971021807" duration="2236000" />
     </task>
     <task id="LOCAL-00001" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <option name="closed" value="true" />
@@ -365,7 +318,23 @@
       <option name="project" value="LOCAL" />
       <updated>1779994650175</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="final finalzinho">
+      <option name="closed" value="true" />
+      <created>1780956961059</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1780956961059</updated>
+    </task>
+    <task id="LOCAL-00007" summary="final finalzinho">
+      <option name="closed" value="true" />
+      <created>1780957085170</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1780957085170</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -386,20 +355,21 @@
     <MESSAGE value="Fase 5 - Análise e melhoria do modelo" />
     <MESSAGE value="Fase 6 - Melhoria da Limpeza dos dados. Deveria ter sido a fase 1." />
     <MESSAGE value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fase 8 - Modelo praticamente finalizado.XGBoost eleito o melhor&#10;Camada de validação de volta, embora o RandomForest não tenha o eval_set e só tenha as camadas treino+teste sem validação.&#10;&#10;Mape e RMSE meio alto mas pode ser por algum erro nos dados de 2023-2024 que está puxando isso muito pra cima. Ainda irei verificar." />
+    <MESSAGE value="final finalzinho" />
+    <option name="LAST_COMMIT_MESSAGE" value="final finalzinho" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DesatolaBH$evaluate.coverage" NAME="evaluate Coverage Results" MODIFIED="1780526532659" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$analisar_erros.coverage" NAME="analisar_erros Coverage Results" MODIFIED="1780006334980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
     <SUITE FILE_PATH="coverage/DesatolaBH$analisar_atipicos.coverage" NAME="analisar_atipicos Coverage Results" MODIFIED="1780409168385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1780522919439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$analisar_erros.coverage" NAME="analisar_erros Coverage Results" MODIFIED="1780006334980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
     <SUITE FILE_PATH="coverage/DesatolaBH$backtest_regime.coverage" NAME="backtest_regime Coverage Results" MODIFIED="1780016170417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$Limpeza.coverage" NAME="Limpeza Coverage Results" MODIFIED="1780522919439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/limpeza_dados" />
     <SUITE FILE_PATH="coverage/DesatolaBH$gerar_graficos.coverage" NAME="gerar_graficos Coverage Results" MODIFIED="1780954926182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/export" />
     <SUITE FILE_PATH="coverage/DesatolaBH$listar_colunas.coverage" NAME="listar_colunas Coverage Results" MODIFIED="1780019701937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/teste_modelos" />
     <SUITE FILE_PATH="coverage/DesatolaBH$verifica_erro.coverage" NAME="verifica_erro Coverage Results" MODIFIED="1780019654142" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />
     <SUITE FILE_PATH="coverage/DesatolaBH$train.coverage" NAME="train Coverage Results" MODIFIED="1780524708773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
     <SUITE FILE_PATH="coverage/DesatolaBH$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1780522910535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/modeling" />
-    <SUITE FILE_PATH="coverage/DesatolaBH$shap_local.coverage" NAME="shap_local Coverage Results" MODIFIED="1780955569817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
+    <SUITE FILE_PATH="coverage/DesatolaBH$shap_local.coverage" NAME="shap_local Coverage Results" MODIFIED="1780972563126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/explicability" />
     <SUITE FILE_PATH="coverage/DesatolaBH$recomendador.coverage" NAME="recomendador Coverage Results" MODIFIED="1780581325536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/sistema_decisao" />
     <SUITE FILE_PATH="coverage/DesatolaBH$auditar_leakege.coverage" NAME="auditar_leakege Coverage Results" MODIFIED="1779989924720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_leakege" />
     <SUITE FILE_PATH="coverage/DesatolaBH$verifica.coverage" NAME="verifica Coverage Results" MODIFIED="1780006403059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/detectar_erros" />

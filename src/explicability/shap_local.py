@@ -13,21 +13,22 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 from config import ITBI_FINAL, OUTPUTS_FIGURES, OUTPUTS_MODELS
 from src.modeling.train import preparar_dados
 
-N_FEATURES_MOSTRAR = 8   # quantas features de maior efeito detalhar por imóvel
-ANO_TESTE_OPERACAO = 2023  # holdout do modelo de operação (train, treino<=2022)
+N_FEATURES_MOSTRAR = 8     # quantas features de maior efeito detalhar por imóvel (texto)
+N_FEATURES_WATERFALL = 12  # features no waterfall (resolve a sobreposição de rótulos)
+ANO_TESTE_OPERACAO = 2023  # início do holdout de extrapolação (train.py, treino<=2022): testa 2023-2024
 
 
 def carregar_modelo(nome_arquivo):
     caminho = OUTPUTS_MODELS / nome_arquivo
     with open(caminho, 'rb') as f:
         modelo = pickle.load(f)
-    print(f"  Modelo carregado: {caminho.name} (operação, treino<=2022)")
+    print(f"  Modelo carregado: {caminho.name} (extrapolação, treino<=2022)")
     return modelo
 
 
 def preparar_teste():
-    """Conjunto de teste do modelo de operação = transações de 2024 (holdout
-    que o train_v2 deixou de fora). Mesmo recorte do shap_analysis.py."""
+    """Conjunto de teste do modelo de extrapolação = transações de 2023-2024
+    (holdout que o train.py deixou de fora). Mesmo recorte do shap_analysis.py."""
     df = pd.read_csv(ITBI_FINAL)
     X, y = preparar_dados(df)
     mask = (df['ano_transacao'] >= ANO_TESTE_OPERACAO).values
@@ -127,31 +128,37 @@ def explicar_imovel(explainer, modelo, X_test, idx, rotulo, info):
     print(f"  Leitura: partindo da média (R$ {np.expm1(base_log):,.0f}), "
           f"essas features multiplicam até R$ {previsto_reais:,.0f}.")
 
-    # --- Force plot (em log — é o que o SHAP gera nativamente) ---
-    plt.figure()
-    shap.force_plot(
-        base_log, shap_values, x.iloc[0],
-        matplotlib=True, show=False
+    # --- Waterfall plot (substitui o force plot: rótulos legíveis, sem sobreposição) ---
+    # O waterfall precisa de um objeto Explanation; montamos a partir dos valores
+    # já calculados pela API antiga. Eixo em log (o que o SHAP gera nativamente);
+    # a leitura em reais está no texto/console acima.
+    expl = shap.Explanation(
+        values=shap_values,
+        base_values=base_log,
+        data=x.iloc[0].values,
+        feature_names=list(X_test.columns),
     )
-    caminho = OUTPUTS_FIGURES / f'shap_local_{rotulo}.png'
-    plt.savefig(caminho, dpi=150, bbox_inches='tight')
+    plt.figure()
+    shap.plots.waterfall(expl, max_display=N_FEATURES_WATERFALL, show=False)
+    caminho = OUTPUTS_FIGURES / f'shap_waterfall_{rotulo}.png'
+    plt.savefig(caminho, dpi=200, bbox_inches='tight')
     plt.close()
-    print(f"\n  Force plot salvo: {caminho.name}")
+    print(f"\n  Waterfall salvo: {caminho.name}")
 
 
 def main(nome_modelo='lightgbm.pkl'):
     print("=" * 80)
-    print("ANÁLISE SHAP — EXPLICABILIDADE LOCAL (modelo de operação)")
+    print("ANÁLISE SHAP — EXPLICABILIDADE LOCAL (modelo de extrapolação)")
     print("=" * 80)
     print(f"\nModelo a explicar: {nome_modelo}")
 
     modelo = carregar_modelo(nome_modelo)
 
-    print("\n[2/4] Reconstruindo conjunto de teste (2023, holdout da operação)...")
+    print("\n[2/4] Reconstruindo conjunto de teste (2023-2024, holdout da extrapolação)...")
     X_test, y_test = preparar_teste()
     if hasattr(modelo, 'feature_names_in_'):
         X_test = X_test[list(modelo.feature_names_in_)]
-    print(f"  Conjunto de teste (2023): {len(X_test):,} imóveis")
+    print(f"  Conjunto de teste (2023-2024): {len(X_test):,} imóveis")
 
     selecao, aux = selecionar_imoveis(modelo, X_test, y_test)
 
@@ -165,7 +172,7 @@ def main(nome_modelo='lightgbm.pkl'):
     print("\n" + "=" * 80)
     print("ANÁLISE SHAP LOCAL CONCLUÍDA")
     print("=" * 80)
-    print(f"\nForce plots em: {OUTPUTS_FIGURES}")
+    print(f"\nWaterfalls em: {OUTPUTS_FIGURES}")
 
 
 if __name__ == '__main__':
